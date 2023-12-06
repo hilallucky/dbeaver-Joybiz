@@ -1,0 +1,96 @@
+{
+	"folders": {},
+	"connections": {
+		"postgres-jdbc-18c33a5f734-7221ee3af61f6dd7": {
+			"provider": "postgresql",
+			"driver": "postgres-jdbc",
+			"name": "postgres",
+			"save-password": true,
+			"configuration": {
+				"host": "localhost",
+				"port": "5432",
+				"database": "joyawesome",
+				"url": "jdbc:postgresql://localhost:5432/joyawesome",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"config-profile": "JoyBiz",
+				"properties": {
+					"connectTimeout": "20",
+					"loginTimeout": "20",
+					"escapeSyntaxCallMode": "callIfNoReturn"
+				},
+				"provider-properties": {
+					"@dbeaver-show-non-default-db@": "true",
+					"@dbeaver-show-template-db@": "false",
+					"@dbeaver-show-unavailable-db@": "false",
+					"show-database-statistics": "false",
+					"@dbeaver-read-all-data-types-db@": "false",
+					"read-keys-with-columns": "false",
+					"@dbeaver-use-prepared-statements-db@": "false",
+					"postgresql.dd.plain.string": "false",
+					"postgresql.dd.tag.string": "false"
+				},
+				"auth-model": "native",
+				"events": {},
+				"handlers": {
+					"ssh_tunnel": {
+						"type": "TUNNEL",
+						"enabled": true,
+						"save-password": true,
+						"properties": {
+							"host": "joybiz.co.id",
+							"port": 22.0,
+							"authType": "PUBLIC_KEY",
+							"keyPath": "/run/user/1000/doc/629d445b/id_rsa",
+							"implementation": "sshj",
+							"localHost": "",
+							"remoteHost": ""
+						}
+					}
+				}
+			},
+			"custom-properties": {
+				"resultset.behavior.doubleClick": "EDITOR",
+				"resultset.grid.value.format": "UI",
+				"resultset.maxrows": "2000",
+				"resultset.show.colorizeDataTypes": "true"
+			}
+		}
+	},
+	"virtual-models": {"postgres-jdbc-18c33a5f734-7221ee3af61f6dd7":{"joyawesome":{"public":{":memberships":{"constraints":{"VIRTUAL_PK":{"type":"vpk","useAllColumns":true}}},":sranks":{"constraints":{"VIRTUAL_PK":{"type":"vpk","useAllColumns":true}}}}}}},
+	"network-profiles": {
+		"JoyBiz": {
+			"name": "JoyBiz",
+			"handlers": {
+				"ssh_tunnel": {
+					"type": "TUNNEL",
+					"enabled": true,
+					"save-password": true,
+					"properties": {
+						"host": "joybiz.co.id",
+						"port": 22.0,
+						"authType": "PUBLIC_KEY",
+						"keyPath": "/run/user/1000/doc/629d445b/id_rsa",
+						"implementation": "sshj",
+						"localHost": "",
+						"remoteHost": ""
+					}
+				}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"smart-commit": false,
+			"smart-commit-recover": false,
+			"auto-close-transactions": true,
+			"close-transactions-period": 1800
+		}
+	}
+}
