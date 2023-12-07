@@ -3,12 +3,13 @@ where u.nama ilike '%makbul%';
 
 -- ini query untuk tarik data point cash reward
 select u.nama, ms.username, u.handphone, sum(jc.joy) as point_reward_joy, sum(jc.biz) as point_reward_biz, sum(jc.biz + jc.joy) AS total
+	-- jc.joy,jc.biz, jc."date"-- 
 from joy_point_reward_cashes jc
 	join memberships ms on jc.owner = ms.uid 
 	join users u ON ms.uid = u.uid
-where jc."date" between  '2022-12-29'and '2023-11-30' and jc.deleted_at is null
+where jc."date" between  '2022-12-29'and '2023-12-07' and jc.deleted_at is null
 and jc.deleted_at is null
-and u.username ilike 'ridwan080753' 
+and u.username ilike 'agusev020889' 
 group by u.nama, ms.username, u.handphone
 order by  total desc;
 
@@ -40,7 +41,7 @@ select * from week_periodes wp where id in (306, 307, 308) order by id;
 select * from joy_point_rewards jpr where owner='6255b234-3121-49ef-a1ca-9347cf8412be' order by date desc;
 
 
--- CHECK QUALIFIKASI TURKIYE (PONT REWARDS) -- MIN PERINGKAT GAMMA, TOTAL POINT REWARDS MIN 250
+-- CHECK QUALIFIKASI TURKIYE (PONT REWARDS) -- MIN PERINGKAT GAMMA, TOTAL POINT REWARDS MIN 250 -- POS 1
 select ms.username, 
 	u.nama, u.handphone, 
 	sum(jp.joy) as point_reward_joy, sum(jp.biz) as point_reward_biz, sum(jp.biz + jp.joy) as total
@@ -49,7 +50,7 @@ from joy_point_rewards jp
 	left outer join users u on ms.uid = u.uid
 where jp."date" BETWEEN '2022-12-29'and now()::date and jp.deleted_at is null
 	and jp.deleted_at is null
-	and ms.username ='ridwan080753'
+	and ms.username ='agusev020889'
 group by ms.username, u.nama, u.handphone
 having sum(jp.biz + jp.joy) >= 250 --between 200 and 249-- 
 order by point_reward_joy asc;
@@ -284,13 +285,13 @@ SELECT
 FROM memberships ms
 	join users u on u.username = ms.username 
 	JOIN sranks sr ON ms.jbid = sr.jbid
-WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('sumrat0607501'))
+WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('lutfiy1210391'))
 	--22115186779 --= 23075375780 --nama ilike '%qurrotun%'
 	 AND sr.srank >= 1 
 --	and AGE(now(), ms.activated_at) < INTERVAL '3 months' 
 	 or lower(ms.username) -- ILIKE ANY(ARRAY[
 	 in (
-	 'sumrat0607501'
+	 'lutfiy1210391'
 )
 --	])
 ORDER BY case 
@@ -317,7 +318,7 @@ select t.created_at, t.transaction_date, t.id_cust_fk, m.jbid, m.username, u.nam
 from "transaction" t
 	join memberships m  on t.id_cust_fk = m.jbid 
 	join users u on m.username = u.username 
-	join bonus_expresses be on t.code_trans = be.code_trans 
+	join bonus_expresses be on t.code_trans = be.code_trans
 where m.username in ('rranik0811351','yayady2211701');
 select * from bonus_expresses limit 1;
 
@@ -336,14 +337,21 @@ order by m.id;
 -- UBAH SPONSOR/ALAMAT
 select ID,nama,  username, email, handphone, alamat, kelurahan, kecamatan, kota_kabupaten, provinsi, status , no_npwp, 
 	id_bank_fk, bank_name, bank_acc_num, bank_acc_name, created_at, activated_at 
-from users u where username in ('daniel0412291', 'effend0412251') or username ilike 'esters0412451%' or username ilike 'afriya0412581%'; 
+from users u where username in ('annisa2111341', 'bintan1511651') or username ilike 'esters0412451%' or username ilike 'afriya0412581%'; 
 --	 email in ('atisanti77@gmail.com','daraesanr@gmail.com','yanakayaraya@gmail.com','iamulyaningsih262@gmail.com','agusmpasya@gmail.com');
 
-select username, jbid, spid, upid, "left", "right" , activated_at, status 
+select * 
+from users u  
+where 
+username in ('erlian0712901','annisa2111341', 'bintan1511651')
+order by id ;
+
+
+select username, jbid, spid, upid, "left", "right" , activated_at, status,flag 
 from memberships m 
 where --username ilike'agusmu0112791%' or username  = 'liamul0112761'
-username in ('martan1311881','ubahy2011131','mohamm120383')
---or jbid in (23065346092)
+username in ('erlian0712901','annisa2111341', 'bintan1511651')
+--or jbid in (23115551668)
 order by id ;
 --
 --select username, jbid, spid, upid, "left", "right" , activated_at, status 
@@ -362,7 +370,8 @@ order by id ;
 
 select jbid, spid, upid, appv, srank, created_at, updated_at  
 from sranks s 
-where  jbid in (23115568579,23125579635) 
+where  jbid in (23115551725,
+23115560161) 
 order by jbid ;
 
 select s.jbid, s.spid, m.spid as m_spid, s.upid, m.upid as m_upid, s.appv, s.srank, s.created_at, s.updated_at  
@@ -378,11 +387,17 @@ from sranks s
 where m.username in ('fanian2611901', 'agusti1711761', 'agussu2707481'); 
 --s.upid 
 
-select * from "transaction" t where id_cust_fk = 23105504377;
+select * from "transaction" t where id_cust_fk = 23125582013;
 
 -- UBAH NAMA
-select * from users u where u.username in ('saswin0512941','wenzir050324') ilike 'saswin0512941' ;-- email in ('mohammad97@gmail.com','sumarni75@gmail.com');
-select * from memberships m where username in ('saswin0512941','wenzir050324') or jbid = 23115574321;
+select * from users u where u.username in ('saswin0512941','wenzir050324','esters0412451',
+'effend0412251',
+'daniel0412291',
+'afriya0412581') ilike 'saswin0512941' ;-- email in ('mohammad97@gmail.com','sumarni75@gmail.com');
+select * from memberships m where username in  ('saswin0512941','wenzir050324','esters0412451',
+'effend0412251',
+'daniel0412291',
+'afriya0412581') or jbid = 23115574321;
 
 update u
 from users u 
@@ -396,7 +411,7 @@ from users
 where username = 'arwiti1911141';
 
 -- HAPUS ITEM PRODUCT
-select  * from "transaction" t where code_trans ilike 'P5MLFB1%';
+select  * from "transaction" t where code_trans ilike 'Q895PW%';
 select  * from transaction_detail td where id_trans_fk in (144586);
 
 select * from barang b where nama ilike lower('%Free Joy Coffee%');
@@ -498,10 +513,10 @@ u.username in ('esters0412451') or u.username ilike 'irnide0511461%';
 
 select m.id, m.username, m.jbid, m.spid, m.upid, m."left", m."right", m.activated_at, m.status  
 from memberships m 
-where 
-
-m.username in ('daniel0412291', 'effend0412251') or m.username ilike 'esters0412451%' or m.username ilike 'afriya0412581%'
+where m.username in ('budisa270852','dewire2206881','andang2508341')
+--	m.username in ('daniel0412291', 'effend0412251') or m.username ilike 'esters0412451%' or m.username ilike 'afriya0412581%'
 order by m.id;
+
 select * from sranks s where jbid =23125576280;
 
 

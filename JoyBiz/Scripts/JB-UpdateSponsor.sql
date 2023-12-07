@@ -34,8 +34,8 @@ from memberships m
 where 
 --username ilike 'marian01%' or 
 --	jbid in ('23105493586')
-username ='sitinu3011741' 
-	or owner ='7430a88f-05b3-490b-9e0b-2303268f3c91'
+username ='inayah2811701' 
+	or owner ='e4d4df38-71cb-4b31-8b2d-348d477532db'
 --where m."left" is null and m."right" is null
 order by id;
 
@@ -45,7 +45,7 @@ where "left" in (23105493586);
 
 
 
-select * from sranks s 
+select * from sranks s where upid = 23115571169;
 
 /*
  * 
