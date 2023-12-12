@@ -29,13 +29,13 @@ where upid = 23115556979;
 
 --update memberships set username = replace(username, '-deleted-deleted', ''), deleted_at = null
 -- HAPUS HU/HAK USAHA 2-7
-select id, "owner", username, jbid, spid, upid, "left", "right", deleted_at 
+select id, "owner", username, jbid, spid, upid, "left", "right", deleted_at, created_at
 from memberships m 
 where 
 --username ilike 'marian01%' or 
 --	jbid in ('23105493586')
-username ='inayah2811701' 
-	or owner ='e4d4df38-71cb-4b31-8b2d-348d477532db'
+username ='abdipu2911391' 
+	or owner ='c4f66acc-6877-4291-a21f-6baad6a1138f'
 --where m."left" is null and m."right" is null
 order by id;
 
@@ -238,3 +238,48 @@ where username = :old_username;
 
 commit;
 */
+
+*/
+
+
+-- check G1 & SC
+select 
+	case 
+		when m.spid = 22115190443 and m.flag =1 then 'G1'
+		else 'JOYBIZER'
+	end as "LEVEL",
+	(
+		select sum(t.pv_total) as pv
+		from "transaction" t 
+		where m.jbid = t.id_cust_fk 
+			and t.status in('PC', 'S', 'A', 'I') -- PAID
+			and to_char(t.transaction_date, 'YYYY-MM') between '2023-10' and '2023-10'
+	) as pv,
+	m.flag, m."owner", m.username, m.jbid, m.spid, m.upid, m."left", m."right", m.deleted_at, m.created_at
+from memberships m 
+where m.username = 'suyant2811121'
+	 or m.spid = 22115190443
+group by 
+order by m.flag
+;
+
+select m.username, to_char(t.transaction_date, 'YYYY-MM') as "Period", sum(t.pv_total) as pv,
+		(select count(*) from memberships m2 where m2.spid = m.jbid and m2.flag = 1) as "G1",
+		(select count(*) from memberships m2 where m2.spid = m.jbid and m2.flag = 2) as "SC"
+from memberships m
+	 join "transaction" t on m.jbid = t.id_cust_fk 
+where m.username = 'suyant2811121'
+	and t.status in('PC', 'S', 'A', 'I') -- PAID
+	and to_char(t.transaction_date, 'YYYY-MM') between '2023-09' and '2023-12'
+group by m.username, to_char(t.transaction_date, 'YYYY-MM'), m.jbid
+order by to_char(t.transaction_date, 'YYYY-MM')
+;
+
+select * from "transaction" t 
+where t.id_cust_fk  = 22115190443
+	and t.status in('PC', 'S', 'A', 'I') -- PAID
+	and to_char(t.transaction_date, 'YYYY-MM') between '2023-09' and '2023-12'
+;
+
+
+

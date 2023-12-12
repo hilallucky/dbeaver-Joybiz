@@ -285,13 +285,13 @@ SELECT
 FROM memberships ms
 	join users u on u.username = ms.username 
 	JOIN sranks sr ON ms.jbid = sr.jbid
-WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('lutfiy1210391'))
+WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('mulian0308841'))
 	--22115186779 --= 23075375780 --nama ilike '%qurrotun%'
 	 AND sr.srank >= 1 
 --	and AGE(now(), ms.activated_at) < INTERVAL '3 months' 
 	 or lower(ms.username) -- ILIKE ANY(ARRAY[
 	 in (
-	 'lutfiy1210391'
+	 'mulian0308841'
 )
 --	])
 ORDER BY case 
@@ -337,22 +337,32 @@ order by m.id;
 -- UBAH SPONSOR/ALAMAT
 select ID,nama,  username, email, handphone, alamat, kelurahan, kecamatan, kota_kabupaten, provinsi, status , no_npwp, 
 	id_bank_fk, bank_name, bank_acc_num, bank_acc_name, created_at, activated_at 
-from users u where username in ('annisa2111341', 'bintan1511651') or username ilike 'esters0412451%' or username ilike 'afriya0412581%'; 
+from users u 
+where 
+--	username in ('budisa270852','dewire2206881','andang2508341') -- or 
+	username ilike 'dewire0812211%' or username ilike 'andang0812121%' or username ilike 'budisa0812841%'; 
 --	 email in ('atisanti77@gmail.com','daraesanr@gmail.com','yanakayaraya@gmail.com','iamulyaningsih262@gmail.com','agusmpasya@gmail.com');
 
 select * 
 from users u  
-where 
-username in ('erlian0712901','annisa2111341', 'bintan1511651')
+where username ilike '%delete'
+--	username in ('erlian0712901','annisa2111341', 'bintan1511651')
+	username in ('annisa2111341') or 
+	username ilike 'dewire0812211%' or username ilike 'andang0812121%' or username ilike 'budisa0812841%' 
 order by id ;
 
 
-select username, jbid, spid, upid, "left", "right" , activated_at, status,flag 
+select username, jbid, spid, upid, "left", "right" , "owner" ,created_at, activated_at, status,flag, deleted_at 
 from memberships m 
-where --username ilike'agusmu0112791%' or username  = 'liamul0112761'
-username in ('erlian0712901','annisa2111341', 'bintan1511651')
+where 
+	username ilike 'anissa0912191%' -- or username ilike 'dewire2206881%' or username ilike 'andang2508341%' -- old
+--	username ilike 'Surian0712541' --or username ilike 'andang0812121%' or username ilike 'budisa0812841%' -- new
+--	--username ilike'agusmu0112791%' or username  = 'liamul0112761'
+--	or 
+--	username in ('inayah2811141','inayah2811701','surian0712541','sitinu3011741')
+--	username in ('anissa09121914','anissa09121913','anissa09121912','anissa0912191')
 --or jbid in (23115551668)
-order by id ;
+order by username, id ;
 --
 --select username, jbid, spid, upid, "left", "right" , activated_at, status 
 --from memberships m 
@@ -370,9 +380,15 @@ order by id ;
 
 select jbid, spid, upid, appv, srank, created_at, updated_at  
 from sranks s 
-where  jbid in (23115551725,
-23115560161) 
-order by jbid ;
+where  jbid in (23125583793
+,23125583714
+,23125583794
+,23125583798
+,23125583723
+,23125583713
+,23125583760
+) 
+order by id ;
 
 select s.jbid, s.spid, m.spid as m_spid, s.upid, m.upid as m_upid, s.appv, s.srank, s.created_at, s.updated_at  
 from sranks s 
@@ -411,12 +427,28 @@ from users
 where username = 'arwiti1911141';
 
 -- HAPUS ITEM PRODUCT
-select  * from "transaction" t where code_trans ilike 'Q895PW%';
-select  * from transaction_detail td where id_trans_fk in (144586);
+select  * from "transaction" t where code_trans ilike 'MJ8TKE%';
+select  * from transaction_detail td where id_trans_fk in (144854);
+
 
 select * from barang b where nama ilike lower('%Free Joy Coffee%');
 
+select * from transaction t where t.code_trans ilike 'CUFOZQ%' order by id;
+select * 
+from transaction_detail td 
+where td.id_trans_fk in (144776
+--,144776
+--,144777
+--,144778
+--,144779
+--,144780
+--,144781
+--,144782
+) 
+order by id_trans_fk , id_barang_fk;
 
+
+select * from memberships m where username ='anissa09121918';
 
 -- UBAH ALAMAT PENGIRIMAN
 select * from users u where username ='rinake2112791';
@@ -558,6 +590,8 @@ from memberships m
 where m.username = 'yudian0108151';
 
 
+select * from memberships m where username in ('nandio2111871','masrif2507821');
+select * from sranks s where jbid in (23075396017,23115560963);
 
 
 

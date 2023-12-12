@@ -43,3 +43,77 @@ from barang_detail bd
 			) t on bd.id_induk_fk = t.id_barang_fk
 where bd.id_barang_fk in (1294, 1347)   
 ORDER BY bd.id_induk_fk asc;
+
+
+
+
+
+
+-- SHOW ALL DOWNLINE BASED ON ID MEMBER AND PRINTED TO PAPER
+-- Step 1: Create the temporary table
+CREATE TEMPORARY TABLE tree_path (
+    row_num int8,
+    id int8,
+    username VARCHAR,
+    nama VARCHAR,
+    jbid int8,
+    spid int8,
+    upid int8,
+    upline_name VARCHAR,
+    upline_no int8,
+    level int8
+);
+
+-- Step 2: Insert the data into the temporary table
+WITH RECURSIVE hierarchy_cte AS (
+    SELECT m1.id, m1.username, u1.nama, m1.jbid, m1.spid, m1.upid, cast('' AS VARCHAR) AS upline_name, 0 AS upline_no, 0 as level
+    FROM memberships m1
+    	left outer join users u1 on m1.username = u1.username
+    WHERE 
+	    u1.username = 'indram0911961'
+--    m1.jbid = 14922
+
+    UNION ALL
+
+    SELECT m2.id, m2.username, u2.nama, m2.jbid, m2.spid, m2.upid, h.nama, 0 AS upline_no, h.level + 1
+    FROM memberships m2
+    	left outer join users u2 on m2.username = u2.username
+    	JOIN hierarchy_cte h ON m2.upid = h.jbid
+    where h.level < 3
+)
+--INSERT INTO tree_path(row_num, id, username, nama, jbid, spid, upid, upline_name, upline_no, level)
+SELECT
+    ROW_NUMBER() OVER (order by hc.level, hc.upline_name, hc.upid, hc.id) AS row_num,
+    hc.id, hc.username, hc.nama, hc.jbid, hc.spid, hc.upid, hc.upline_name, hc.upline_no, hc.level,
+    to_char(tr.transaction_date, 'YYYY-MM') as "period",
+	case 
+		when (tr.deleted_at is not null and tr.status in('PC', 'S', 'A') and to_char(tr.transaction_date, 'YYYY-MM') between '2023-10' and '2023-12') then sum(tr.purchase_cost) else 0
+	end as "purchase_cost"
+--    sum(tr.purchase_cost) as "purchase_cost", sum(tr.shipping_cost) as "shipping_cost",
+--	sum(tr.bv_total) as "bv_total", sum(tr.pv_total) as "pv_total", sum(tr.rv_total) as "rv_total"
+FROM hierarchy_cte hc
+	left outer join "transaction" tr on hc.jbid = tr.id_cust_fk
+--where tr.deleted_at is null
+--	  and tr.status in('PC', 'S', 'A') -- , 'I') -- PAID
+--	  and to_char(tr.transaction_date, 'YYYY-MM') between '2023-10' and '2023-12'
+group by 
+    hc.id, hc.username, hc.nama, hc.jbid, hc.spid, hc.upid, hc.upline_name, hc.upline_no, hc.level,
+    to_char(tr.transaction_date, 'YYYY-MM'), tr.deleted_at, tr.status 
+ORDER BY hc.level, hc.upline_name, hc.upid, hc.id
+
+-- Step 3: Query the temporary table to retrieve the results
+SELECT tp.row_num, tp.id, tp.username, tp.nama, tp.jbid, tp.spid, tp.upid, tp.upline_name, (select t.row_num from tree_path t where t.jbid = tp.upid) as upline_no, tp.level
+FROM tree_path tp
+--where username = 'nuryan171272'
+ORDER BY tp.row_num;  
+
+-- Step 4: Query detele the temporary table
+DROP TABLE IF EXISTS tree_path;
+
+-- END NETWORK
+
+
+
+select *
+from "transaction" t 
+where t.id_cust_fk = 22115169320;

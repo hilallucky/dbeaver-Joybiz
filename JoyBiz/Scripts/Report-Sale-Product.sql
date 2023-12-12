@@ -39,7 +39,7 @@ from barang_detail bd
 			GROUP BY td."id_barang_fk",td."name"
 			ORDER BY td.id_barang_fk
 			) t on bd.id_induk_fk = t.id_barang_fk
-where bd.id_barang_fk in (1294, 1347)   
+where bd.id_barang_fk in (104, 256, 327, 749, 824, 924, 997, 1065, 1150, 1206, 1274, 1337)   
 ORDER BY bd.id_induk_fk asc;
 
 

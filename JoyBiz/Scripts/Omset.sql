@@ -136,8 +136,6 @@ where to_char(t.transaction_date, 'YYYY-MM') = '2023-09'
 --t.transaction_date::date between '2023-08-01' and '2023-11-30'
 ;
 
-
-
 select r1."Provinsi", r1."Kabupaten", -- r1."Period",
 	sum(CASE WHEN r1."Period" = '2023-08' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-08",
 	sum(CASE WHEN r1."Period" = '2023-09' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-09",
@@ -172,9 +170,23 @@ from (
 group by r1."Provinsi", r1."Kabupaten" --, r1."Period"
 ;	
 
+/* 
+ * ===============================================================================================================================================================
+ * START OMZET BERDASARKAN DOMISILI MEMBER
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/* 
+ * ===============================================================================================================================================================
+ * START OMZET BERDASARKAN DOMISILI MEMBER MONTHLY
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+
 select CASE WHEN r1."Provinsi" = null then 'Unknown' else r1."Provinsi" end as "Provinsi", 
 	CASE WHEN r1."Kabupaten" = null then 'Unknown' else r1."Kabupaten" end as "Kabupaten", -- r1."Period",
-	sum(CASE WHEN r1."Period" = '2023-08' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-08",
+	sum(CASE WHEN r1."Period" = '2023-1' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-08",
 	sum(CASE WHEN r1."Period" = '2023-09' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-09",
 	sum(CASE WHEN r1."Period" = '2023-10' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-10",
 	sum(CASE WHEN r1."Period" = '2023-11' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-11"
@@ -198,7 +210,7 @@ from (
 		--	and 
 			t.deleted_at is null
 			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-			and t.transaction_date::date between '2023-08-01' and '2023-11-30'
+			and t.transaction_date::date between '2023-12-04' and '2023-12-10'
 		group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		order by 
 				INITCAP(ap.provinsi), INITCAP(ak.kabupaten), 
@@ -206,6 +218,111 @@ from (
 	) r1
 group by r1."Provinsi", r1."Kabupaten" --, r1."Period"
 ;	
+
+
+/* 
+ * ===============================================================================================================================================================
+ * END OMZET BERDASARKAN DOMISILI MEMBER MONTHLY
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/* 
+ * ===============================================================================================================================================================
+ * START OMZET BERDASARKAN DOMISILI MEMBER WEEKLY
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+
+select CASE WHEN r1."Provinsi" = null then 'Unknown' else r1."Provinsi" end as "Provinsi", 
+	CASE WHEN r1."Kabupaten" = null then 'Unknown' else r1."Kabupaten" end as "Kabupaten", -- r1."Period",
+	sum(CASE WHEN r1."Period" = '2023-12' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-12"
+--	r1."Purchase Cost", r1."Shipping Cost", r1."BV", r1."PV", r1."RV"
+from (
+		select -- t.code_trans, 
+			to_char(t.transaction_date, 'YYYY-MM') as "Period", 
+			INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+			sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+		--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+			sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+		from "transaction" t 
+			left outer join memberships m on (t.id_cust_fk = m.jbid)
+		--	join memberships m2 on m.owner = m2.owner and m.owner = m.uid
+			left outer join users u on m.username = u.username 
+			left outer join alamat_provinsi ap on u.provinsi::int =ap.id  
+			left outer join alamat_kabupaten ak on u.kota_kabupaten::int = ak.id
+		where 
+		--	u.provinsi::int = 72
+		--	and u.kota_kabupaten::int = 7271 --PALU
+		--	and 
+			t.deleted_at is null
+			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+			and t.transaction_date::date between '2023-12-04' and '2023-12-10'
+		group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+		order by 
+				INITCAP(ap.provinsi), INITCAP(ak.kabupaten), 
+				to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten
+	) r1
+group by r1."Provinsi", r1."Kabupaten" --, r1."Period"
+;	
+
+
+/* 
+ * ===============================================================================================================================================================
+ * END OMZET BERDASARKAN DOMISILI MEMBER WEEKLY
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+
+/* 
+ * ===============================================================================================================================================================
+ * START OMZET BERDASARKAN MEMBER
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+
+select r1.username, r1.nama,
+	sum(CASE WHEN r1."Period" = '2023-05' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-05",
+	sum(CASE WHEN r1."Period" = '2023-06' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-06",
+	sum(CASE WHEN r1."Period" = '2023-07' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-07",
+	sum(CASE WHEN r1."Period" = '2023-08' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-08",
+	sum(CASE WHEN r1."Period" = '2023-09' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-09",
+	sum(CASE WHEN r1."Period" = '2023-10' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-10",
+	sum(CASE WHEN r1."Period" = '2023-11' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-11",
+	sum(CASE WHEN r1."Period" = '2023-12' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-12"
+--	r1."Purchase Cost", r1."Shipping Cost", r1."BV", r1."PV", r1."RV"
+from (
+		select -- t.code_trans, 
+			m.username, --u.nama,
+			to_char(t.transaction_date, 'YYYY-MM') as "Period", 
+			sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+		from "transaction" t 
+			left outer join memberships m on (t.id_cust_fk = m.jbid)
+--			left outer join users u on m.username = u.username 
+--			left outer join users u on m.username = u.username 
+		where 
+--			m.username ilike 'indram0911961'
+			m.spid = (select m3.jbid from memberships m3 where m3.username = 'indram0911961')
+			and t.deleted_at is null
+			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+			and to_char(t.transaction_date, 'YYYY-MM') between '2023-10' and '2023-12'
+		group by m.username, to_char(t.transaction_date, 'YYYY-MM') --u.nama, 
+		order by 
+				to_char(t.transaction_date, 'YYYY-MM'), m.username --, u.nama
+	) r1
+group by r1.username, r1.nama
+;	
+
+select * from memberships m where username = 'indram0911961' or m.spid = 22115169320;
+
+/* 
+ * ===============================================================================================================================================================
+ * END OMZET BERDASARKAN MEMBER
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+
 
 /* 
  * ===============================================================================================================================================================
