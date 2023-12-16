@@ -355,14 +355,14 @@ order by id ;
 select username, jbid, spid, upid, "left", "right" , "owner" ,created_at, activated_at, status,flag, deleted_at 
 from memberships m 
 where 
-	username ilike 'anissa0912191%' -- or username ilike 'dewire2206881%' or username ilike 'andang2508341%' -- old
+--	username ilike 'kari0512711' -- or username ilike 'dewire2206881%' or username ilike 'andang2508341%' -- old
 --	username ilike 'Surian0712541' --or username ilike 'andang0812121%' or username ilike 'budisa0812841%' -- new
---	--username ilike'agusmu0112791%' or username  = 'liamul0112761'
+--	username ilike'esters0412451%' -- or username  = 'liamul0112761'
 --	or 
---	username in ('inayah2811141','inayah2811701','surian0712541','sitinu3011741')
---	username in ('anissa09121914','anissa09121913','anissa09121912','anissa0912191')
+--	username in ('esters0412451','effend0412251','daniel0412291','afriya0412581') -- or jbid = 23105527852
+	username in ('esters04124516')
 --or jbid in (23115551668)
-order by username, id ;
+order by id, username, id ;
 --
 --select username, jbid, spid, upid, "left", "right" , activated_at, status 
 --from memberships m 
@@ -380,15 +380,9 @@ order by username, id ;
 
 select jbid, spid, upid, appv, srank, created_at, updated_at  
 from sranks s 
-where  jbid in (23125583793
-,23125583714
-,23125583794
-,23125583798
-,23125583723
-,23125583713
-,23125583760
+where  jbid in (23125576289
 ) 
-order by id ;
+order by jbid ;
 
 select s.jbid, s.spid, m.spid as m_spid, s.upid, m.upid as m_upid, s.appv, s.srank, s.created_at, s.updated_at  
 from sranks s 
@@ -467,7 +461,7 @@ select * from alamat_kelurahan ak where kelurahan ilike 'PANGGUNGJATI';
 
 -- UBAH NO REKENING
 select * from memberships m where username ='sriyau1212671';
-select id, username, nama, id_bank_fk, bank_name , bank_acc_name, bank_acc_num from users u where username in ('daniel0412291', 'effend0412251') or username ilike 'esters0412451%' or username ilike 'afriya0412581%';
+select id, username, nama, id_bank_fk, bank_name , bank_acc_name, bank_acc_num from users u where username in ('agusti1711761');
 select * from bank b;
 
 -- Tarik data transaksi
@@ -592,6 +586,29 @@ where m.username = 'yudian0108151';
 
 select * from memberships m where username in ('nandio2111871','masrif2507821');
 select * from sranks s where jbid in (23075396017,23115560963);
+
+
+
+-- CHECK TOTAL BV MEMBER DALAM SETAHUN TERAKHIR
+select m.username, u.nama, m.activated_at,
+		coalesce(sum(t.pv_total), 0) as "pv", max(t.transaction_date) "latest_date",
+		coalesce(AGE(now(), max(t.transaction_date))) as "transaction_age"
+from  
+	memberships m  
+	left join users u on m.username = u.username
+	left outer join "transaction" t on t.id_cust_fk  = m.jbid and t.st;atus in('PC', 'S', 'A') -- , 'I') -- PAID
+where m.username in ('dayuka050191', 'triawa2604561')
+group by m.username, u.nama,  m.activated_at;
+
+select * from memberships m where m.username in ('dayuka050191', 'triawa2604561');
+
+select * from "transaction" t where code_trans ='DDPDMC';
+select * from barang where nama ilike '%Joybizer (J31%'; --1063 R05J31	Joybizer (J31)
+select * from transaction_detail td where id_trans_fk in (144756);
+
+
+select id, code_trans, deleted_at, transaction_date  from "transaction" t where code_trans ='NWPJVC';
+select * from transaction_detail td where id_trans_fk =145076;
 
 
 

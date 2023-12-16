@@ -34,18 +34,51 @@ from memberships m
 where 
 --username ilike 'marian01%' or 
 --	jbid in ('23105493586')
-username ='abdipu2911391' 
-	or owner ='c4f66acc-6877-4291-a21f-6baad6a1138f'
+username ='ahmadm0207651' 
+	or owner ='3464a09d-28eb-40d7-8179-636dcaab487c'
 --where m."left" is null and m."right" is null
 order by id;
 
-select id, "owner", username, jbid, spid, upid, "left", "right", deleted_at 
-from memberships m 
-where "left" in (23105493586);
+/*  ==================================================================================================================================
+ *  START UPDATE HAPUS HU
+ *  ==================================================================================================================================
+ */
+
+DO $$ 
+DECLARE
+	row_id integer;
+    xusername text := 'aidasu1512571';
+    xowner text;
+    add_username text := '-delete';
+
+   BEGIN
+		row_id := 1;
+		
+		-- UPDATE HU
+		update memberships 
+		set username = concat(username, add_username), deleted_at = now()
+		where username in (
+			select m.username
+			from memberships m
+				 left outer join users u on u.username = m.username
+			where m.username ilike xusername ||'%' and m.username is not null and u.username is null
+		);
+	
+	
+	--UPDATE HU 1 left & right
+	update memberships 
+	set "left" = case when (select position('-delete' in m2.username) from memberships m2 where m2.jbid = memberships."left") > 0 then null else memberships."left" end,
+		"right" = case when (select position('-delete' in m2.username) from memberships m2 where m2.jbid = memberships."right") > 0 then null else memberships."right" end
+	where username = 'aidasu1512571';
+
+END $$;
+
+/*  ==================================================================================================================================
+ *  END UPDATE HAPUS HU
+ *  ==================================================================================================================================
+ */
 
 
-
-select * from sranks s where upid = 23115571169;
 
 /*
  * 
@@ -89,7 +122,7 @@ select id, jbid, spid, upid from sranks where jbid = 123234234;
 select * from users u where nama ilike 'Mohammad Rasyid';
 select * from memberships m where username like 'marian0110121%';
 select * from memberships m where uid = '96867ffc-936f-46e7-a37e-d5dd1bf0b66a' or "owner" ='96867ffc-936f-46e7-a37e-d5dd1bf0b66a' order by id;
-
+select * from memberships m where username = 'sukart010728';
 
 select * from users u where nama ilike 'Mohammad Rasyid';
 SELECT id FROM users WHERE strpos('Mohammad Rasyid', nama) > 0;
@@ -240,27 +273,39 @@ commit;
 */
 
 */
-
+select * 
+from memberships m 
+where m.username in ('nyoman300763',
+'nobell050130',
+'luhary1805341',
+'dayuka050191',
+'niputu061072');
 
 -- check G1 & SC
-select 
-	case 
-		when m.spid = 22115190443 and m.flag =1 then 'G1'
-		else 'JOYBIZER'
-	end as "LEVEL",
+select d1."LEVEL", d1.flag, count(d1."LEVEL") as "total"
+from 
 	(
-		select sum(t.pv_total) as pv
-		from "transaction" t 
-		where m.jbid = t.id_cust_fk 
-			and t.status in('PC', 'S', 'A', 'I') -- PAID
-			and to_char(t.transaction_date, 'YYYY-MM') between '2023-10' and '2023-10'
-	) as pv,
-	m.flag, m."owner", m.username, m.jbid, m.spid, m.upid, m."left", m."right", m.deleted_at, m.created_at
-from memberships m 
-where m.username = 'suyant2811121'
-	 or m.spid = 22115190443
-group by 
-order by m.flag
+		select 
+			case 
+				when m.spid = 40061 and m.flag =1 then 'G1-JB'
+				when m.spid = 40061 and m.flag =2 then 'G1-SC'
+				else 'JOYBIZER'
+			end as "LEVEL",
+--			(
+--				select sum(t.pv_total) as pv
+--				from "transaction" t 
+--				where m.jbid = t.id_cust_fk 
+--					and t.status in('PC', 'S', 'A', 'I') -- PAID
+--					and to_char(t.transaction_date, 'YYYY-MM') between '2023-09' and '2023-12'
+--			) as pv,
+			m.flag, m."owner", m.username, m.jbid, m.spid, m.upid, m."left", m."right", m.deleted_at, m.created_at
+		from memberships m 
+		where m.username = 'sukart010728'
+			 or m.spid = 40061
+		group by m.flag, m."owner", m.username, m.jbid, m.spid, m.upid, m."left", m."right", m.deleted_at, m.created_at
+		order by m.flag
+	) d1
+group by d1."LEVEL", d1.flag
 ;
 
 select m.username, to_char(t.transaction_date, 'YYYY-MM') as "Period", sum(t.pv_total) as pv,
@@ -268,7 +313,7 @@ select m.username, to_char(t.transaction_date, 'YYYY-MM') as "Period", sum(t.pv_
 		(select count(*) from memberships m2 where m2.spid = m.jbid and m2.flag = 2) as "SC"
 from memberships m
 	 join "transaction" t on m.jbid = t.id_cust_fk 
-where m.username = 'suyant2811121'
+where m.username = 'sukart010728'
 	and t.status in('PC', 'S', 'A', 'I') -- PAID
 	and to_char(t.transaction_date, 'YYYY-MM') between '2023-09' and '2023-12'
 group by m.username, to_char(t.transaction_date, 'YYYY-MM'), m.jbid
