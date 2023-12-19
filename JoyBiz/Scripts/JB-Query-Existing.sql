@@ -445,11 +445,12 @@ order by id_trans_fk , id_barang_fk;
 select * from memberships m where username ='anissa09121918';
 
 -- UBAH ALAMAT PENGIRIMAN
-select * from users u where username ='rinake2112791';
+select * from users u where username ='karint0212601';
 
 -- UBAH EXPEDISI
 --  4 untuk JNE dan 7 untuk TIKI
-select code_trans, transaction_date, courier, deleted_at, status from "transaction" t where code_trans in ('DHFSAF');
+select id, code_trans, transaction_date, courier, deleted_at, status from "transaction" t where code_trans in ('Z7Z5JW');
+select * from transaction_detail td where id_trans_fk =144536;
 
 select t.code_trans, shipping_name, shipping_phone, shipping_address,
 		shipping_city, shipping_province, shipping_village, shipping_district 
