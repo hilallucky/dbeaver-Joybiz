@@ -1,17 +1,18 @@
 
 select *
 from barang b 
-where 
+where --nama ilike '%Joypolinse%'
 --	nama = 'Go Gamma BVB Pack (J40)'
 --	or contains(nama, 'Start-Up Titanium')
-nama ILIKE 'Registration Joybize%';
+nama ILIKE '%J40%' and created_at::date = '2023-12-27'
+--or nama ilike '%pronovde%'
+order by id
 ;
-1597
-1638
-1599
-1639
-1598
-1640
+1641
+1642
+1643
+1644
+1645
 
 select 	*
 from barang b  
@@ -25,12 +26,17 @@ where b.nama
 order by b.nama ;
 
 
-select * from products p where code ilike '%39%';
+select * from products p where code ilike '%1346%';
 
+select * from media m where id_barang_fk in (1640,1641,1642,1643,1644,1645) order by id_barang_fk  desc;
+
+
+select * from barang b where id in (1346);
 
 select *
 from barang_detail bd  
-where id_induk_fk  = 1640;
+where id_induk_fk  = 1643
+order by id ;
 
 1637
 
@@ -104,7 +110,7 @@ FROM barang b
 	JOIN barang dbs ON d.id_barang_fk = dbs.id
 	LEFT JOIN products p ON d.product_code = p.code
 WHERE b.id IN  (
-		1637,1638,1639,1640
+		1641,1642,1643,1644,1645
 		) 
 ORDER BY b."id", d.id;
 -- END PRODUCT LISTING;

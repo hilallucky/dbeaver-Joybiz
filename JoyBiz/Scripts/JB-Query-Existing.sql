@@ -44,26 +44,30 @@ select * from joy_point_rewards jpr where owner='6255b234-3121-49ef-a1ca-9347cf8
 -- CHECK QUALIFIKASI TURKIYE (PONT REWARDS) -- MIN PERINGKAT GAMMA, TOTAL POINT REWARDS MIN 250 -- POS 1
 select ms.username, 
 	u.nama, u.handphone, 
-	sum(jp.joy) as point_reward_joy, sum(jp.biz) as point_reward_biz, sum(jp.biz + jp.joy) as total
+	sum(jp.joy) as point_reward_joy, sum(jp.biz) as point_reward_biz, sum(jp.biz + jp.joy) as total,
+	case 
+		when sum(jp.biz + jp.joy) between 250 and 499.999 then 'POS 1'
+		when sum(jp.biz + jp.joy) >= 500 then 'POS 2'
+	end
 from joy_point_rewards jp
 	join memberships ms on jp.owner = ms.uid 
-	left outer join users u on ms.uid = u.uid
+	left outer join users u on ms.uid = u.uid or ms."owner" = u.uid 
 where jp."date" BETWEEN '2022-12-29'and now()::date and jp.deleted_at is null
 	and jp.deleted_at is null
-	and ms.username ='agusev020889'
+--	and ms.username ='bessew210665'
 group by ms.username, u.nama, u.handphone
 having sum(jp.biz + jp.joy) >= 250 --between 200 and 249-- 
 order by point_reward_joy asc;
 
 -- CHECK QUALIFIKASI CASH REWARDS
-select u.nama, ms.username, u.handphone, sum(jc.joy) as point_reward_joy, sum(jc.biz) as point_reward_biz, sum(jc.biz + jc.joy) AS total
+select u.nama, ms.username, u.handphone, sum(jc.joy) as point_reward_joy, sum(jc.biz) as point_reward_biz, sum(jc.biz + jc.joy) AS total, 'CASH REWARD'
 from joy_point_reward_cashes jc
 	join memberships ms on jc.owner = ms.uid 
-	join users u on ms.uid = u.uid
+	left outer join users u on ms.uid = u.uid or ms."owner" = u.uid 
 where jc."date" between '2022-12-29'and now()::date
-	and ms.username ='ridwan080753'
+--	and ms.username ='ridwan0807538'
 	and jc.deleted_at is null
-and jc.deleted_at is null 
+--	and jc.deleted_at is null 
 group by u.nama, ms.username, u.handphone
 having sum(jc.biz + jc.joy) >= 100 --between 60 and 99 -- 
 order by total desc;
@@ -285,13 +289,13 @@ SELECT
 FROM memberships ms
 	join users u on u.username = ms.username 
 	JOIN sranks sr ON ms.jbid = sr.jbid
-WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('mulian0308841'))
+WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('muhamm2003691'))
 	--22115186779 --= 23075375780 --nama ilike '%qurrotun%'
 	 AND sr.srank >= 1 
 --	and AGE(now(), ms.activated_at) < INTERVAL '3 months' 
 	 or lower(ms.username) -- ILIKE ANY(ARRAY[
 	 in (
-	 'mulian0308841'
+	 lower('muhamm2003691')
 )
 --	])
 ORDER BY case 
@@ -339,8 +343,8 @@ select ID,nama,  username, email, handphone, alamat, kelurahan, kecamatan, kota_
 	id_bank_fk, bank_name, bank_acc_num, bank_acc_name, created_at, activated_at 
 from users u 
 where 
---	username in ('budisa270852','dewire2206881','andang2508341') -- or 
-	username ilike 'dewire0812211%' or username ilike 'andang0812121%' or username ilike 'budisa0812841%'; 
+	username in ('muthia0412461','zalimi0301211') -- or 
+--	username ilike 'zalimi0301211' -- or username ilike 'andang0812121%' or username ilike 'budisa0812841%'; 
 --	 email in ('atisanti77@gmail.com','daraesanr@gmail.com','yanakayaraya@gmail.com','iamulyaningsih262@gmail.com','agusmpasya@gmail.com');
 
 select * 
@@ -351,6 +355,11 @@ where username ilike '%delete'
 	username ilike 'dewire0812211%' or username ilike 'andang0812121%' or username ilike 'budisa0812841%' 
 order by id ;
 
+select u.username, u.nama, u.activated_at::date
+from users u 
+where u.username in ('muksin3012511',
+'indrak29117013'
+);
 
 select username, jbid, spid, upid, "left", "right" , "owner" ,created_at, activated_at, status,flag, deleted_at 
 from memberships m 
@@ -360,8 +369,8 @@ where
 --	username ilike'esters0412451%' -- or username  = 'liamul0112761'
 --	or 
 --	username in ('esters0412451','effend0412251','daniel0412291','afriya0412581') -- or jbid = 23105527852
-	username in ('esters04124516')
---or jbid in (23115551668)
+	username in ('muthia0412461','zalimi0301211') 
+--	or jbid in (23115572236)
 order by id, username, id ;
 --
 --select username, jbid, spid, upid, "left", "right" , activated_at, status 
@@ -376,11 +385,12 @@ order by id, username, id ;
 --where username in ('santis0112981'); -- or id = 56005 --'suhaen1511461','yuslia0910461', 
 ----	or jbid in (23105511824, 23105511824) --or "right" in (23105520652)	
 --;
-----select * from users u where username ='wiwikp1711311' or id in (54298);
+-- select * from users u where username in ('dewire08122112','dewire08122113');
+select * from memberships m  where username in ('dewire08122112','dewire08122113');
 
 select jbid, spid, upid, appv, srank, created_at, updated_at  
 from sranks s 
-where  jbid in (23125576289
+where  jbid in (23125575615,24015613640
 ) 
 order by jbid ;
 
@@ -421,7 +431,7 @@ from users
 where username = 'arwiti1911141';
 
 -- HAPUS ITEM PRODUCT
-select  * from "transaction" t where code_trans ilike 'MJ8TKE%';
+select  * from "transaction" t where code_trans ilike 'NU9ZDM%';
 select  * from transaction_detail td where id_trans_fk in (144854);
 
 
@@ -449,20 +459,20 @@ select * from users u where username ='karint0212601';
 
 -- UBAH EXPEDISI
 --  4 untuk JNE dan 7 untuk TIKI
-select id, code_trans, transaction_date, courier, deleted_at, status from "transaction" t where code_trans in ('Z7Z5JW');
-select * from transaction_detail td where id_trans_fk =144536;
+select id, code_trans, transaction_date, courier, deleted_at, status from "transaction" t where code_trans in ('1WM4UF');
+select * from transaction_detail td where id_trans_fk =145268;
 
-select t.code_trans, shipping_name, shipping_phone, shipping_address,
-		shipping_city, shipping_province, shipping_village, shipping_district 
-from "transaction" t where t.code_trans ='JINPUA' limit 1 ;
+select t.code_trans, status, is_pickup, shipping_name, shipping_phone, shipping_address,
+		shipping_city, shipping_province, shipping_village, shipping_district, shipping_cost 
+from "transaction" t where t.code_trans in ('BBE2P0','VSEWCP','5CZDBF','PAIH7Z','MW4LOC','VE2K3H','LXPXED') ;
 --select * from alamat_provinsi ap;
-select * from alamat_kabupaten ak2 where kabupaten ilike 'kota serang%';
-select * from alamat_kecamatan ak where kecamatan ilike 'TAKTAKAN';
-select * from alamat_kelurahan ak where kelurahan ilike 'PANGGUNGJATI';
+select * from alamat_kabupaten ak2 where kabupaten ilike '%depok%'; ;--id in (3209, 3404);--
+select * from alamat_kecamatan ak where id_kabupaten in (3276);-- kecamatan ilike '%depok%';
+select * from alamat_kelurahan ak where id_kecamatan = 3276050; -- kelurahan ilike 'beji';
 
 -- UBAH NO REKENING
-select * from memberships m where username ='sriyau1212671';
-select id, username, nama, id_bank_fk, bank_name , bank_acc_name, bank_acc_num from users u where username in ('agusti1711761');
+select * from memberships m where username ='desriy2803141';
+select id, username, nama, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  from users u where username ilike 'desriy2803141'; -- in ('desry2803141');
 select * from bank b;
 
 -- Tarik data transaksi
@@ -540,13 +550,14 @@ u.username in ('esters0412451') or u.username ilike 'irnide0511461%';
 
 select m.id, m.username, m.jbid, m.spid, m.upid, m."left", m."right", m.activated_at, m.status  
 from memberships m 
-where m.username in ('budisa270852','dewire2206881','andang2508341')
+where m.username in ('dewire08122112','dewire08122113')
 --	m.username in ('daniel0412291', 'effend0412251') or m.username ilike 'esters0412451%' or m.username ilike 'afriya0412581%'
 order by m.id;
 
-select * from sranks s where jbid =23125576280;
+select * from sranks s where jbid in ('23125583242','23125583276');
+select * from eranks e where jbid in ('23125583232','23125583376');
 
-
+23125583276 23125583232	23125583232
 
 ('afriya2210861',
 'afriya22108612',
@@ -601,15 +612,175 @@ from
 where m.username in ('dayuka050191', 'triawa2604561')
 group by m.username, u.nama,  m.activated_at;
 
-select * from memberships m where m.username in ('dayuka050191', 'triawa2604561');
+select * from users u where username ilike '510806%' or email ilike 'mertagede%';
+
+select * from memberships m where m.uid in ('1f5ed8d1-1b1c-4145-aae8-299448651c5e'); 
 
 select * from "transaction" t where code_trans ='DDPDMC';
 select * from barang where nama ilike '%Joybizer (J31%'; --1063 R05J31	Joybizer (J31)
 select * from transaction_detail td where id_trans_fk in (144756);
 
 
-select id, code_trans, deleted_at, transaction_date  from "transaction" t where code_trans ='NWPJVC';
-select * from transaction_detail td where id_trans_fk =145076;
+select id, code_trans, deleted_at, transaction_date  from "transaction" t where code_trans in ('UBGBVN','GOGR5F');
+select * from transaction_detail td where id_trans_fk =145713;
+
+
+
+select * from "transaction" t where id_cust_fk = 4 order by created_at desc;
+
+
+
+-- START CHECK TIKET ACARA TERJUAL
+SELECT tr.code_trans, tr.transaction_date, ms.username AS Buyer, td."name" AS barang , tr.status, td.qty 
+FROM "transaction" tr
+	JOIN transaction_detail td ON tr."id" = td.id_trans_fk
+	JOIN memberships ms ON tr.id_cust_fk = ms.jbid
+WHERE td.id_barang_fk IN(1625) 
+	AND tr.transaction_date BETWEEN '2022-03-01' AND '2024-01-02' 
+	AND tr.transaction_date IS NOT NULL 
+	AND tr.deleted_at IS NULL
+ORDER BY tr.transaction_date;
+-- END CHECK TIKET ACARA TERJUAL
+
+
+select m.username, m.created_at, m.activated_at, "owner" 
+from memberships m 
+where username ilike 'wendri290683'
+order by username ;
+
+
+select * from bonus_matchings bm ;
+
+
+
+select 	u.uid, u.username , u.nama, u.handphone, u.email,
+--		jbs.id, 
+--		jbs.date, 
+		jbs.wid, 
+		jbs.owner, 
+		sum(jbs.xpress) as xpress, 
+		sum(jbs.bgroup) as bgroup,
+		sum(jbs.leadership) as leadership, 
+		sum(jbs.total) as total,
+		sum(jbs.tax) as tax,
+		sum(jbs.voucher) as voucher,
+		sum(jbs.transfer) as transfer, 
+		jbs.confirmed, 
+		jbs.published, 
+--		jbs.vouchered, 
+		jbs.transfered, 
+--		jbs.created_at, 
+--		jbs.updated_at, 
+		jbs.user_id, 
+		jbs.deleted_at, 
+		sum(jbs.year_end) as year_end
+from joy_bonus_summaries jbs 
+	 left outer join users u on jbs."owner" = u.uid  
+where 
+--	jbs."date" ='2023-12-27' and
+	jbs.wid = 314
+	and jbs.deleted_at is null 
+	and jbs."owner" ='38d2d0af-14bd-4f38-bd44-5e708dac8026'
+group by u.uid, u.username , u.nama, u.handphone, u.email,
+--		jbs.id, 
+--		jbs.date, 
+		jbs.wid, 
+		jbs.owner, 
+		jbs.confirmed, 
+		jbs.published, 
+--		jbs.vouchered, 
+		jbs.transfered, 
+--		jbs.created_at, 
+--		jbs.updated_at, 
+		jbs.user_id, 
+		jbs.deleted_at; 
+	
+	
+
+
+select 	
+	u.uid, u.username , u.nama, u.handphone, u.email,
+--		jbs.id, 
+--		jbs.date, 
+		jbs.wid, 
+--		jbs.owner, 
+		sum(jbs.xpress) as xpress, 
+		sum(jbs.bgroup) as bgroup,
+		sum(jbs.leadership) as leadership, 
+		sum(jbs.total) as total,
+		sum(jbs.tax) as tax,
+		sum(jbs.voucher) as voucher,
+		sum(jbs.transfer) as transfer, 
+		jbs.confirmed, 
+		jbs.published, 
+--		jbs.vouchered, 
+		jbs.transfered, 
+--		jbs.created_at, 
+--		jbs.updated_at, 
+		jbs.user_id, 
+		jbs.deleted_at, 
+		sum(jbs.year_end) as year_end
+from joy_bonus_summaries jbs 
+	 left outer join users u on jbs.user_id  = u.uid  
+where 
+--	jbs."date" ='2023-12-27' 
+	jbs.wid = 314
+	and jbs.deleted_at is null 
+--	and (jbs."owner" ='fadea2f8-8ac0-4b52-931e-70af373b9056'
+--	or jbs.user_id = 'fadea2f8-8ac0-4b52-931e-70af373b9056')
+--	and "owner" = ';38d2d0af-14bd-4f38-bd44-5e708dac8026'
+group by 
+	u.uid, u.username , u.nama, u.handphone, u.email,
+--		jbs.id, 
+--		jbs.date, 
+		jbs.wid, 
+--		jbs.owner, 
+		jbs.confirmed, 
+		jbs.published, 
+--		jbs.vouchered, 
+		jbs.transfered, 
+--		jbs.created_at, 
+--		jbs.updated_at, 
+		jbs.user_id, 
+		jbs.deleted_at; 
+
+
+
+select jbs."owner", u.uid, u.username , u.nama, jbs.*
+from joy_bonus_summaries jbs 
+	 left outer join users u on jbs."owner" = u.uid 
+where
+--	jbs."date" ='2023-12-27' 
+	jbs.wid = 314
+	and jbs.deleted_at is null 
+	and jbs."owner" ='02eeb3de-3538-421a-b22a-02467558e59d'; 
+
+
+
+select * from week_periodes wp ;
+
+select username, uid  
+from memberships m  
+where m.username in ( 'desi14047', 
+ 'joy201741', 
+ 'laodep160554', 
+ 'mohammad171260', 
+ 'mohammad171260', 
+ 'mohammad171260', 
+ 'mohammad171260', 
+ 'mohammad171260');
+
+select "owner", wid, total, voucher, ppn, total_transfer 
+from bonus_weeklies bw 
+where wid = 314
+	and "owner" in ( '38d2d0af-14bd-4f38-bd44-5e708dac8026')
+ order by "owner" 
+;
+select * --"owner", wid, total, voucher, tax, transfer, year_end 
+from joy_bonus_summaries jbs 
+where wid = 314
+	and "owner" in ( '38d2d0af-14bd-4f38-bd44-5e708dac8026')
+order by "owner", total ; 
 
 
 

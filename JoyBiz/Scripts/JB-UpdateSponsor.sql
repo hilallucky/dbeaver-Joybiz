@@ -34,8 +34,8 @@ from memberships m
 where 
 --username ilike 'marian01%' or 
 --	jbid in ('23105493586')
-username ='ahmadm0207651' 
-	or owner ='3464a09d-28eb-40d7-8179-636dcaab487c'
+username ilike 'muthia0412461%' 
+	or owner ='ba74ed9c-9f96-4a1b-aeaf-4acb0c283337'
 --where m."left" is null and m."right" is null
 order by id;
 
@@ -47,7 +47,7 @@ order by id;
 DO $$ 
 DECLARE
 	row_id integer;
-    xusername text := 'aidasu1512571';
+    xusername text := 'muthia0412461';
     xowner text;
     add_username text := '-delete';
 
@@ -69,7 +69,7 @@ DECLARE
 	update memberships 
 	set "left" = case when (select position('-delete' in m2.username) from memberships m2 where m2.jbid = memberships."left") > 0 then null else memberships."left" end,
 		"right" = case when (select position('-delete' in m2.username) from memberships m2 where m2.jbid = memberships."right") > 0 then null else memberships."right" end
-	where username = 'aidasu1512571';
+	where username = 'pardi3012521';
 
 END $$;
 
@@ -90,15 +90,19 @@ from memberships m
 */
 
 
-select * from memberships m where m.username ='mohammad171260';
+select username, jbid, spid, upid, "left", "right" 
+from memberships m 
+where m.username in ('novaro1811921', 'aidils0710981');
+
+select * from sranks m where m.jbid  =23125599785;
 
 
 
 
 DO $$ 
 DECLARE
-    xusername text := 'arwiti1911141';
-    new_upline_username text := 'atmoja08053613';
+    xusername text := 'aidils0710981';
+    new_upline_username text := 'novaro1811921';
     jbid_user bigint;
     jbid_upline bigint;
 
@@ -328,3 +332,9 @@ where t.id_cust_fk  = 22115190443
 
 
 
+select * from users u where username = 'muarif180323';
+select * from memberships m where username = 'muarif180323';
+
+
+
+select * from 

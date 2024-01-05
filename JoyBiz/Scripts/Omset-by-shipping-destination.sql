@@ -261,6 +261,13 @@ group by r1."Provinsi", r1."Kabupaten" --, r1."Period"
 select 
 	CASE WHEN r1."Provinsi" is null then 'Unknown' else r1."Provinsi" end as "Provinsi", 
 	CASE WHEN r1."Kabupaten" is null then 'Unknown' else r1."Kabupaten" end as "Kabupaten", -- r1."Period",
+	sum(CASE WHEN r1."Period" = '2023-01' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-01",
+	sum(CASE WHEN r1."Period" = '2023-02' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-02",
+	sum(CASE WHEN r1."Period" = '2023-03' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-03",
+	sum(CASE WHEN r1."Period" = '2023-04' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-04",
+	sum(CASE WHEN r1."Period" = '2023-05' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-05",
+	sum(CASE WHEN r1."Period" = '2023-06' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-06",
+	sum(CASE WHEN r1."Period" = '2023-07' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-07",
 	sum(CASE WHEN r1."Period" = '2023-08' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-08",
 	sum(CASE WHEN r1."Period" = '2023-09' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-09",
 	sum(CASE WHEN r1."Period" = '2023-10' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-10",
@@ -285,7 +292,7 @@ from (
 			t.deleted_at is null
 			and t.is_pickup = 1 -- PICKUP PUC/MPU
 			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-			and t.transaction_date::date between '2023-08-01' and now() --'2023-12-10'
+			and t.transaction_date::date between '2023-01-01' and '2023-12-31' -- now() --'2023-12-10'
 		group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 				
 		union all
@@ -304,7 +311,7 @@ from (
 			t.deleted_at is null
 			and t.is_pickup = 2 -- SENT to ADDRESS
 			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-			and t.transaction_date::date between '2023-08-01' and now() --'2023-12-10'
+			and t.transaction_date::date between '2023-01-01' and '2023-12-31' -- now() --'2023-12-10'
 		group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 	) r1
 group by r1."Provinsi", r1."Kabupaten" --, r1."Period"
@@ -330,6 +337,308 @@ order by r1."Provinsi", r1."Kabupaten"
 	select * from "transaction" t where is_pickup = 1; 
 	select * from stock_packs sp ;
 	select * from alamat_kabupaten ak where id in (3174,7371);
+ */
+
+select 
+	CASE WHEN r1."Provinsi" is null then 'Unknown' else r1."Provinsi" end as "Provinsi", 
+	CASE WHEN r1."Kabupaten" is null then 'Unknown' else r1."Kabupaten" end as "Kabupaten", -- r1."Period",
+	sum(CASE WHEN r1."Period" = 'week1 27 NOV-03 DEC 2023' THEN r1."Purchase Cost" else 0 end) AS "Week1 27 NOV-03 DEC 2023",
+	sum(CASE WHEN r1."Period" = 'week2 04-10 DEC 2023' THEN r1."Purchase Cost" else 0 end) AS "Week2 04-10 DEC 2023",
+	sum(CASE WHEN r1."Period" = 'week3 11-17 DEC 2023' THEN r1."Purchase Cost" else 0 end) AS "Week3 11-17 DEC 2023",
+	sum(CASE WHEN r1."Period" = 'week4 18-24 DEC 2023' THEN r1."Purchase Cost" else 0 end) AS "Week4 18-24 DEC 2023",
+	sum(CASE WHEN r1."Period" = 'week5 25-01 JAN 2024' THEN r1."Purchase Cost" else 0 end) AS "Week5 25-01 JAN 2024"
+--	r1."Purchase Cost", r1."Shipping Cost", r1."BV", r1."PV", r1."RV"
+from (
+		(
+			select 
+				'week1 27 NOV-03 DEC 2023' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+			--	join memberships m2 on m.owner = m2.owner and m.owner = m.uid
+	--			left outer join users u on m.username = u.username 
+				left outer join stock_packs sp on t.pickup_stock_pack = sp.code
+				left outer join alamat_provinsi ap on sp.province::int =ap.id  
+				left outer join alamat_kabupaten ak on sp.district::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 1 -- PICKUP PUC/MPU
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2023-11-27' and '2023-12-03'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+					
+			union all
+			
+			select -- t.code_trans, 
+				'week1 27 NOV-03 DEC 2023' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+				left outer join alamat_provinsi ap on t.shipping_province::int =ap.id  
+				left outer join alamat_kabupaten ak on t.shipping_city::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 2 -- SENT to ADDRESS
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2023-11-27' and '2023-12-03'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+		)
+		
+		union all
+		
+		(
+			select 
+				'week2 04-10 DEC 2023' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+			--	join memberships m2 on m.owner = m2.owner and m.owner = m.uid
+	--			left outer join users u on m.username = u.username 
+				left outer join stock_packs sp on t.pickup_stock_pack = sp.code
+				left outer join alamat_provinsi ap on sp.province::int =ap.id  
+				left outer join alamat_kabupaten ak on sp.district::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 1 -- PICKUP PUC/MPU
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2023-12-04' and '2023-12-10'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+					
+			union all
+			
+			select -- t.code_trans, 
+				'week2 04-10 DEC 2023' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+				left outer join alamat_provinsi ap on t.shipping_province::int =ap.id  
+				left outer join alamat_kabupaten ak on t.shipping_city::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 2 -- SENT to ADDRESS
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2023-12-04' and '2023-12-10'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+		)
+		
+		union all
+		
+		(
+			select 
+				'week3 11-17 DEC 2023' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+			--	join memberships m2 on m.owner = m2.owner and m.owner = m.uid
+	--			left outer join users u on m.username = u.username 
+				left outer join stock_packs sp on t.pickup_stock_pack = sp.code
+				left outer join alamat_provinsi ap on sp.province::int =ap.id  
+				left outer join alamat_kabupaten ak on sp.district::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 1 -- PICKUP PUC/MPU
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2023-12-11' and '2023-12-17'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+					
+			union all
+			
+			select -- t.code_trans, 
+				'week3 11-17 DEC 2023' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+				left outer join alamat_provinsi ap on t.shipping_province::int =ap.id  
+				left outer join alamat_kabupaten ak on t.shipping_city::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 2 -- SENT to ADDRESS
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2023-12-11' and '2023-12-17'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+		)
+		
+		union all
+		
+		(
+			select 
+				'week4 18-24 DEC 2023' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+			--	join memberships m2 on m.owner = m2.owner and m.owner = m.uid
+	--			left outer join users u on m.username = u.username 
+				left outer join stock_packs sp on t.pickup_stock_pack = sp.code
+				left outer join alamat_provinsi ap on sp.province::int =ap.id  
+				left outer join alamat_kabupaten ak on sp.district::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 1 -- PICKUP PUC/MPU
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2023-12-18' and '2023-12-24'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+					
+			union all
+			
+			select -- t.code_trans, 
+				'week4 18-24 DEC 2023' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+				left outer join alamat_provinsi ap on t.shipping_province::int =ap.id  
+				left outer join alamat_kabupaten ak on t.shipping_city::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 2 -- SENT to ADDRESS
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2023-12-18' and '2023-12-24'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+		)
+		
+		union all
+		
+		(
+			select 
+				'week5 25-01 JAN 2024' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+			--	join memberships m2 on m.owner = m2.owner and m.owner = m.uid
+	--			left outer join users u on m.username = u.username 
+				left outer join stock_packs sp on t.pickup_stock_pack = sp.code
+				left outer join alamat_provinsi ap on sp.province::int =ap.id  
+				left outer join alamat_kabupaten ak on sp.district::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 1 -- PICKUP PUC/MPU
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2023-12-25' and '2024-01-01'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+					
+			union all
+			
+			select -- t.code_trans, 
+				'week5 25-01 JAN 2024' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+				left outer join alamat_provinsi ap on t.shipping_province::int =ap.id  
+				left outer join alamat_kabupaten ak on t.shipping_city::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 2 -- SENT to ADDRESS
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2023-12-25' and '2024-01-01'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+		)
+	) r1
+group by r1."Provinsi", r1."Kabupaten" --, r1."Period"
+--ROLLUP (r1."Provinsi", r1."Kabupaten")
+order by r1."Provinsi", r1."Kabupaten"
+;	
+
+
+/* 
+ * ===============================================================================================================================================================
+ * END OMZET BERDASARKAN TUJUAN PENGIRIMAN WEEKLY
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+select * from week_periodes wp order by "eDate" desc;
+
+
+select id, transaction_date, purchase_cost, bv_total, pv_total, rv_total,
+	   case 
+	   	when 
+	   end
+	   
+from "transaction" t 
+where transaction_date between (select min (wp."sDate") from week_periodes wp where wp."name" like '23.12.%')
+	and (select min (wp."eDate") from week_periodes wp where wp."name" like '23.12.%')
+order by transaction_date ;
+
+
+select * from alamat_provinsi ap where id = 51;
+
+
+
+select --transaction_date, 
+		wp."name", wp."sDate", wp."eDate", 
+		INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+--		ap.id, ak.id,
+		sum(purchase_cost) as purchase_cost, sum(bv_total) as bv_total, sum(pv_total) as pv_total, sum(rv_total) as rv_total,
+		(
+			select count(*)
+			from users u 
+			where u.flag = 1 and (u.activated_at::date between wp."sDate" and wp."eDate") and u.deleted_at is null
+				 and u.provinsi::int = ap.id and u.kota_kabupaten::int = ak.id
+		) as "total_member"
+from 	"transaction" t 
+	  	left outer join week_periodes wp on (transaction_date >= wp."sDate" and transaction_date <= wp."eDate") 
+		left outer join stock_packs sp on t.pickup_stock_pack = sp.code
+		left outer join alamat_provinsi ap on sp.province::int =ap.id 
+		left outer join alamat_kabupaten ak on sp.district::int = ak.id
+where wp."name" like '23.11.%' or wp."name" like '23.12.%'
+		and t.deleted_at is null
+		and t.is_pickup = 1 -- PICKUP PUC/MPU
+		and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+		
+--		and t.transaction_date::date between '2023-11-27' and '2023-12-03'
+group by --transaction_date, 
+	wp."sDate", wp."eDate", wp."name"
+--	to_char(t.transaction_date, 'YYYY-MM'), 
+	,ap.provinsi, ak.kabupaten --t.code_trans,
+	,ap.id, ak.id
+order by wp."name" 
+--transaction_date 
+;
+
+
+
+
+select count(*) --u.activated_at::date, wp."sDate", wp."eDate", wp,"name"
+	   , u.flag, u.provinsi, kota_kabupaten 
+from users u 
+	join week_periodes wp on (u.activated_at::date >= wp."sDate" and u.activated_at::date <= wp."eDate")
+where wp."name" like '23.12.%' and u.deleted_at is null and u.activated_at::date is not null
+group by u.flag, u.provinsi, kota_kabupaten  ;
+
+/* 
+ * ===============================================================================================================================================================
+ * START OMZET BERDASARKAN TUJUAN PENGIRIMAN WEEKLY TUTUP POINT
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
  */
 
 select 
@@ -475,9 +784,14 @@ order by r1."Provinsi", r1."Kabupaten"
 
 /* 
  * ===============================================================================================================================================================
- * END OMZET BERDASARKAN TUJUAN PENGIRIMAN WEEKLY
+ * END OMZET BERDASARKAN TUJUAN PENGIRIMAN WEEKLY TUTUP POINT
  * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
  */
+
+
+
+
+
 
 
 select 

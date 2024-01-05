@@ -2,7 +2,7 @@
 	Note : 
 	Kode produk :
 	Joypolinse : 3,254,325, 695, 746, 822, 923, 996, 1064, 1148, 1205, 1263, 1335
-	Joymunemax : 4,255,326,457,459,461,463, 747, 823
+	Joymunemax : ;4,255,326,457,459,461,463, 747, 823
 	Joycell : 119,266,332, 751, 830, 929, 1002,1070, 1154, 1211, 1279, 1341
 	Joyrazero : 104, 256, 327, 749, 824, 924, 997, 1065, 1150, 1206, 1274, 1337
 	Lae Erica : 95, 260, 329, 399, 806, 826, 926, 999, 1068, 1151, 1208, 1276, 1340
@@ -33,7 +33,7 @@ from barang_detail bd
 					from barang_detail bd 
 --					where bd.id_barang_fk in (3,254,325, 695, 746, 822, 923, 996, 1064, 1148, 1205, 1263, 1335)
 				) 
-				and t.transaction_date BETWEEN '2023-10-26' and '2023-11-30'
+				and t.transaction_date BETWEEN '2023-12-01' and '2023-12-27'
 --				'2023-08-31' and '2023-09-27'  -- (kamis pertama di bulan berjalan sampai rabu terakhir di bulan selanjutnya)
 				and t.deleted_at is null and t.transaction_date is not null
 			GROUP BY td."id_barang_fk",td."name"
