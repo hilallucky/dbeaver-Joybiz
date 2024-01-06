@@ -34,8 +34,8 @@ from memberships m
 where 
 --username ilike 'marian01%' or 
 --	jbid in ('23105493586')
-username ilike 'muthia0412461%' 
-	or owner ='ba74ed9c-9f96-4a1b-aeaf-4acb0c283337'
+username ilike 'dewire2712951%' 
+	or owner ='b26b0018-4339-4199-874b-ba8c3e05d011'
 --where m."left" is null and m."right" is null
 order by id;
 
@@ -47,7 +47,7 @@ order by id;
 DO $$ 
 DECLARE
 	row_id integer;
-    xusername text := 'muthia0412461';
+    xusername text := 'dewire2712951';
     xowner text;
     add_username text := '-delete';
 
@@ -65,11 +65,11 @@ DECLARE
 		);
 	
 	
-	--UPDATE HU 1 left & right
-	update memberships 
-	set "left" = case when (select position('-delete' in m2.username) from memberships m2 where m2.jbid = memberships."left") > 0 then null else memberships."left" end,
-		"right" = case when (select position('-delete' in m2.username) from memberships m2 where m2.jbid = memberships."right") > 0 then null else memberships."right" end
-	where username = 'pardi3012521';
+--	UPDATE HU 1 left & right
+--	update memberships 
+--	set "left" = case when (select position('-delete' in m2.username) from memberships m2 where m2.jbid = memberships."left") > 0 then null else memberships."left" end,
+--		"right" = case when (select position('-delete' in m2.username) from memberships m2 where m2.jbid = memberships."right") > 0 then null else memberships."right" end
+--	where username = 'pardi3012521';
 
 END $$;
 

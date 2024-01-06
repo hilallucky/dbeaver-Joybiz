@@ -343,9 +343,10 @@ select ID,nama,  username, email, handphone, alamat, kelurahan, kecamatan, kota_
 	id_bank_fk, bank_name, bank_acc_num, bank_acc_name, created_at, activated_at 
 from users u 
 where 
-	username in ('muthia0412461','zalimi0301211') -- or 
+	username in ('dewire2712951','suryat111247') -- or 
 --	username ilike 'zalimi0301211' -- or username ilike 'andang0812121%' or username ilike 'budisa0812841%'; 
 --	 email in ('atisanti77@gmail.com','daraesanr@gmail.com','yanakayaraya@gmail.com','iamulyaningsih262@gmail.com','agusmpasya@gmail.com');
+;
 
 select * 
 from users u  
@@ -369,7 +370,7 @@ where
 --	username ilike'esters0412451%' -- or username  = 'liamul0112761'
 --	or 
 --	username in ('esters0412451','effend0412251','daniel0412291','afriya0412581') -- or jbid = 23105527852
-	username in ('muthia0412461','zalimi0301211') 
+	username in ('dewire2712951','suryat111247') 
 --	or jbid in (23115572236)
 order by id, username, id ;
 --
@@ -781,6 +782,16 @@ from joy_bonus_summaries jbs
 where wid = 314
 	and "owner" in ( '38d2d0af-14bd-4f38-bd44-5e708dac8026')
 order by "owner", total ; 
+
+
+-- HAPUS SHHIPING COST
+select code_trans,shipping_cost
+from "transaction" t 
+where code_trans in ('UTXFNP', 'NFNECR', '9VSGHI', 'IVX4O1');
+
+update "transaction" 
+set shipping_cost = 0
+where code_trans in ('UTXFNP', 'NFNECR', '9VSGHI', 'IVX4O1');
 
 
 
