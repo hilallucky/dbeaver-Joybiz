@@ -343,7 +343,7 @@ select ID,nama,  username, email, handphone, alamat, kelurahan, kecamatan, kota_
 	id_bank_fk, bank_name, bank_acc_num, bank_acc_name, created_at, activated_at 
 from users u 
 where 
-	username in ('dewire2712951','suryat111247') -- or 
+	username in ('mellag0501311') -- or 
 --	username ilike 'zalimi0301211' -- or username ilike 'andang0812121%' or username ilike 'budisa0812841%'; 
 --	 email in ('atisanti77@gmail.com','daraesanr@gmail.com','yanakayaraya@gmail.com','iamulyaningsih262@gmail.com','agusmpasya@gmail.com');
 ;
@@ -370,7 +370,7 @@ where
 --	username ilike'esters0412451%' -- or username  = 'liamul0112761'
 --	or 
 --	username in ('esters0412451','effend0412251','daniel0412291','afriya0412581') -- or jbid = 23105527852
-	username in ('dewire2712951','suryat111247') 
+	username in ('mellag0501311','lusian1112541') 
 --	or jbid in (23115572236)
 order by id, username, id ;
 --
@@ -762,26 +762,21 @@ select * from week_periodes wp ;
 
 select username, uid  
 from memberships m  
-where m.username in ( 'desi14047', 
- 'joy201741', 
- 'laodep160554', 
- 'mohammad171260', 
- 'mohammad171260', 
- 'mohammad171260', 
- 'mohammad171260', 
- 'mohammad171260');
+where m.username in ( 'joy201741');
 
 select "owner", wid, total, voucher, ppn, total_transfer 
 from bonus_weeklies bw 
 where wid = 314
 	and "owner" in ( '38d2d0af-14bd-4f38-bd44-5e708dac8026')
- order by "owner" 
+ order by id, "owner" 
 ;
 select * --"owner", wid, total, voucher, tax, transfer, year_end 
 from joy_bonus_summaries jbs 
 where wid = 314
 	and "owner" in ( '38d2d0af-14bd-4f38-bd44-5e708dac8026')
-order by "owner", total ; 
+	and deleted_at is null
+order by id, "owner", total ; 
+
 
 
 -- HAPUS SHHIPING COST
