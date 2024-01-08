@@ -465,7 +465,7 @@ select * from transaction_detail td where id_trans_fk =145268;
 
 select t.code_trans, status, is_pickup, shipping_name, shipping_phone, shipping_address,
 		shipping_city, shipping_province, shipping_village, shipping_district, shipping_cost 
-from "transaction" t where t.code_trans in ('BBE2P0','VSEWCP','5CZDBF','PAIH7Z','MW4LOC','VE2K3H','LXPXED') ;
+from "transaction" t where t.code_trans in ('2BKQG7') ;
 --select * from alamat_provinsi ap;
 select * from alamat_kabupaten ak2 where kabupaten ilike '%depok%'; ;--id in (3209, 3404);--
 select * from alamat_kecamatan ak where id_kabupaten in (3276);-- kecamatan ilike '%depok%';
@@ -622,8 +622,8 @@ select * from barang where nama ilike '%Joybizer (J31%'; --1063 R05J31	Joybizer 
 select * from transaction_detail td where id_trans_fk in (144756);
 
 
-select id, code_trans, deleted_at, transaction_date  from "transaction" t where code_trans in ('UBGBVN','GOGR5F');
-select * from transaction_detail td where id_trans_fk =145713;
+select id, code_trans, created_at, deleted_at, transaction_date  from "transaction" t where code_trans in ('J68PTY','WJULNN');
+select * from transaction_detail td where id_trans_fk in (145654, 145655);
 
 
 
