@@ -342,16 +342,17 @@ order by r1."Provinsi", r1."Kabupaten"
 select 
 	CASE WHEN r1."Provinsi" is null then 'Unknown' else r1."Provinsi" end as "Provinsi", 
 	CASE WHEN r1."Kabupaten" is null then 'Unknown' else r1."Kabupaten" end as "Kabupaten", -- r1."Period",
-	sum(CASE WHEN r1."Period" = 'week1 27 NOV-03 DEC 2023' THEN r1."Purchase Cost" else 0 end) AS "Week1 27 NOV-03 DEC 2023",
-	sum(CASE WHEN r1."Period" = 'week2 04-10 DEC 2023' THEN r1."Purchase Cost" else 0 end) AS "Week2 04-10 DEC 2023",
-	sum(CASE WHEN r1."Period" = 'week3 11-17 DEC 2023' THEN r1."Purchase Cost" else 0 end) AS "Week3 11-17 DEC 2023",
-	sum(CASE WHEN r1."Period" = 'week4 18-24 DEC 2023' THEN r1."Purchase Cost" else 0 end) AS "Week4 18-24 DEC 2023",
-	sum(CASE WHEN r1."Period" = 'week5 25-01 JAN 2024' THEN r1."Purchase Cost" else 0 end) AS "Week5 25-01 JAN 2024"
+	sum(CASE WHEN r1."Period" = '25-31 JAN 2024' THEN r1."Purchase Cost" else 0 end) AS "25-31 JAN 2024",
+	sum(CASE WHEN r1."Period" = '01-07 JAN 2024' THEN r1."Purchase Cost" else 0 end) AS "01-07 JAN 2024",
+	sum(CASE WHEN r1."Period" = '08-14 JAN 2024' THEN r1."Purchase Cost" else 0 end) AS "08-14 JAN 2024",
+	sum(CASE WHEN r1."Period" = '15-21 JAN 2024' THEN r1."Purchase Cost" else 0 end) AS "15-21 JAN 2024",
+	sum(CASE WHEN r1."Period" = '22-28 JAN 2024' THEN r1."Purchase Cost" else 0 end) AS "22-28 JAN 2024",
+	sum(CASE WHEN r1."Period" = '29-04 FEB 2024' THEN r1."Purchase Cost" else 0 end) AS "29-04 FEB 2024"
 --	r1."Purchase Cost", r1."Shipping Cost", r1."BV", r1."PV", r1."RV"
 from (
 		(
 			select 
-				'week1 27 NOV-03 DEC 2023' as "Period",
+				'25-31 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -367,13 +368,13 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 1 -- PICKUP PUC/MPU
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-11-27' and '2023-12-03'
+				and t.transaction_date::date between '2023-12-25' and '2023-12-31'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 					
 			union all
 			
 			select -- t.code_trans, 
-				'week1 27 NOV-03 DEC 2023' as "Period",
+				'week5 25-31 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -386,7 +387,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 2 -- SENT to ADDRESS
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-11-27' and '2023-12-03'
+				and t.transaction_date::date between '2023-12-25' and '2023-12-31'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		)
 		
@@ -394,7 +395,7 @@ from (
 		
 		(
 			select 
-				'week2 04-10 DEC 2023' as "Period",
+				'01-07 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -410,13 +411,13 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 1 -- PICKUP PUC/MPU
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-04' and '2023-12-10'
+				and t.transaction_date::date between '2024-01-01' and '2024-01-07'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 					
 			union all
 			
 			select -- t.code_trans, 
-				'week2 04-10 DEC 2023' as "Period",
+				'01-07 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -429,7 +430,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 2 -- SENT to ADDRESS
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-04' and '2023-12-10'
+				and t.transaction_date::date between '2024-01-01' and '2024-01-07'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		)
 		
@@ -437,7 +438,7 @@ from (
 		
 		(
 			select 
-				'week3 11-17 DEC 2023' as "Period",
+				'08-14 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -453,13 +454,13 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 1 -- PICKUP PUC/MPU
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-11' and '2023-12-17'
+				and t.transaction_date::date between '2024-01-08' and '2024-01-14'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 					
 			union all
 			
 			select -- t.code_trans, 
-				'week3 11-17 DEC 2023' as "Period",
+				'08-14 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -472,7 +473,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 2 -- SENT to ADDRESS
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-11' and '2023-12-17'
+				and t.transaction_date::date between '2024-01-08' and '2024-01-14'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		)
 		
@@ -480,7 +481,7 @@ from (
 		
 		(
 			select 
-				'week4 18-24 DEC 2023' as "Period",
+				'15-21 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -496,13 +497,13 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 1 -- PICKUP PUC/MPU
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-18' and '2023-12-24'
+				and t.transaction_date::date between '2024-01-15' and '2024-01-21'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 					
 			union all
 			
 			select -- t.code_trans, 
-				'week4 18-24 DEC 2023' as "Period",
+				'15-21 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -515,7 +516,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 2 -- SENT to ADDRESS
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-18' and '2023-12-24'
+				and t.transaction_date::date between '2024-01-15' and '2024-01-21'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		)
 		
@@ -523,7 +524,7 @@ from (
 		
 		(
 			select 
-				'week5 25-01 JAN 2024' as "Period",
+				'22-28 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -539,13 +540,13 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 1 -- PICKUP PUC/MPU
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-25' and '2024-01-01'
+				and t.transaction_date::date between '2024-01-22' and '2024-01-28'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 					
 			union all
 			
 			select -- t.code_trans, 
-				'week5 25-01 JAN 2024' as "Period",
+				'22-28 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -558,7 +559,50 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 2 -- SENT to ADDRESS
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-25' and '2024-01-01'
+				and t.transaction_date::date between '2024-01-22' and '2024-01-28'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+		)
+		
+		union all
+		
+		(
+			select 
+				'29-04 FEB 2024' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+			--	join memberships m2 on m.owner = m2.owner and m.owner = m.uid
+	--			left outer join users u on m.username = u.username 
+				left outer join stock_packs sp on t.pickup_stock_pack = sp.code
+				left outer join alamat_provinsi ap on sp.province::int =ap.id  
+				left outer join alamat_kabupaten ak on sp.district::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 1 -- PICKUP PUC/MPU
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2024-01-29' and '2024-02-04'
+			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
+					
+			union all
+			
+			select -- t.code_trans, 
+				'29-04 FEB 2024' as "Period",
+				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
+				sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+			from "transaction" t 
+				left outer join memberships m on (t.id_cust_fk = m.jbid)
+				left outer join alamat_provinsi ap on t.shipping_province::int =ap.id  
+				left outer join alamat_kabupaten ak on t.shipping_city::int = ak.id
+			where 
+				t.deleted_at is null
+				and t.is_pickup = 2 -- SENT to ADDRESS
+				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+				and t.transaction_date::date between '2024-01-29' and '2024-02-04'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		)
 	) r1
@@ -644,14 +688,14 @@ group by u.flag, u.provinsi, kota_kabupaten  ;
 select 
 	CASE WHEN r1."Provinsi" is null then 'Unknown' else r1."Provinsi" end as "Provinsi", 
 	CASE WHEN r1."Kabupaten" is null then 'Unknown' else r1."Kabupaten" end as "Kabupaten", -- r1."Period",
-	sum(CASE WHEN r1."Period" = 'week1 27 NOV-03 DEC 2023' THEN r1."Purchase Cost" else 0 end) AS "Week1 27 NOV-03 DEC 2023",
-	sum(CASE WHEN r1."Period" = 'week2 04-10 DEC 2023' THEN r1."Purchase Cost" else 0 end) AS "Week2 04-10 DEC 2023",
-	sum(CASE WHEN r1."Period" = 'week3 11-17 DEC 2023' THEN r1."Purchase Cost" else 0 end) AS "Week3 11-17 DEC 2023"
+	sum(CASE WHEN r1."Period" = 'week1 27 NOV-03 JAN 2024' THEN r1."Purchase Cost" else 0 end) AS "Week1 27 NOV-03 JAN 2024",
+	sum(CASE WHEN r1."Period" = 'week2 04-10 JAN 2024' THEN r1."Purchase Cost" else 0 end) AS "Week2 04-10 JAN 2024",
+	sum(CASE WHEN r1."Period" = 'week3 11-17 JAN 2024' THEN r1."Purchase Cost" else 0 end) AS "Week3 11-17 JAN 2024"
 --	r1."Purchase Cost", r1."Shipping Cost", r1."BV", r1."PV", r1."RV"
 from (
 		(
 			select 
-				'week1 27 NOV-03 DEC 2023' as "Period",
+				'week1 27 NOV-03 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -673,7 +717,7 @@ from (
 			union all
 			
 			select -- t.code_trans, 
-				'week1 27 NOV-03 DEC 2023' as "Period",
+				'week1 27 NOV-03 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -694,7 +738,7 @@ from (
 		
 		(
 			select 
-				'week2 04-10 DEC 2023' as "Period",
+				'week2 04-10 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -716,7 +760,7 @@ from (
 			union all
 			
 			select -- t.code_trans, 
-				'week2 04-10 DEC 2023' as "Period",
+				'week2 04-10 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -737,7 +781,7 @@ from (
 		
 		(
 			select 
-				'week3 11-17 DEC 2023' as "Period",
+				'week3 11-17 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
@@ -759,7 +803,7 @@ from (
 			union all
 			
 			select -- t.code_trans, 
-				'week3 11-17 DEC 2023' as "Period",
+				'week3 11-17 JAN 2024' as "Period",
 				INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
 				sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
 			--	sum(t.subsidi_shipping) as "Shipping Subsidy", sum(t.gross_shipping) as "Shipping Gross",
