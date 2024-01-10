@@ -337,4 +337,7 @@ select * from memberships m where username = 'muarif180323';
 
 
 
-select * from 
+select * from "transaction" t where transaction_date is not null order by transaction_date desc;
+
+
+

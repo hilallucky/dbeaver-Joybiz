@@ -226,7 +226,7 @@ WITH RECURSIVE upline_cte AS (
     	join users u1 on m1.username = u1.username
     	-- left outer join memberships mup1 on mup1.jbid = m1.upid
     	-- left outer join users sup1 on mup1.username = sup1.nama
-    WHERE lower(u1.username) ilike 'humaidi%' -- in ('humaidi0908411')
+    WHERE lower(u1.username) ilike 'dessyn040231%' -- in ('humaidi0908411')
     UNION
     SELECT 	m2.id, m2.username, m2.jbid, u2.nama, 
 		    m2.spid, 
@@ -258,7 +258,7 @@ WITH RECURSIVE upline_cte AS (
     FROM memberships m1
     	join users u1 on m1.username = u1.username
     	join transaction t1 on t1.id_cust_fk = m1.jbid 
-    WHERE lower(u1.username) in ('humaidi0908411')
+    WHERE lower(u1.username) in ('dessyn040231')
 		and t1.transaction_date is not null
     UNION
     SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid, u2.nama, t2.transaction_date, t2.bv_total
@@ -289,13 +289,13 @@ SELECT
 FROM memberships ms
 	join users u on u.username = ms.username 
 	JOIN sranks sr ON ms.jbid = sr.jbid
-WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('muhamm2003691'))
+WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('runa1007761'))
 	--22115186779 --= 23075375780 --nama ilike '%qurrotun%'
 	 AND sr.srank >= 1 
 --	and AGE(now(), ms.activated_at) < INTERVAL '3 months' 
 	 or lower(ms.username) -- ILIKE ANY(ARRAY[
 	 in (
-	 lower('muhamm2003691')
+	 lower('runa1007761')
 )
 --	])
 ORDER BY case 
@@ -304,7 +304,7 @@ ORDER BY case
 		end ,
 	ms.jbid, sr.srank, ms.activated_at desc;
 
-select 5500*1500
+--select 5500*1500
 
 SELECT now(), '2023-01-06', AGE(now(), '2023-01-06 00:00:00') as "ages", 
 case 
@@ -358,19 +358,22 @@ order by id ;
 
 select u.username, u.nama, u.activated_at::date
 from users u 
-where u.username in ('muksin3012511',
-'indrak29117013'
+where u.username in ('zairin1610241',
+'karint0212601'
 );
+
+
+select username, jbid, spid, upid, "left", "right" , "owner" ,created_at, activated_at, status,flag, deleted_at from memberships m where jbid is null and deleted_at is null order by created_at desc;
 
 select username, jbid, spid, upid, "left", "right" , "owner" ,created_at, activated_at, status,flag, deleted_at 
 from memberships m 
 where 
---	username ilike 'kari0512711' -- or username ilike 'dewire2206881%' or username ilike 'andang2508341%' -- old
+--	username ilike 'suliha0901171%' -- or username ilike 'dewire2206881%' or username ilike 'andang2508341%' -- old
 --	username ilike 'Surian0712541' --or username ilike 'andang0812121%' or username ilike 'budisa0812841%' -- new
 --	username ilike'esters0412451%' -- or username  = 'liamul0112761'
 --	or 
 --	username in ('esters0412451','effend0412251','daniel0412291','afriya0412581') -- or jbid = 23105527852
-	username in ('mellag0501311','lusian1112541') 
+	username in ('zairin1610241','karint0212601','safari0401531') 
 --	or jbid in (23115572236)
 order by id, username, id ;
 --
@@ -391,7 +394,7 @@ select * from memberships m  where username in ('dewire08122112','dewire08122113
 
 select jbid, spid, upid, appv, srank, created_at, updated_at  
 from sranks s 
-where  jbid in (23125575615,24015613640
+where  jbid in (23105510630,23125573989
 ) 
 order by jbid ;
 
@@ -788,5 +791,17 @@ update "transaction"
 set shipping_cost = 0
 where code_trans in ('UTXFNP', 'NFNECR', '9VSGHI', 'IVX4O1');
 
+
+
+
+select *
+from users u 
+where username in ('junaid300125','anyand210962','pradip0411151');
+
+select * from users u where nama ilike '%fer% arifin%';
+
+select * from users u where alamat ilike lower('%KUANTAN REGENCY NOGOTIRTO NO. D1 JL. NOGOSAREN BARU%')
+
+select * from "transaction" t where id_cust_fk in (28066);
 
 
