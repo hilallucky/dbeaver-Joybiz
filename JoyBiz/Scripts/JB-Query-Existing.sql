@@ -476,7 +476,7 @@ select * from alamat_kelurahan ak where id_kecamatan = 3276050; -- kelurahan ili
 
 -- UBAH NO REKENING
 select * from memberships m where username ='desriy2803141';
-select id, username, nama, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  from users u where username ilike 'desriy2803141'; -- in ('desry2803141');
+select id, username, nama, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  from users u where username ilike 'didhin0610591'; -- in ('desry2803141');
 select * from bank b;
 
 -- Tarik data transaksi
