@@ -34,8 +34,8 @@ from memberships m
 where 
 --username ilike 'marian01%' or 
 --	jbid in ('23105493586')
-username ilike 'dewire2712951%' 
-	or owner ='b26b0018-4339-4199-874b-ba8c3e05d011'
+username ilike 'distan2110601%' 
+	or owner ='6baf31b2-8056-4077-8024-479df18317b5'
 --where m."left" is null and m."right" is null
 order by id;
 
@@ -47,7 +47,7 @@ order by id;
 DO $$ 
 DECLARE
 	row_id integer;
-    xusername text := 'dewire2712951';
+    xusername text := 'distan2110601';
     xowner text;
     add_username text := '-delete';
 

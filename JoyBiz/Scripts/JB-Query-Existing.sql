@@ -463,8 +463,8 @@ select * from users u where username ='karint0212601';
 
 -- UBAH EXPEDISI
 --  4 untuk JNE dan 7 untuk TIKI
-select id, code_trans, transaction_date, courier, deleted_at, status from "transaction" t where code_trans in ('1WM4UF');
-select * from transaction_detail td where id_trans_fk =145268;
+select id, code_trans, transaction_date, courier, deleted_at, status from "transaction" t where code_trans in ('5U1GLV');
+select * from transaction_detail td where id_trans_fk =145757;
 
 select t.code_trans, status, is_pickup, shipping_name, shipping_phone, shipping_address,
 		shipping_city, shipping_province, shipping_village, shipping_district, shipping_cost 
@@ -476,7 +476,7 @@ select * from alamat_kelurahan ak where id_kecamatan = 3276050; -- kelurahan ili
 
 -- UBAH NO REKENING
 select * from memberships m where username ='desriy2803141';
-select id, username, nama, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  from users u where username ilike 'didhin0610591'; -- in ('desry2803141');
+select id, username, nama, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  from users u where username ilike 'yulian1309651'; -- in ('desry2803141');
 select * from bank b;
 
 -- Tarik data transaksi
@@ -528,8 +528,8 @@ select code_trans, status, is_pickup, pickup_stock_pack  from "transaction" t wh
 
 -- UBAH NO HP PENGIRIMAN
 select * from users u where username ='mambau1211961';
-select * from "transaction" t where code_trans = 'ZVSA4H';
-select * from transaction_detail td where id_trans_fk = '144376';
+select * from "transaction" t where code_trans = '0DFPXA';
+select * from transaction_detail td where id_trans_fk = '144918';
 select * from tra td where id_trans_fk = '144376';
 
 -- CHECK TRANSAKSI MEMBER
@@ -640,7 +640,7 @@ FROM "transaction" tr
 	JOIN transaction_detail td ON tr."id" = td.id_trans_fk
 	JOIN memberships ms ON tr.id_cust_fk = ms.jbid
 WHERE td.id_barang_fk IN(1625) 
-	AND tr.transaction_date BETWEEN '2022-03-01' AND '2024-01-02' 
+	AND tr.transaction_date BETWEEN '2022-03-01' AND now()::date
 	AND tr.transaction_date IS NOT NULL 
 	AND tr.deleted_at IS NULL
 ORDER BY tr.transaction_date;
