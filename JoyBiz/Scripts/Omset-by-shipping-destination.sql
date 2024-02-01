@@ -62,7 +62,7 @@ from (
 							)
 			and t.deleted_at is null
 			and t.status in('PC', 'S', 'A', 'I') -- PAID
-			and t.transaction_date::date between '2022-12-01' and '2023-11-30'
+			and t.transaction_date::date between '2022-12-01' and '2024-11-30'
 		group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten
 		order by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten
 	) r1
@@ -96,7 +96,7 @@ from (
 							)
 --			and t.deleted_at is null
 			and t.status in('PC', 'S', 'A', 'I') -- PAID
---			and t.transaction_date::date between '2022-12-01' and '2023-11-30'
+--			and t.transaction_date::date between '2022-12-01' and '2024-11-30'
 		group by m.username, u.nama, to_char(t.transaction_date, 'YYYY-MM'), to_char(t.created_at, 'YYYY-MM')
 		order by m.username, u.nama, to_char(t.transaction_date, 'YYYY-MM')
 	) r1
@@ -132,17 +132,17 @@ from "transaction" t
 	left outer join users u on m."owner" = u.uid
 	left outer join alamat_provinsi ap on u.provinsi::int =ap.id  
 	left outer join alamat_kabupaten ak on u.kota_kabupaten::int = ak.id
-where to_char(t.transaction_date, 'YYYY-MM') = '2023-09'
+where to_char(t.transaction_date, 'YYYY-MM') = '2024-09'
 	and t.deleted_at is null
 	and t.status in('PC', 'S', 'A') --, 'I') -- PAID
---t.transaction_date::date between '2023-08-01' and '2023-11-30'
+--t.transaction_date::date between '2024-08-01' and '2024-11-30'
 ;
 
 select r1."Provinsi", r1."Kabupaten", -- r1."Period",
-	sum(CASE WHEN r1."Period" = '2023-08' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-08",
-	sum(CASE WHEN r1."Period" = '2023-09' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-09",
-	sum(CASE WHEN r1."Period" = '2023-10' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-10",
-	sum(CASE WHEN r1."Period" = '2023-11' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-11"
+	sum(CASE WHEN r1."Period" = '2024-08' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-08",
+	sum(CASE WHEN r1."Period" = '2024-09' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-09",
+	sum(CASE WHEN r1."Period" = '2024-10' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-10",
+	sum(CASE WHEN r1."Period" = '2024-11' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-11"
 --	r1."Purchase Cost", r1."Shipping Cost", r1."BV", r1."PV", r1."RV"
 from (
 		select 
@@ -163,7 +163,7 @@ from (
 		--	and 
 			t.deleted_at is null
 --			and t.status in('PC', 'S', 'A', 'I') -- PAID
-			and t.transaction_date::date between '2023-08-01' and '2023-11-30'
+			and t.transaction_date::date between '2024-08-01' and '2024-11-30'
 		group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten
 		order by 
 				INITCAP(ap.provinsi), INITCAP(ak.kabupaten), 
@@ -207,10 +207,10 @@ SELECT pg_catalog.setval(pg_get_serial_sequence('memberships', 'id'), MAX(id)) F
 select 
 	CASE WHEN r1."Provinsi" is null then 'Unknown' else r1."Provinsi" end as "Provinsi", 
 	CASE WHEN r1."Kabupaten" is null then 'Unknown' else r1."Kabupaten" end as "Kabupaten", -- r1."Period",
-	sum(CASE WHEN r1."Period" = '2023-08' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-08",
-	sum(CASE WHEN r1."Period" = '2023-09' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-09",
-	sum(CASE WHEN r1."Period" = '2023-10' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-10",
-	sum(CASE WHEN r1."Period" = '2023-11' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-11"
+	sum(CASE WHEN r1."Period" = '2023-11' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-11",
+	sum(CASE WHEN r1."Period" = '2023-12' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-12",
+	sum(CASE WHEN r1."Period" = '2024-01' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-01",
+--	sum(CASE WHEN r1."Period" = '2024-11' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-11"
 --	r1."Purchase Cost", r1."Shipping Cost", r1."BV", r1."PV", r1."RV"
 from (
 		select -- t.code_trans, 
@@ -231,7 +231,7 @@ from (
 		--	and 
 			t.deleted_at is null
 			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-			and t.transaction_date::date between '2023-08-01' and '2023-12-10'
+			and t.transaction_date::date between '2023-11-01' and '2024-01-31'
 		group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		order by 
 				INITCAP(ap.provinsi), INITCAP(ak.kabupaten), 
@@ -261,18 +261,20 @@ group by r1."Provinsi", r1."Kabupaten" --, r1."Period"
 select 
 	CASE WHEN r1."Provinsi" is null then 'Unknown' else r1."Provinsi" end as "Provinsi", 
 	CASE WHEN r1."Kabupaten" is null then 'Unknown' else r1."Kabupaten" end as "Kabupaten", -- r1."Period",
-	sum(CASE WHEN r1."Period" = '2023-01' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-01",
-	sum(CASE WHEN r1."Period" = '2023-02' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-02",
-	sum(CASE WHEN r1."Period" = '2023-03' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-03",
-	sum(CASE WHEN r1."Period" = '2023-04' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-04",
-	sum(CASE WHEN r1."Period" = '2023-05' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-05",
-	sum(CASE WHEN r1."Period" = '2023-06' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-06",
-	sum(CASE WHEN r1."Period" = '2023-07' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-07",
-	sum(CASE WHEN r1."Period" = '2023-08' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-08",
-	sum(CASE WHEN r1."Period" = '2023-09' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-09",
-	sum(CASE WHEN r1."Period" = '2023-10' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-10",
 	sum(CASE WHEN r1."Period" = '2023-11' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-11",
-	sum(CASE WHEN r1."Period" = '2023-12' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-12"
+	sum(CASE WHEN r1."Period" = '2023-12' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-12",
+	sum(CASE WHEN r1."Period" = '2024-01' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-01" --,
+--	sum(CASE WHEN r1."Period" = '2024-02' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-02",
+--	sum(CASE WHEN r1."Period" = '2024-03' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-03",
+--	sum(CASE WHEN r1."Period" = '2024-04' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-04",
+--	sum(CASE WHEN r1."Period" = '2024-05' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-05",
+--	sum(CASE WHEN r1."Period" = '2024-06' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-06",
+--	sum(CASE WHEN r1."Period" = '2024-07' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-07",
+--	sum(CASE WHEN r1."Period" = '2024-08' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-08",
+--	sum(CASE WHEN r1."Period" = '2024-09' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-09",
+--	sum(CASE WHEN r1."Period" = '2024-10' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-10",
+--	sum(CASE WHEN r1."Period" = '2024-11' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-11",
+--	sum(CASE WHEN r1."Period" = '2024-12' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-12"
 --	r1."Purchase Cost", r1."Shipping Cost", r1."BV", r1."PV", r1."RV"
 from (
 		select -- t.code_trans, 
@@ -292,7 +294,7 @@ from (
 			t.deleted_at is null
 			and t.is_pickup = 1 -- PICKUP PUC/MPU
 			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-			and t.transaction_date::date between '2023-01-01' and '2023-12-31' -- now() --'2023-12-10'
+			and t.transaction_date::date between '2023-11-01' and '2024-12-31' -- now() --'2024-12-10'
 		group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 				
 		union all
@@ -311,7 +313,7 @@ from (
 			t.deleted_at is null
 			and t.is_pickup = 2 -- SENT to ADDRESS
 			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-			and t.transaction_date::date between '2023-01-01' and '2023-12-31' -- now() --'2023-12-10'
+			and t.transaction_date::date between '2023-11-01' and '2024-12-31' -- now() --'2024-12-10'
 		group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 	) r1
 group by r1."Provinsi", r1."Kabupaten" --, r1."Period"
@@ -368,7 +370,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 1 -- PICKUP PUC/MPU
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-25' and '2023-12-31'
+				and t.transaction_date::date between '2024-12-25' and '2024-12-31'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 					
 			union all
@@ -387,7 +389,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 2 -- SENT to ADDRESS
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-25' and '2023-12-31'
+				and t.transaction_date::date between '2024-12-25' and '2024-12-31'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		)
 		
@@ -659,7 +661,7 @@ where wp."name" like '23.11.%' or wp."name" like '23.12.%'
 		and t.is_pickup = 1 -- PICKUP PUC/MPU
 		and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
 		
---		and t.transaction_date::date between '2023-11-27' and '2023-12-03'
+--		and t.transaction_date::date between '2024-11-27' and '2024-12-03'
 group by --transaction_date, 
 	wp."sDate", wp."eDate", wp."name"
 --	to_char(t.transaction_date, 'YYYY-MM'), 
@@ -711,7 +713,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 1 -- PICKUP PUC/MPU
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-11-27' and '2023-12-03'
+				and t.transaction_date::date between '2024-11-27' and '2024-12-03'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 					
 			union all
@@ -730,7 +732,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 2 -- SENT to ADDRESS
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-11-27' and '2023-12-03'
+				and t.transaction_date::date between '2024-11-27' and '2024-12-03'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		)
 		
@@ -754,7 +756,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 1 -- PICKUP PUC/MPU
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-04' and '2023-12-10'
+				and t.transaction_date::date between '2024-12-04' and '2024-12-10'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 					
 			union all
@@ -773,7 +775,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 2 -- SENT to ADDRESS
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-04' and '2023-12-10'
+				and t.transaction_date::date between '2024-12-04' and '2024-12-10'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		)
 		
@@ -797,7 +799,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 1 -- PICKUP PUC/MPU
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-11' and '2023-12-17'
+				and t.transaction_date::date between '2024-12-11' and '2024-12-17'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 					
 			union all
@@ -816,7 +818,7 @@ from (
 				t.deleted_at is null
 				and t.is_pickup = 2 -- SENT to ADDRESS
 				and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-				and t.transaction_date::date between '2023-12-11' and '2023-12-17'
+				and t.transaction_date::date between '2024-12-11' and '2024-12-17'
 			group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		)
 	) r1
@@ -852,13 +854,13 @@ select 	current_date - extract(isodow from current_date)::integer-13 as Monday,
 	   	current_date - extract(isodow from current_date)::integer as Sunday
 	   ;
 
-select extract(day from TIMESTAMP '2023-12-04 00:00:00')::int / 7 + 1 as week_in_month;
+select extract(day from TIMESTAMP '2024-12-04 00:00:00')::int / 7 + 1 as week_in_month;
 
 SELECT t.d1::DATE
 FROM GENERATE_SERIES
      (
-       TIMESTAMP '2023-12-01',
-       TIMESTAMP '2023-12-19',
+       TIMESTAMP '2024-12-01',
+       TIMESTAMP '2024-12-19',
        INTERVAL  '7 DAY'
      ) AS t(d1);
     
@@ -866,7 +868,7 @@ FROM GENERATE_SERIES
     
 SELECT t.transaction_date , to_char(t.transaction_date, 'Day') as dayofweek 
 FROM "transaction" t 
-WHERE t.transaction_date  BETWEEN '2023-12-01' AND now()::date 
+WHERE t.transaction_date  BETWEEN '2024-12-01' AND now()::date 
 --	AND date_part('dow', t.transaction_date) in (5,0)
 order by t.transaction_date ;
     
@@ -879,7 +881,7 @@ order by t.transaction_date ;
 
 select CASE WHEN r1."Provinsi" = null then 'Unknown' else r1."Provinsi" end as "Provinsi", 
 	CASE WHEN r1."Kabupaten" = null then 'Unknown' else r1."Kabupaten" end as "Kabupaten", -- r1."Period",
-	sum(CASE WHEN r1."Period" = '2023-12' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-12"
+	sum(CASE WHEN r1."Period" = '2024-12' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-12"
 --	r1."Purchase Cost", r1."Shipping Cost", r1."BV", r1."PV", r1."RV"
 from (
 		select -- t.code_trans, 
@@ -900,7 +902,7 @@ from (
 		--	and 
 			t.deleted_at is null
 			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-			and t.transaction_date::date between '2023-12-04' and '2023-12-10'
+			and t.transaction_date::date between '2024-12-04' and '2024-12-10'
 		group by to_char(t.transaction_date, 'YYYY-MM'), ap.provinsi, ak.kabupaten --t.code_trans,
 		order by 
 				INITCAP(ap.provinsi), INITCAP(ak.kabupaten), 
@@ -926,14 +928,14 @@ group by r1."Provinsi", r1."Kabupaten" --, r1."Period"
  */
 
 select r1.username, r1.nama,
-	sum(CASE WHEN r1."Period" = '2023-05' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-05",
-	sum(CASE WHEN r1."Period" = '2023-06' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-06",
-	sum(CASE WHEN r1."Period" = '2023-07' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-07",
-	sum(CASE WHEN r1."Period" = '2023-08' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-08",
-	sum(CASE WHEN r1."Period" = '2023-09' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-09",
-	sum(CASE WHEN r1."Period" = '2023-10' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-10",
-	sum(CASE WHEN r1."Period" = '2023-11' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-11",
-	sum(CASE WHEN r1."Period" = '2023-12' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2023-12"
+	sum(CASE WHEN r1."Period" = '2024-05' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-05",
+	sum(CASE WHEN r1."Period" = '2024-06' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-06",
+	sum(CASE WHEN r1."Period" = '2024-07' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-07",
+	sum(CASE WHEN r1."Period" = '2024-08' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-08",
+	sum(CASE WHEN r1."Period" = '2024-09' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-09",
+	sum(CASE WHEN r1."Period" = '2024-10' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-10",
+	sum(CASE WHEN r1."Period" = '2024-11' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-11",
+	sum(CASE WHEN r1."Period" = '2024-12' THEN r1."Purchase Cost" else 0 end) AS "Purchase Cost 2024-12"
 --	r1."Purchase Cost", r1."Shipping Cost", r1."BV", r1."PV", r1."RV"
 from (
 		select -- t.code_trans, 
@@ -950,7 +952,7 @@ from (
 			m.spid = (select m3.jbid from memberships m3 where m3.username = 'indram0911961')
 			and t.deleted_at is null
 			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-			and to_char(t.transaction_date, 'YYYY-MM') between '2023-10' and '2023-12'
+			and to_char(t.transaction_date, 'YYYY-MM') between '2024-10' and '2024-12'
 		group by m.username, to_char(t.transaction_date, 'YYYY-MM'), u.nama
 		order by 
 				to_char(t.transaction_date, 'YYYY-MM'), m.username, u.nama
@@ -998,4 +1000,103 @@ select *
 from users u 
 where username in ('nurill2608961','bintan2608731','lusias0811781','lusias08117813','lusias08117812','asepsu19115913','asepsu1911591','asepsu19115912');
 */
+
+
+
+
+
+
+
+
+/* 
+ * ===============================================================================================================================================================
+ * START OMZET BERDASARKAN TUJUAN PENGIRIMAN MONTHLY -- MARKETING -- LELA
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	select * from "transaction" t where is_pickup = 1; 
+	select * from stock_packs sp ;
+	select * from alamat_kabupaten ak where id in (3174,7371);
+ */
+
+/*
+select 
+	CASE WHEN r1."Provinsi" is null then 'Unknown' else r1."Provinsi" end as "Provinsi", 
+	CASE WHEN r1."Kabupaten" is null then 'Unknown' else r1."Kabupaten" end as "Kabupaten",
+	r1."Period",
+	r1."Purchase Cost"
+from (
+		select 
+			to_char(t.transaction_date, 'YYYY-MM-DD') as "Period", 
+			INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+			sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+		from "transaction" t 
+			left outer join memberships m on (t.id_cust_fk = m.jbid)
+			left outer join stock_packs sp on t.pickup_stock_pack = sp.code
+			left outer join alamat_provinsi ap on sp.province::int =ap.id  
+			left outer join alamat_kabupaten ak on sp.district::int = ak.id
+		where 
+			t.deleted_at is null
+			and t.is_pickup = 1 -- PICKUP PUC/MPU
+			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+			and t.transaction_date::date between '2023-11-01' and '2024-12-31' -- now() --'2024-12-10'
+		group by to_char(t.transaction_date, 'YYYY-MM-DD'), ap.provinsi, ak.kabupaten --t.code_trans,
+				
+		union all
+		
+		select
+			to_char(t.transaction_date, 'YYYY-MM-DD') as "Period", 
+			INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+			sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+		from "transaction" t 
+			left outer join memberships m on (t.id_cust_fk = m.jbid)
+			left outer join alamat_provinsi ap on t.shipping_province::int =ap.id  
+			left outer join alamat_kabupaten ak on t.shipping_city::int = ak.id
+		where 
+			t.deleted_at is null
+			and t.is_pickup = 2 -- SENT to ADDRESS
+			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+			and t.transaction_date::date between '2023-11-01' and '2024-12-31' -- now() --'2024-12-10'
+		group by to_char(t.transaction_date, 'YYYY-MM-DD'), ap.provinsi, ak.kabupaten --t.code_trans,
+	) r1
+where r1."Kabupaten" ilike '%makassar%'
+--	  and (r1."Period" between '2024-05-22' and '2024-06-17')
+group by r1."Provinsi", r1."Kabupaten", r1."Period", 
+	r1."Purchase Cost"
+order by r1."Provinsi", r1."Kabupaten"
+;	
+*/
+
+
+
+select
+--	to_char(t.transaction_date, 'YYYY-MM-DD') as "Period", 
+	INITCAP(ap.provinsi) as "Provinsi", 
+	INITCAP(ak.kabupaten) as "Kabupaten",
+	sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost"
+from "transaction" t 
+	left outer join memberships m on (t.id_cust_fk = m.jbid)
+	left outer join alamat_provinsi ap on t.shipping_province::int =ap.id  
+	left outer join alamat_kabupaten ak on t.shipping_city::int = ak.id
+where 
+	t.deleted_at is null
+	and t.status in('PC', 'S', 'A', 'I') -- PAID
+	and t.transaction_date::date -- >= '2023-05-29' 
+		between '2023-11-20' 
+			and '2023-12-19' -- now() --'2024-12-10'
+	and ak.kabupaten ilike '%Makassar%'
+--		NOT ILIKE ALL(ARRAY['%Bombana%','%Baubau%','%Makassar%','%Palu%'])
+--	and ap.provinsi ilike '%Sulawesi%'
+group by 
+--	to_char(t.transaction_date, 'YYYY-MM-DD'), 
+	ap.provinsi, ak.kabupaten --t.code_trans,
+--order by to_char(t.transaction_date, 'YYYY-MM-DD') 
+;
+
+/* 
+ * ===============================================================================================================================================================
+ * END OMZET BERDASARKAN TUJUAN PENGIRIMAN MONTHLY -- MARKETING -- LELA
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
 

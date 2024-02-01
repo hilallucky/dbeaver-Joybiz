@@ -34,8 +34,10 @@ from memberships m
 where 
 --username ilike 'marian01%' or 
 --	jbid in ('23105493586')
-username ilike 'distan2110601%' 
-	or owner ='6baf31b2-8056-4077-8024-479df18317b5'
+username ilike 'annaas2201361' 
+--	or owner ='48057484-e096-4dc2-91f2-630850669e61'
+	or jbid in (24015633590,24015633590)
+	or "left" = 24015633344 or "right" = 24015633344
 --where m."left" is null and m."right" is null
 order by id;
 
@@ -47,7 +49,7 @@ order by id;
 DO $$ 
 DECLARE
 	row_id integer;
-    xusername text := 'distan2110601';
+    xusername text := 'henimi2201601';
     xowner text;
     add_username text := '-delete';
 
@@ -94,7 +96,7 @@ select username, jbid, spid, upid, "left", "right"
 from memberships m 
 where m.username in ('novaro1811921', 'aidils0710981');
 
-select * from sranks m where m.jbid  =23125599785;
+select * from sranks m where m.jbid in (23125605298,24015633344,24015633590);
 
 
 

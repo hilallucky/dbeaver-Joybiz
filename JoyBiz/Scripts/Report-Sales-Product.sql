@@ -43,3 +43,49 @@ where bd.id_barang_fk in (1294, 1347)
 ORDER BY bd.id_induk_fk asc;
 
 
+
+
+
+SELECT 
+	b.id, b.kode, b.nama --, 
+--	b.pv, b.pvx, b.bv, b.bvx, b.xv, b.rv, b.bv_sc, b.weight, b.cashback_reseller,   
+--	b.harga_1, b.harga_2, b.harga_3, 
+--	b.harga_retail_1, b.shipping_budget, 
+--	b.is_register, d.id, d.id_induk_fk,d.id_barang_fk, dbs.nama, d.qty, p."name"
+FROM barang b JOIN barang_detail d ON b.id = d.id_induk_fk
+JOIN barang dbs ON d.id_barang_fk = dbs.id
+LEFT JOIN products p ON d.product_code = p.code
+WHERE b.nama ilike '%j40%' or b.nama ilike '%j39%'
+group by b.id, b.kode, b.nama 
+ORDER BY b."id";
+
+
+
+select * from barang b where kode ilike 'RTS%';
+
+select 
+from 	"transaction" t 
+		inner join transaction_detail td on t.id  = td.id_trans_fk 
+where td.id_barang_fk in (1647,1648,1649);
+
+
+select -- td.id_barang_fk, 
+	td."name", 
+	td.sell_price,
+	sum(td.qty) as qty_order,
+	td.sell_price * sum(td.qty) as price_total,
+	td.pv,
+	td.pv * sum(td.qty) as pv_total,
+	td.bv,
+	td.bv * sum(td.qty) as bv_total,
+	td.rv,
+	td.rv * sum(td.qty) as rv_total
+from 	transaction_detail td 
+		inner join "transaction" t on t.id = td.id_trans_fk 
+where td.id_barang_fk  in (1647,1648,1649) --"name" ilike '%rts%' -- 
+	and t.status in('PC', 'S', 'A', 'I') -- PAID
+group by td.id_barang_fk, td."name", 
+	td.sell_price, td.pv, td.bv, td.rv 
+order by td."name" ;
+
+
