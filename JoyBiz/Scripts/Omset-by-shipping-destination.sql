@@ -331,6 +331,7 @@ order by r1."Provinsi", r1."Kabupaten"
 
 
 
+
 /* 
  * ===============================================================================================================================================================
  * START OMZET BERDASARKAN TUJUAN PENGIRIMAN WEEKLY
@@ -622,6 +623,79 @@ order by r1."Provinsi", r1."Kabupaten"
 
 
 
+/* 
+ * ===============================================================================================================================================================
+ * START OMZET BERDASARKAN TUJUAN PENGIRIMAN YEARLY
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	select * from "transaction" t where is_pickup = 1; 
+	select * from stock_packs sp ;
+	select * from alamat_kabupaten ak where id in (3174,7371);
+ */
+
+select 
+	CASE WHEN r1."Provinsi" is null then 'Unknown' else r1."Provinsi" end as "Provinsi", 
+	CASE WHEN r1."Kabupaten" is null then 'Unknown' else r1."Kabupaten" end as "Kabupaten", r1."Period",
+	r1."Purchase Cost"
+--	,r1.code_trans
+from (
+		select  --t.code_trans, 
+			EXTRACT('Year' FROM t.transaction_date) as "Period", 
+			INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+			sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+		from "transaction" t 
+			left outer join memberships m on (t.id_cust_fk = m.jbid)
+			left outer join stock_packs sp on t.pickup_stock_pack = sp.code
+			left outer join alamat_provinsi ap on sp.province::int =ap.id  
+			left outer join alamat_kabupaten ak on sp.district::int = ak.id
+		where 
+			t.deleted_at is null
+			and t.is_pickup = 1 -- PICKUP PUC/MPU
+			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+			and EXTRACT('Year' FROM t.transaction_date) BETWEEN 2021 and 2023
+		group by EXTRACT('Year' FROM t.transaction_date), ap.provinsi, ak.kabupaten --, t.code_trans
+				
+		union all
+		
+		select  --t.code_trans, 
+			EXTRACT('Year' FROM t.transaction_date) as "Period", 
+			INITCAP(ap.provinsi) as "Provinsi", INITCAP(ak.kabupaten) as "Kabupaten",
+			sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
+			sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
+		from "transaction" t 
+			left outer join memberships m on (t.id_cust_fk = m.jbid)
+			left outer join alamat_provinsi ap on t.shipping_province::int =ap.id  
+			left outer join alamat_kabupaten ak on t.shipping_city::int = ak.id
+		where 
+			t.deleted_at is null
+			and t.is_pickup = 2 -- SENT to ADDRESS
+			and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
+			and EXTRACT('Year' FROM t.transaction_date) BETWEEN 2021 and 2023
+		group by EXTRACT('Year' FROM t.transaction_date), ap.provinsi, ak.kabupaten --, t.code_trans
+	) r1
+--where r1."Kabupaten" ilike '%jember%' and r1."Provinsi" = 'Jawa Tengah'
+group by r1."Provinsi", r1."Kabupaten", r1."Period", r1."Purchase Cost" --, r1.code_trans
+--ROLLUP (r1."Provinsi", r1."Kabupaten")
+order by r1."Provinsi", r1."Kabupaten"
+;	
+
+
+/* 
+ * ===============================================================================================================================================================
+ * END OMZET BERDASARKAN TUJUAN PENGIRIMAN YEARLY
+ * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ */
+
+
+select * from "transaction" t where code_trans in ('DD3ENW','KOMJCM');
+select * from alamat_provinsi ap where id in (35);
+select * from alamat_kabupaten ak where id in (3526) or ak.kabupaten ilike '%mamuju%';
+select * from alamat_kecamatan ak where ak.kecamatan ilike '%bangkalan%'; --ak.id_kabupaten in (7605) order by kecamatan ; -- and 
+select * from alamat_kelurahan ak;
+
+
+
 select * from week_periodes wp order by "eDate" desc;
 
 
@@ -851,7 +925,8 @@ select 	current_date - extract(isodow from current_date)::integer-13 as Monday,
 		current_date - extract(isodow from current_date)::integer-3 as Thursday,
 	   	current_date - extract(isodow from current_date)::integer-2 as Friday,
 	   	current_date - extract(isodow from current_date)::integer-1 as Saturday,
-	   	current_date - extract(isodow from current_date)::integer as Sunday
+	   	current_date - extract(isodow from current_date)::integer as Sunday,
+	   	current_date
 	   ;
 
 select extract(day from TIMESTAMP '2024-12-04 00:00:00')::int / 7 + 1 as week_in_month;
@@ -1071,9 +1146,16 @@ order by r1."Provinsi", r1."Kabupaten"
 
 
 select
---	to_char(t.transaction_date, 'YYYY-MM-DD') as "Period", 
+	to_char(t.transaction_date, 'YYYY-MM') as "Period", 
 	INITCAP(ap.provinsi) as "Provinsi", 
-	INITCAP(ak.kabupaten) as "Kabupaten",
+--	INITCAP(ak.kabupaten) as "Kabupaten",
+	case
+		when INITCAP(ap.provinsi) = 'Bengkulu' then 'Bengkulu'
+		when INITCAP(ap.provinsi) = 'Lampung' then 'Lampung'
+		when INITCAP(ap.provinsi) = 'Bali' then 'Bali'
+		when INITCAP(ap.provinsi) = 'Palu' then 'Palu'
+		else INITCAP(ak.kabupaten)
+	end as "Kabupaten",
 	sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost"
 from "transaction" t 
 	left outer join memberships m on (t.id_cust_fk = m.jbid)
@@ -1082,17 +1164,63 @@ from "transaction" t
 where 
 	t.deleted_at is null
 	and t.status in('PC', 'S', 'A', 'I') -- PAID
-	and t.transaction_date::date -- >= '2023-05-29' 
-		between '2023-11-20' 
-			and '2023-12-19' -- now() --'2024-12-10'
-	and ak.kabupaten ilike '%Makassar%'
+--	and t.transaction_date::date -- >= '2023-05-29'  --		between '2023-11-28' and '2023-12-27' -- now() --'2024-12-10'
+	and to_char(t.transaction_date, 'YYYY-MM') between '2023-05' and '2023-12'
+	and (
+			ak.kabupaten ILIKE ANY(ARRAY['%Makassar%','%Banyuwangi%','%Kota Jambi%','%Jember%',
+										 '%Bombana%','%Purbalingga%','%Buton%Tengah%',
+										 '%mamuju%utara', --'%Pasang%kayu%',
+										 '%Bau%bau%','%Cianjur%','%Tangerang%','%Madura%','%Kota%Bandung%',
+										 '%Bangkalan%','%Sampang%','%Pamekasan%','%Sumenep%','%Kalianget%', --Madura
+										 '%Cilegon%','%Surabaya%','%Lumajang%','%Palu%']) 
+			or ap.provinsi ILIKE ANY(ARRAY['%Bengkulu%','%Lampung%','%Bali%']) 
+		)
+--	ak.kabupaten ilike '%bau%bau%'
 --		NOT ILIKE ALL(ARRAY['%Bombana%','%Baubau%','%Makassar%','%Palu%'])
---	and ap.provinsi ilike '%Sulawesi%'
+--	and ap.provinsi ilike '%b%ton%'
 group by 
---	to_char(t.transaction_date, 'YYYY-MM-DD'), 
+	to_char(t.transaction_date, 'YYYY-MM'), 
 	ap.provinsi, ak.kabupaten --t.code_trans,
---order by to_char(t.transaction_date, 'YYYY-MM-DD') 
+order by ap.provinsi, ak.kabupaten, to_char(t.transaction_date, 'YYYY-MM') 
 ;
+
+
+
+
+select
+	to_char(t.transaction_date, 'YYYY-MM') as "Period", 
+	INITCAP(ap.provinsi) as "Provinsi", 
+--	INITCAP(ak.kabupaten) as "Kabupaten",
+	case
+		when INITCAP(ap.provinsi) = 'Bengkulu' then 'Bengkulu'
+		when INITCAP(ap.provinsi) = 'Lampung' then 'Lampung'
+		when INITCAP(ap.provinsi) = 'Bali' then 'Bali'
+		when INITCAP(ap.provinsi) = 'Palu' then 'Palu'
+		else INITCAP(ak.kabupaten)
+	end as "Kabupaten",
+	sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost"
+from "transaction" t 
+	left outer join memberships m on (t.id_cust_fk = m.jbid)
+	left outer join alamat_provinsi ap on t.shipping_province::int =ap.id  
+	left outer join alamat_kabupaten ak on t.shipping_city::int = ak.id
+where 
+	t.deleted_at is null
+	and t.status in('PC', 'S', 'A', 'I') -- PAID
+--	and t.transaction_date::date -- >= '2023-05-29'  --		between '2023-11-28' and '2023-12-27' -- now() --'2024-12-10'
+	and to_char(t.transaction_date, 'YYYY-MM') between '2023-11' and '2024-02'
+	and (
+			ak.kabupaten ILIKE ANY(ARRAY['%garut%','%Bangkalan%']) 
+--			or ap.provinsi ILIKE ANY(ARRAY['%Bengkulu%','%Lampung%','%Bali%']) 
+		)
+--	ak.kabupaten ilike '%bau%bau%'
+--		NOT ILIKE ALL(ARRAY['%Bombana%','%Baubau%','%Makassar%','%Palu%'])
+--	and ap.provinsi ilike '%b%ton%'
+group by 
+	to_char(t.transaction_date, 'YYYY-MM'), 
+	ap.provinsi, ak.kabupaten --t.code_trans,
+order by ap.provinsi, ak.kabupaten, to_char(t.transaction_date, 'YYYY-MM') 
+;
+
 
 /* 
  * ===============================================================================================================================================================

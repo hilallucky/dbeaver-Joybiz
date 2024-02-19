@@ -33,11 +33,11 @@ select id, "owner", username, jbid, spid, upid, "left", "right", deleted_at, cre
 from memberships m 
 where 
 --username ilike 'marian01%' or 
---	jbid in ('23105493586')
-username ilike 'annaas2201361' 
---	or owner ='48057484-e096-4dc2-91f2-630850669e61'
-	or jbid in (24015633590,24015633590)
-	or "left" = 24015633344 or "right" = 24015633344
+--	jbid in ('heldim1401751')
+username ilike 'mabiza0702411' 
+	or owner ='81d924e3-d7f5-454f-90b9-0d94033d727e'
+--	or jbid in (24015633590,24015633590)
+--	or "left" = 24015633344 or "right" = 24015633344
 --where m."left" is null and m."right" is null
 order by id;
 
@@ -49,7 +49,7 @@ order by id;
 DO $$ 
 DECLARE
 	row_id integer;
-    xusername text := 'henimi2201601';
+    xusername text := 'ettysu3101211';
     xowner text;
     add_username text := '-delete';
 
@@ -68,10 +68,12 @@ DECLARE
 	
 	
 --	UPDATE HU 1 left & right
---	update memberships 
---	set "left" = case when (select position('-delete' in m2.username) from memberships m2 where m2.jbid = memberships."left") > 0 then null else memberships."left" end,
---		"right" = case when (select position('-delete' in m2.username) from memberships m2 where m2.jbid = memberships."right") > 0 then null else memberships."right" end
---	where username = 'pardi3012521';
+	update memberships 
+	set "left" = case when (select position('-delete' in lower(m2.username)) from memberships m2 where m2.jbid = memberships."left") > 0 then null else memberships."left" end,
+		"right" = case when (select position('-delete' in lower(m2.username)) from memberships m2 where m2.jbid = memberships."right") > 0 then null else memberships."right" end
+	where username = xusername;
+
+--	select * from sranks s where s.jbid = 24015626112;
 
 END $$;
 
@@ -94,7 +96,7 @@ from memberships m
 
 select username, jbid, spid, upid, "left", "right" 
 from memberships m 
-where m.username in ('novaro1811921', 'aidils0710981');
+where m.username in ('samsuz1502601', 'budian12015516');
 
 select * from sranks m where m.jbid in (23125605298,24015633344,24015633590);
 
@@ -103,8 +105,8 @@ select * from sranks m where m.jbid in (23125605298,24015633344,24015633590);
 
 DO $$ 
 DECLARE
-    xusername text := 'aidils0710981';
-    new_upline_username text := 'novaro1811921';
+    xusername text := 'samsuz1502601';
+    new_upline_username text := 'budian12015516';
     jbid_user bigint;
     jbid_upline bigint;
 

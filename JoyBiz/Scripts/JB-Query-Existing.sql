@@ -7,12 +7,15 @@ select u.nama, ms.username, u.handphone, sum(jc.joy) as point_reward_joy, sum(jc
 from joy_point_reward_cashes jc
 	join memberships ms on jc.owner = ms.uid 
 	join users u ON ms.uid = u.uid
-where jc."date" between  '2022-12-29'and '2023-12-07' and jc.deleted_at is null
+where jc."date" between  '2023-12-28'and current_date and jc.deleted_at is null
 and jc.deleted_at is null
-and u.username ilike 'agusev020889' 
+and u.username ilike 'mohammad171260' 
 group by u.nama, ms.username, u.handphone
 order by  total desc;
 
+select * from fee_pucs fp order by "date" desc;
+
+select to_char(now(), 'YYYY-MM-DD');
 
 select * from users u where username like 'muarif180323';
 select * from memberships m where username like 'muarif180323';
@@ -130,7 +133,7 @@ WITH RECURSIVE downline_cte AS (
     SELECT m1.id, m1.username, m1.jbid, m1.spid, m1.upid, m1."left", m1."right", u1.nama
     FROM memberships m1
     	left outer join users u1 on m1.username = u1.username
-    WHERE lower(m1.username) = lower('esters040219') --jbid = 26
+    WHERE lower(m1.username) = lower('meilan0502321') --jbid = 26
     UNION
     SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid, m2."left", m2."right", u2.nama
     FROM memberships m2
@@ -143,7 +146,33 @@ FROM downline_cte
 order by jbid;
 
 
+
+-- SHOW ALL DOWNLINE BASED ON ID MEMBER
+WITH RECURSIVE downline_cte AS (
+    SELECT m1.id, m1.username, m1.jbid, m1.spid, m1.upid, m1."left", m1."right", u1.nama
+    FROM memberships m1
+    	left outer join users u1 on m1.username = u1.username
+    WHERE lower(m1.username) = lower('meilan0502321') --jbid = 26
+    UNION
+    SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid, m2."left", m2."right", u2.nama
+    FROM memberships m2
+    	left outer join users u2 on m2.username = u2.username
+	    JOIN downline_cte ucte ON m2.spid = ucte.jbid
+)
+SELECT id, '', username, jbid, spid, upid, "left", "right", nama 
+FROM downline_cte 
+--where username like 'mohammad17%'
+order by jbid;
+
+
 select * from users u where username ='nuryan171272';
+select * from memberships m  where username ='mamans29077613';
+
+SELECT m1.id, m1.username, u1.nama, m1.jbid, m1.spid, m1.upid, cast('' AS VARCHAR) AS upline_name, 0 AS upline_no, 0 as level
+FROM memberships m1
+	left outer join users u1 on m1.owner = u1.uid
+WHERE lower(m1.username) = lower('mamans29077613')
+
 
 -- SHOW ALL DOWNLINE BASED ON ID MEMBER AND PRINTED TO PAPER
 -- Step 1: Create the temporary table
@@ -166,7 +195,7 @@ WITH RECURSIVE hierarchy_cte AS (
     FROM memberships m1
     	left outer join users u1 on m1.username = u1.username
     WHERE 
-    lower(u1.username) = lower('Laodep160554')
+    lower(u1.username) = lower('mamans29077613')
 --    m1.jbid = 14922
 
     UNION ALL
@@ -194,6 +223,60 @@ ORDER BY tp.row_num;
 DROP TABLE IF EXISTS tree_path;
 
 -- END NETWORK
+
+
+
+
+-- SHOW ALL DOWNLINE BASED ON ID MEMBER AND PRINTED TO PAPER
+-- Step 1: Create the temporary table
+CREATE TEMPORARY TABLE tree_path (
+    row_num int8,
+    id int8,
+    username VARCHAR,
+    nama VARCHAR,
+    jbid int8,
+    spid int8,
+    upid int8,
+    upline_name VARCHAR,
+    upline_no int8,
+    level int8
+);
+
+-- Step 2: Insert the data into the temporary table
+WITH RECURSIVE hierarchy_cte AS (
+    SELECT m1.id, m1.username, u1.nama, m1.jbid, m1.spid, m1.upid, cast('' AS VARCHAR) AS upline_name, 0 AS upline_no, 0 as level
+    FROM memberships m1
+    	left outer join users u1 on m1.owner = u1.uid
+    WHERE lower(m1.username) = lower('mamans2907761')
+--    m1.jbid = 14922
+
+    UNION ALL
+
+    SELECT m2.id, m2.username, u2.nama, m2.jbid, m2.spid, m2.upid, h.nama, 0 AS upline_no, h.level + 1
+    FROM memberships m2
+    	left outer join users u2 on m2.owner = u2.uid
+    	JOIN hierarchy_cte h ON m2.spid = h.jbid
+--    where h.level < 3
+)
+INSERT INTO tree_path(row_num, id, username, nama, jbid, spid, upid, upline_name, upline_no, level)
+SELECT
+    ROW_NUMBER() OVER (order by level, upline_name, upid, id) AS row_num,
+    id, username, nama, jbid, spid, upid, upline_name, upline_no, level
+FROM hierarchy_cte
+ORDER BY level, upline_name, spid, id;
+
+-- Step 3: Query the temporary table to retrieve the results
+SELECT tp.row_num, tp.id, tp.username, tp.nama, tp.jbid, tp.spid, tp.upid, tp.upline_name, (select t.row_num from tree_path t where t.jbid = tp.upid) as upline_no, tp.level
+FROM tree_path tp
+--where username = 'nuryan171272'
+ORDER BY tp.row_num;  
+
+-- Step 4: Query detele the temporary table
+DROP TABLE IF EXISTS tree_path;
+
+-- END NETWORK
+
+
 
 
 
@@ -274,6 +357,61 @@ ORDER BY u.username, u.transaction_date DESC;
 
 
 
+
+
+
+-- SHOW ALL SPONSORS BASED ON ID MEMBER -- OPTION 2
+WITH RECURSIVE upline_cte AS (
+    select  distinct  on (m1.username) m1.id, m1.username, m1.jbid, m1.spid, m1.upid, u1.nama, t1.transaction_date, t1.bv_total
+    FROM memberships m1
+    	join users u1 on m1.username = u1.username
+    	join transaction t1 on t1.id_cust_fk = m1.jbid 
+    WHERE lower(u1.username) in ('dessyn040231')
+		and t1.transaction_date is not null
+    UNION
+    SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid, u2.nama, t2.transaction_date, t2.bv_total
+    FROM memberships m2
+    	join users u2 on m2.username = u2.username
+	    JOIN upline_cte ucte ON m2.jbid = ucte.upid
+    	join transaction t2 on t2.id_cust_fk = m2.jbid
+    WHERE t2.transaction_date is not null
+)
+select distinct on (u.username) *
+FROM upline_cte u 
+ORDER BY u.username, u.transaction_date DESC;
+
+
+
+
+-- START CHECK CJ ---
+-- 800BV LAST 3 MONTHS, SC = 10
+select m2.jbid from memberships m2 where m2.username = 'hennym2707611';
+select username , jbid, spid, activated_at 
+from memberships m 
+where spid = (select m2.jbid from memberships m2 where m2.username = 'hennym2707611')
+--	 and username = 'hennym2707611'
+	and flag = 2 -- SC
+	;
+
+select COUNT(X.*) as "bv_800"
+from (
+	select to_char(t.transaction_date, 'YYYY-MM'),  id_cust_fk, m.username, sum(bv_total) as "sum_bv_total", sum(bv_plan_joy) as sum_bv_plan_joy, sum(bv_plan_biz) as sum_bv_plan_biz 
+	from "transaction" t 
+		  inner join memberships m on t.id_cust_fk = m.jbid
+	where id_cust_fk = 23075398567
+			and t.deleted_at is null
+			and t.status in('PC', 'S', 'A', 'I') -- PAID
+			and to_char(t.transaction_date, 'YYYY-MM') between '2023-11' and '2024-02'
+	group by to_char(t.transaction_date, 'YYYY-MM'),  id_cust_fk, m.username
+	having sum(bv_total) >= 800 OR sum(bv_plan_joy) >= 800 OR sum(bv_plan_biz) >= 800 
+	order by to_char(t.transaction_date, 'YYYY-MM'),  id_cust_fk
+) as X
+;
+-- END CHECK CJ ---
+
+
+
+
 -- LIST POLA TURBO
 SELECT 
 --		ROW_NUMBER() OVER (order by sr.srank, ms.activated_at desc) as "No", 
@@ -289,13 +427,13 @@ SELECT
 FROM memberships ms
 	join users u on u.username = ms.username 
 	JOIN sranks sr ON ms.jbid = sr.jbid
-WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('hashif2003721'))
+WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('yessya1910121'))
 	--22115186779 --= 23075375780 --nama ilike '%qurrotun%'
 	 AND sr.srank >= 1 
 --	and AGE(now(), ms.activated_at) < INTERVAL '3 months' 
 	 or lower(ms.username) -- ILIKE ANY(ARRAY[
 	 in (
-	 lower('hashif2003721')
+	 lower('yessya1910121')
 )
 --	])
 ORDER BY case 
@@ -343,7 +481,7 @@ select ID,nama,  username, email, handphone, alamat, kelurahan, kecamatan, kota_
 	id_bank_fk, bank_name, bank_acc_num, bank_acc_name, created_at, activated_at, uid 
 from users u 
 where 
-	username ilike ('budian1201551') -- or 
+	username ilike ('meilan0502321') -- or 
 --	username ilike 'zalimi0301211' -- or username ilike 'andang0812121%' or username ilike 'budisa0812841%'; 
 --	 email in ('atisanti77@gmail.com','daraesanr@gmail.com','yanakayaraya@gmail.com','iamulyaningsih262@gmail.com','agusmpasya@gmail.com');
 ;
@@ -373,7 +511,7 @@ where
 --	username ilike'esters0412451%' -- or username  = 'liamul0112761'
 --	or 
 --	username in ('esters0412451','effend0412251','daniel0412291','afriya0412581') -- or jbid = 23105527852
-	username in ('aswant0101551','estipu0101831') 
+	username in ('indria0802831','ettysu3101211') 
 --	or jbid in (22065077731)
 --	"owner" = '0fe96839-aeb2-412b-a3bf-4dd15eaf566b'
 order by id, username, id ;
@@ -395,8 +533,8 @@ select * from memberships m  where username in ('dewire08122112','dewire08122113
 
 select * -- jbid, spid, upid, appv, srank, created_at, updated_at  
 from sranks s 
-where  jbid in (24015612541,
-24015612689
+where  jbid in (24015642322,
+24025651740
 ) 
 order by jbid ;
 
@@ -441,11 +579,20 @@ from users
 where username = 'arwiti1911141';
 
 -- HAPUS ITEM PRODUCT
-select  * from "transaction" t where code_trans ilike 'HLLGNL%';
+select  * from "transaction" t where code_trans ilike '2NW8DT';
 select  * from transaction_detail td where id_trans_fk in (146113);
 
 
-select * from barang b where nama ilike lower('%Free Joy Coffee%');
+select id, kode , nama, status, is_show, is_show_sc, updated_at , deleted_at 
+from barang b 
+where nama ilike lower('%Free Joy Coffee%') 
+	or kode in ('I005J39','JOBVBP001J39','GGBVB001J40','SUP001J40','SUT001J40','I005PLJ40')
+	or nama ilike 'JoyVit-C (J39)'
+	;
+--	or status = 'I';
+
+select * from 
+
 
 select * from transaction t where t.code_trans ilike 'CUFOZQ%' order by id;
 select * 
@@ -471,20 +618,31 @@ select * from users u where username ='karint0212601';
 --  4 untuk JNE dan 7 untuk TIKI
 select id, code_trans, transaction_date, courier, deleted_at, status 
 from "transaction" t 
-where code_trans in ('ZXY9PI');
+where code_trans in ('PYPPPJ');
 select * from transaction_detail td where id_trans_fk =145757;
 
 select t.code_trans, status, is_pickup, shipping_name, shipping_phone, shipping_address,
 		shipping_city, shipping_province, shipping_village, shipping_district, shipping_cost 
-from "transaction" t where t.code_trans in ('PGYXKF') ;
---select * from alamat_provinsi ap;
-select * from alamat_kabupaten ak2 where kabupaten ilike '%serang%'; ;--id in (3209, 3404);--3673
-select * from alamat_kecamatan ak where kecamatan ilike '%kasemen%';--id_kabupaten in (3276);--3673060 
-select * from alamat_kelurahan ak where id_kecamatan = 3673060; -- kelurahan ilike 'beji';3673060001
+from "transaction" t where t.code_trans in ('L6EBTX','J56TOJ','C815TA','RGLJHJ','M4JSJE') ;
+
+update "transaction" 
+set shipping_name= null, shipping_phone= null, shipping_address= null, courier = null,
+		shipping_city= null, shipping_province= null, shipping_village= null, shipping_district= null
+where code_trans = 'C815TA';
+
+select * from "transaction" t where t.code_trans in ('L6EBTX','J56TOJ','C815TA','SF7F7F') ;
+
+select * from stock_packs sp ;
+
+
+select * from alamat_provinsi ap where provinsi ilike '%jakarta%';
+select * from alamat_kabupaten ak2 where id_provinsi in (31); --kabupaten ilike '%cipinang%'; ;--id in (3209, 3404);--3172
+select * from alamat_kecamatan ak where id_kabupaten in (3172); -- kecamatan ilike '%jember%';-- id_kabupaten in (1802);--3673060 --
+select * from alamat_kelurahan ak where id_kecamatan in (3172060); --kelurahan ilike 'jember'; -- 3673060001 id_kecamatan = 1802043; -- 3172060003
 
 -- UBAH NO REKENING
 select * from memberships m where username ='karima0608691';
-select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  from users u where username ilike 'larasa2712871'; -- in ('desry2803141');
+select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  from users u where username ilike 'budian1201551'; -- in ('desry2803141');
 select * from bank b;
 
 -- Tarik data transaksi
@@ -577,7 +735,7 @@ select -- u.id, u.username,
 	u.provinsi 
 --	u.disabled, u.activated_at, u.status 
 from users u
-where u.username in ('dr.ir.220367'); 
+where u.username in ('indrag020218'); 
 
 select m.id, m.username, m.jbid, m.spid, m.upid, m."left", m."right", m.activated_at, m.status 
 from memberships m 
@@ -647,7 +805,7 @@ select * from users u where username ilike '510806%' or email ilike 'mertagede%'
 
 select * from memberships m where m.uid in ('1f5ed8d1-1b1c-4145-aae8-299448651c5e'); 
 
-select * from "transaction" t where code_trans ='DDPDMC';
+select * from "transaction" t where code_trans ='6M515P';
 select * from barang where nama ilike '%Joybizer (J31%'; --1063 R05J31	Joybizer (J31)
 select * from transaction_detail td where id_trans_fk in (144756);
 
@@ -796,44 +954,31 @@ select * from week_periodes wp ;
 
 
 -- UPDATE TAX/PPH
-select username, uid  
+select username, uid, concat('''',uid,''',') 
 from memberships m  
-where m.username in ( 'wendri290683', 
- 'joysys18', 
- 'mohammad171260', 
- 'desi14047', 
- 'iffala120921', 
- 'laodep160554', 
- 'desriy2803141', 
- 'joysys20', 
- 'bessew210665', 
+where m.username in (  'joysys18', 
+ 'wendri290683', 
  'amirma111057', 
+ 'laodep160554', 
+ 'bessew210665', 
+ 'agusev020889', 
  'gilang1807741', 
- 'intyas080132', 
- 'destip201274', 
- 'diahag2907841'
+ 'joysys20'
 );
 
 
 
 select "owner", wid, total, voucher, ppn, total_transfer 
 from bonus_weeklies bw 
-where wid = 318
-	and "owner" in (  'd3c79296-6237-425a-9b24-0ece9341190c', 
- '1e609277-703f-4a74-9ae2-c190e0a20484', 
- '96867ffc-936f-46e7-a37e-d5dd1bf0b66a', 
- '55022134-2ec6-4bf3-9f8c-c9e3c8e3a196', 
- '5c76939d-10a0-4a99-bba9-8d253d3b3cf3', 
- '4329e907-a806-4b38-acc6-6b3d12de0967', 
- '93e9349d-ec4c-4f63-98a2-3e3a1109e713', 
- '32c2f44f-84c3-473a-80d5-f580b8d9bbc6', 
- '98608fcc-b0b0-4031-ad0b-fd9364a07527', 
+where wid = 320
+	and "owner" in (  '1e609277-703f-4a74-9ae2-c190e0a20484', 
+ 'd3c79296-6237-425a-9b24-0ece9341190c', 
  '5e9d4368-3f51-4525-aaf0-ec1f07bb3906', 
+ '4329e907-a806-4b38-acc6-6b3d12de0967', 
+ '98608fcc-b0b0-4031-ad0b-fd9364a07527', 
+ '9a632349-1b43-4cba-84bf-529879e729ac', 
  'e2aa5c1b-dc5d-44b0-ae07-25a88535a88f', 
- 'a98a3671-fefb-45cf-864b-4fbb897abb9e', 
- 'cce33bd5-db66-4c0b-9b25-34940b9fc7c6', 
- '38e70098-d540-4acf-9b04-ce827c1a5da6'
-
+ '32c2f44f-84c3-473a-80d5-f580b8d9bbc6'
 )
  order by "owner", total
 ;
@@ -847,20 +992,22 @@ order by id, "owner", total ;
 
 
 -- HAPUS SHHIPING COST
-select code_trans,shipping_cost, status 
+select code_trans,shipping_cost, status, transaction_date 
 from "transaction" t 
-where code_trans in ('QFZYQ9','NAVO33','A3JOVH','RB8FQQ','A48ETD','AYQB7Y');
+where code_trans in ('AOAWQA','EZGV0D');
 
 update "transaction" 
 set shipping_cost = 0
 where code_trans in ('UTXFNP', 'NFNECR', '9VSGHI', 'IVX4O1');
 
+select * from "transaction" t where id_cust_fk = 37434 order by transaction_date ;
 
 
+select * from memberships m where username ilike 'mjefry010838';
 
 select *
 from users u 
-where username in ('junaid300125','anyand210962','pradip0411151');
+where username in ('mjefry010838');
 
 select * from users u where nama ilike '%fer% arifin%';
 
@@ -909,4 +1056,55 @@ where m.jbid = 22115169320
 order by pdj.wid  desc;
 
 
+
+select * from week_periodes wp order by id desc;
+
+select * from users u  where username ='eenrae0309121';
+select * from memberships m where username ='eenrae0309121';
+
+select * from sranks s where jbid =23095449551; -- old appv = 2376.00
+
+
+select * from users u  
+where username in ('muhamm2410591',
+'hjehaj2411851',
+'dedehs2812911',
+'mamans2410801',
+'dedesu2711411',
+'saepul2701991',
+'noviya3101551',
+'hjadem0301341',
+'meilan0502321',
+'muhamm0502541',
+'hjehaj0502401',
+'dedehs0502571',
+'mamans0502831',
+'dedesu0502961',
+'saepul0502481',
+'noviya0502201',
+'hjadem0502951'
+);
+
+
+
+select * from users u where nama = 'Hila Sc-001' or email ilike 'hilal%@%.com';
+
+select * from memberships m where username in ('hilal21101611','hilasc0702251') or jbid in (23085429739);
+
+
+select * from fee_pucs fp;
+select t.id , t.code_trans , t.total_price, t.bv_total, td.id_barang_fk, td.qty, td.base_price, td.bv 
+from "transaction" t 
+	 inner join transaction_detail td on t.id = td.id_trans_fk 
+where t.code_trans in ('J2KI7G');
+
+select * from transaction t where code_trans in ('J2KI7G'); 
+select * from transaction_detail td where id_trans_fk in (133102); 
+
+select * from stock_pack_pickeds spp where transaction_code in ('J2KI7G');
+
+select * from stock_pack_stocks sps;
+
+
+select * from budget_reserves br order by "date"  desc;
 

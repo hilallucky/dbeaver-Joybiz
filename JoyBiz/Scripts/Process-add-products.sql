@@ -4,7 +4,7 @@ from barang b
 where --nama ilike '%Joypolinse%'
 --	nama = 'Go Gamma BVB Pack (J40)'
 --	or contains(nama, 'Start-Up Titanium')
-nama ILIKE '%RTS%' -- or kode in ('TJ007','TJ008','TJ008','TJ003','TJ005','TJ002','MC008')
+nama ILIKE '%joycell%%' -- or kode in ('TJ007','TJ008','TJ008','TJ003','TJ005','TJ002','MC008')
 --and created_at::date = '2023-12-27'
 --or nama ilike '%pronovde%'
 order by id
@@ -14,6 +14,12 @@ order by id
 1643
 1644
 1645
+
+1656
+1657
+1658
+1659
+1660
 
 select * from barang where core = true and nama ilike 'Joyrazero%'; 
 
@@ -77,9 +83,8 @@ select * from products p;
 select *
 from barang_detail bd  
 where id_induk_fk  in (
---1637,1638,1639,1640,
---1597,1599,1598
-1647,1648,1649
+1641,1622,1643,1644,1645,
+1656,1657,1658,1659,1660
 )
 order by bd.id_induk_fk, bd.id_barang_fk ;
 
@@ -114,19 +119,8 @@ FROM barang b
 	LEFT JOIN products p ON d.product_code = p.code
 WHERE
 b.id IN  (
-select id from barang b2 where nama ilike '%RTS%'
-
---		1647,1648,1649
-
---1637,
---1638,
---1639,
---1640,
---1641,
---1642,
---1643,
---1644,
---1645
+--select id from barang b2 where nama ilike '%RTS%'
+1656,1657,1658,1659,1660
 		) 
 ORDER BY b."id", d.id;
 -- END PRODUCT LISTING;
