@@ -40,7 +40,7 @@
 							"host": "joybiz.co.id",
 							"port": 22.0,
 							"authType": "PUBLIC_KEY",
-							"keyPath": "/run/user/1000/doc/629d445b/id_rsa",
+							"keyPath": "/home/hilal/.ssh/id_rsa",
 							"implementation": "sshj",
 							"localHost": "",
 							"remoteHost": ""
@@ -94,7 +94,7 @@
 						"host": "joybiz.co.id",
 						"port": 22.0,
 						"authType": "PUBLIC_KEY",
-						"keyPath": "/run/user/1000/doc/629d445b/id_rsa",
+						"keyPath": "/home/hilal/.ssh/id_rsa",
 						"implementation": "sshj",
 						"localHost": "",
 						"remoteHost": ""

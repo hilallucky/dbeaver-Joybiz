@@ -419,7 +419,7 @@ SELECT
 		ms.activated_at as "Activated At", AGE(ms.activated_at) as "Joint Duration",
 		case 
 			when AGE(now(), ms.activated_at) > INTERVAL '3 months' then '> 3 months' 
-			else null 
+			else '' --null 
 		end as "Remarks"
 --		,(DATE_PART('YEAR', now()::DATE) - DATE_PART('YEAR', ms.activated_at::DATE)) * 12
 --		+ (DATE_PART('Month', now()::DATE) - DATE_PART('Month', ms.activated_at::DATE)) AS month_diff
@@ -427,13 +427,13 @@ SELECT
 FROM memberships ms
 	join users u on u.username = ms.username 
 	JOIN sranks sr ON ms.jbid = sr.jbid
-WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('yessya1910121'))
+WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('nuryan171272'))
 	--22115186779 --= 23075375780 --nama ilike '%qurrotun%'
 	 AND sr.srank >= 1 
 --	and AGE(now(), ms.activated_at) < INTERVAL '3 months' 
 	 or lower(ms.username) -- ILIKE ANY(ARRAY[
 	 in (
-	 lower('yessya1910121')
+	 lower('nuryan171272')
 )
 --	])
 ORDER BY case 
@@ -950,35 +950,40 @@ where
 
 
 
-select * from week_periodes wp ;
+select * from week_periodes wp where to_char("sDate", 'YYYY-MM') between '2024-01' and '2024-02' order by id desc;
 
+select * from "transaction" t where code_trans in ('ES9BKU');
 
 -- UPDATE TAX/PPH
 select username, uid, concat('''',uid,''',') 
 from memberships m  
-where m.username in (  'joysys18', 
- 'wendri290683', 
- 'amirma111057', 
- 'laodep160554', 
+where m.username in (   'amirma111057', 
+ 'desriy2803141', 
+ 'desi14047', 
+ 'mohammad171260', 
  'bessew210665', 
- 'agusev020889', 
- 'gilang1807741', 
- 'joysys20'
+ 'joysys18', 
+ 'ferlin2707821', 
+ 'wendri290683', 
+ 'iffala120921', 
+ 'gilang1807741'
 );
 
 
 
 select "owner", wid, total, voucher, ppn, total_transfer 
 from bonus_weeklies bw 
-where wid = 320
-	and "owner" in (  '1e609277-703f-4a74-9ae2-c190e0a20484', 
- 'd3c79296-6237-425a-9b24-0ece9341190c', 
- '5e9d4368-3f51-4525-aaf0-ec1f07bb3906', 
- '4329e907-a806-4b38-acc6-6b3d12de0967', 
+where wid = 321
+	and "owner" in (   '5e9d4368-3f51-4525-aaf0-ec1f07bb3906', 
+ '93e9349d-ec4c-4f63-98a2-3e3a1109e713', 
+ '55022134-2ec6-4bf3-9f8c-c9e3c8e3a196', 
+ '96867ffc-936f-46e7-a37e-d5dd1bf0b66a', 
  '98608fcc-b0b0-4031-ad0b-fd9364a07527', 
- '9a632349-1b43-4cba-84bf-529879e729ac', 
- 'e2aa5c1b-dc5d-44b0-ae07-25a88535a88f', 
- '32c2f44f-84c3-473a-80d5-f580b8d9bbc6'
+ '1e609277-703f-4a74-9ae2-c190e0a20484', 
+ '8946b9a1-43e9-46db-8431-11db74836a09', 
+ 'd3c79296-6237-425a-9b24-0ece9341190c', 
+ '5c76939d-10a0-4a99-bba9-8d253d3b3cf3', 
+ 'e2aa5c1b-dc5d-44b0-ae07-25a88535a88f'
 )
  order by "owner", total
 ;

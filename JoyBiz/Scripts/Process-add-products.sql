@@ -4,7 +4,7 @@ from barang b
 where --nama ilike '%Joypolinse%'
 --	nama = 'Go Gamma BVB Pack (J40)'
 --	or contains(nama, 'Start-Up Titanium')
-nama ILIKE '%joycell%%' -- or kode in ('TJ007','TJ008','TJ008','TJ003','TJ005','TJ002','MC008')
+nama ILIKE '%J41%%' -- or kode in ('TJ007','TJ008','TJ008','TJ003','TJ005','TJ002','MC008')
 --and created_at::date = '2023-12-27'
 --or nama ilike '%pronovde%'
 order by id
@@ -126,12 +126,14 @@ ORDER BY b."id", d.id;
 -- END PRODUCT LISTING;
 
 select * from media m 
-where id_barang_fk in (1647,1648,1649)
+where id_barang_fk in (1656,1657,1658,1659,1660)
 order by m.created_at desc;
 
 
+select * from barang b  where nama ilike '%J41%' order by id;
 
-select * from barang b ;
+
+
 
 -- STOCK PUC
 select sps.id, sp.code, sp."name", b.kode, b.nama, sps.qty , sps.created_at, sps.updated_at 

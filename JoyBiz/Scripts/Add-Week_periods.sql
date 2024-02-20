@@ -77,9 +77,6 @@ where "Thursday"> '2024-01-25';
 
 
 
-
-
-
 with data_weeks as (
 select "data"."Thursday", "data"."Wednesday", 
 --	"data"."MONTH-Wed", "data"."year", "data"."period",

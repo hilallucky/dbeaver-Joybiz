@@ -34,8 +34,8 @@ from memberships m
 where 
 --username ilike 'marian01%' or 
 --	jbid in ('heldim1401751')
-username ilike 'mabiza0702411' 
-	or owner ='81d924e3-d7f5-454f-90b9-0d94033d727e'
+username ilike 'janol2002351' 
+	or owner ='961df4f0-8d10-456a-8d6f-4c8515dced82'
 --	or jbid in (24015633590,24015633590)
 --	or "left" = 24015633344 or "right" = 24015633344
 --where m."left" is null and m."right" is null
@@ -49,7 +49,7 @@ order by id;
 DO $$ 
 DECLARE
 	row_id integer;
-    xusername text := 'ettysu3101211';
+    xusername text := 'janol2002351';
     xowner text;
     add_username text := '-delete';
 
@@ -342,6 +342,8 @@ select * from memberships m where username = 'muarif180323';
 
 
 select * from "transaction" t where transaction_date is not null order by transaction_date desc;
+
+
 
 
 
