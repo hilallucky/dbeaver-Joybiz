@@ -31,7 +31,7 @@ WITH RECURSIVE hierarchy_cte AS (
     	left outer join users u1 on m1.username = u1.username
 --    	left outer join "transaction" t1 on m1.jbid = t1.id_cust_fk
     WHERE 
-    u1.username = 'indram0911961'
+    u1.username = 'khusnu12094213'
 --    m1.jbid = 14922
 
     UNION ALL
@@ -184,7 +184,7 @@ WITH RECURSIVE upline_cte AS (
     	join users u1 on m1.username = u1.username
     	join transaction t1 on t1.id_cust_fk = m1.jbid 
     WHERE lower(u1.username) in (
-				'syefri260170')
+				'anisha2211511')
 		and t1.transaction_date is not null
     UNION
     SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid, u2.nama, t2.transaction_date, t2.bv_total
@@ -206,6 +206,25 @@ from tree_path t;
 */
 
 
+WITH RECURSIVE upline_cte AS (
+    select  distinct  on (m1.username) m1.id, m1.username, m1.jbid, m1.spid, m1.upid --, u1.nama
+    FROM memberships m1
+--    	join users u1 on m1.username = u1.username
+    WHERE lower(m1.username) in ('anisha2211511')
+    UNION
+    SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid --, u2.nama
+    FROM memberships m2
+--    	left outer join users u2 on m2.username = u2.username
+	    JOIN upline_cte ucte ON m2.jbid = ucte.spid
+--    WHERE t2.transaction_date is not null
+)
+select id, username, jbid, spid, upid
+FROM upline_cte u 
+order by id desc;
+--ORDER BY u.username, u.transaction_date DESC;
+
+
+select * from memberships m  where jbid = 22095123936;
 
 
 select 
@@ -226,4 +245,66 @@ where pdj.jbid in (22115169320,22115172514,23075169327,23075387390)
 group by to_char(wp."sDate", 'YYYY-MM'),
 		pdj.jbid, m.username, u.nama
 order by to_char(wp."sDate", 'YYYY-MM'), pdj.jbid;
+
+
+-- GET UPLINE
+WITH RECURSIVE descendants AS (
+    SELECT id, username, jbid, spid, upid, 0 AS depth, "owner"
+    FROM memberships m1
+    WHERE lower(m1.username) in ('anisha2211511') -- root khusnu1209421 right khusnu12094212 left khusnu12094213
+UNION    
+    SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid, d.depth+ 1, m2."owner"
+    FROM memberships m2
+    	 inner join descendants d on m2.jbid = d.spid
+)
+SELECT d.id, d.username, u.nama, m.username as sp_name, d.jbid, d.spid, d.upid, d.depth, d."owner"
+FROM descendants d
+	left outer JOIN users u ON d."owner" = u.uid
+	inner join memberships m on d.spid = m.jbid
+order by d.id
+;
+
+
+-- GET DOWNLINE
+WITH RECURSIVE descendants AS (
+    SELECT id, username, jbid, spid, upid, 0 AS depth, "owner"
+    FROM memberships m1
+    WHERE lower(m1.username) in ('yessya1910121') -- root khusnu1209421 right khusnu12094212 left khusnu12094213
+UNION    
+    SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid, d.depth+ 1, m2."owner"
+    FROM memberships m2
+    	 inner join descendants d on m2.spid = d.jbid
+)
+SELECT d.id, d.username, u.nama, m.username as sp_name, d.jbid, d.spid, d.upid, d.depth, d."owner"
+FROM descendants d
+	left outer JOIN users u ON d."owner" = u.uid
+	inner join memberships m on d.spid = m.jbid
+order by d.id
+;
+
+
+
+
+
+-- GET ALL DOWNLINES
+WITH RECURSIVE cte (id, username, jbid, spid, "depth", "owner") as (
+	select m.id , m.username, m.jbid, m.spid, 0 AS depth, m."owner" 
+	from memberships m  
+	where m.username = 'khusnu1209421'
+  	UNION ALL
+	select m.id , m.username, m.jbid, m.spid, cte.depth+ 1, m."owner" 
+	from memberships m  
+		INNER JOIN cte ON m.spid = cte.jbid
+)
+SELECT cte.id , cte.username, u1.nama , cte.jbid, cte.spid, cte."depth", cte."owner"
+FROM cte
+	inner join users u1 on cte."owner" = u1.uid 
+--	inner join users u2 on cte."owner" = u2.uid 
+order by cte.depth, cte.id
+;
+
+
+select * from memberships m where spid = '22095123975';
+
+
 

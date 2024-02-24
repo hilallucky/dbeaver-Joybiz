@@ -427,13 +427,13 @@ SELECT
 FROM memberships ms
 	join users u on u.username = ms.username 
 	JOIN sranks sr ON ms.jbid = sr.jbid
-WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('nuryan171272'))
+WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('khusnu1209421'))
 	--22115186779 --= 23075375780 --nama ilike '%qurrotun%'
 	 AND sr.srank >= 1 
 --	and AGE(now(), ms.activated_at) < INTERVAL '3 months' 
 	 or lower(ms.username) -- ILIKE ANY(ARRAY[
 	 in (
-	 lower('nuryan171272')
+	 lower('khusnu1209421')
 )
 --	])
 ORDER BY case 
@@ -481,7 +481,7 @@ select ID,nama,  username, email, handphone, alamat, kelurahan, kecamatan, kota_
 	id_bank_fk, bank_name, bank_acc_num, bank_acc_name, created_at, activated_at, uid 
 from users u 
 where 
-	username ilike ('meilan0502321') -- or 
+	username ilike ('widyan2002721') -- or 
 --	username ilike 'zalimi0301211' -- or username ilike 'andang0812121%' or username ilike 'budisa0812841%'; 
 --	 email in ('atisanti77@gmail.com','daraesanr@gmail.com','yanakayaraya@gmail.com','iamulyaningsih262@gmail.com','agusmpasya@gmail.com');
 ;
@@ -496,7 +496,7 @@ order by id ;
 
 select u.username, u.nama, u.activated_at::date
 from users u 
-where u.username in ('drsrus2801931',
+where u.username in ('widyan2002721',
 'drs.mu10117'
 );
 
@@ -511,7 +511,7 @@ where
 --	username ilike'esters0412451%' -- or username  = 'liamul0112761'
 --	or 
 --	username in ('esters0412451','effend0412251','daniel0412291','afriya0412581') -- or jbid = 23105527852
-	username in ('indria0802831','ettysu3101211') 
+	username in ('widyan2002721','effend0412251') 
 --	or jbid in (22065077731)
 --	"owner" = '0fe96839-aeb2-412b-a3bf-4dd15eaf566b'
 order by id, username, id ;
@@ -533,8 +533,8 @@ select * from memberships m  where username in ('dewire08122112','dewire08122113
 
 select * -- jbid, spid, upid, appv, srank, created_at, updated_at  
 from sranks s 
-where  jbid in (24015642322,
-24025651740
+where  jbid in (23125576470,
+24025664182
 ) 
 order by jbid ;
 
@@ -594,7 +594,7 @@ where nama ilike lower('%Free Joy Coffee%')
 select * from 
 
 
-select * from transaction t where t.code_trans ilike 'CUFOZQ%' order by id;
+select * from transaction t where t.code_trans ilike 'PO9WB9%' order by id;
 select * 
 from transaction_detail td 
 where td.id_trans_fk in (144776
@@ -623,7 +623,7 @@ select * from transaction_detail td where id_trans_fk =145757;
 
 select t.code_trans, status, is_pickup, shipping_name, shipping_phone, shipping_address,
 		shipping_city, shipping_province, shipping_village, shipping_district, shipping_cost 
-from "transaction" t where t.code_trans in ('L6EBTX','J56TOJ','C815TA','RGLJHJ','M4JSJE') ;
+from "transaction" t where t.code_trans in ('PO9WB9') ;
 
 update "transaction" 
 set shipping_name= null, shipping_phone= null, shipping_address= null, courier = null,
@@ -635,14 +635,14 @@ select * from "transaction" t where t.code_trans in ('L6EBTX','J56TOJ','C815TA',
 select * from stock_packs sp ;
 
 
-select * from alamat_provinsi ap where provinsi ilike '%jakarta%';
-select * from alamat_kabupaten ak2 where id_provinsi in (31); --kabupaten ilike '%cipinang%'; ;--id in (3209, 3404);--3172
-select * from alamat_kecamatan ak where id_kabupaten in (3172); -- kecamatan ilike '%jember%';-- id_kabupaten in (1802);--3673060 --
-select * from alamat_kelurahan ak where id_kecamatan in (3172060); --kelurahan ilike 'jember'; -- 3673060001 id_kecamatan = 1802043; -- 3172060003
+select * from alamat_provinsi ap where provinsi ilike '%sul%sel%';
+select * from alamat_kabupaten ak2 where id_provinsi in (73) and kabupaten ilike '%makassar%'; ;--id in (3209, 3404);--3172
+select * from alamat_kecamatan ak where id_kabupaten in (7371); -- kecamatan ilike '%jember%';-- id_kabupaten in (1802);--3673060 --
+select * from alamat_kelurahan ak where id_kecamatan in (7371031); --kelurahan ilike 'jember'; -- 3673060001 id_kecamatan = 1802043; -- 7371031001
 
 -- UBAH NO REKENING
 select * from memberships m where username ='karima0608691';
-select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  from users u where username ilike 'budian1201551'; -- in ('desry2803141');
+select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  from users u where username ilike 'abdulm2212951'; -- in ('desry2803141');
 select * from bank b;
 
 -- Tarik data transaksi
@@ -1097,19 +1097,24 @@ select * from users u where nama = 'Hila Sc-001' or email ilike 'hilal%@%.com';
 select * from memberships m where username in ('hilal21101611','hilasc0702251') or jbid in (23085429739);
 
 
-select * from fee_pucs fp;
+select * from fee_pucs fp order by "date" desc ;
 select t.id , t.code_trans , t.total_price, t.bv_total, td.id_barang_fk, td.qty, td.base_price, td.bv 
 from "transaction" t 
 	 inner join transaction_detail td on t.id = td.id_trans_fk 
 where t.code_trans in ('J2KI7G');
 
-select * from transaction t where code_trans in ('J2KI7G'); 
+select * from transaction t where pickup_code  in ('ZY8XMG'); 
 select * from transaction_detail td where id_trans_fk in (133102); 
 
-select * from stock_pack_pickeds spp where transaction_code in ('J2KI7G');
+select * from stock_pack_pickeds spp where pick in ('ZY8XMG');
 
 select * from stock_pack_stocks sps;
 
 
 select * from budget_reserves br order by "date"  desc;
+
+
+
+select * from users u where username in ('budiwa0409571','budiwa0502621','hilal2202661') or nama ilike '%li%jemm%';
+
 

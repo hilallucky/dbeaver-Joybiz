@@ -34,8 +34,8 @@ from memberships m
 where 
 --username ilike 'marian01%' or 
 --	jbid in ('heldim1401751')
-username ilike 'janol2002351' 
-	or owner ='961df4f0-8d10-456a-8d6f-4c8515dced82'
+username ilike 'desiya0202281' 
+	or owner ='751f4989-9b2d-4f62-8173-681010c8865d'
 --	or jbid in (24015633590,24015633590)
 --	or "left" = 24015633344 or "right" = 24015633344
 --where m."left" is null and m."right" is null
@@ -49,7 +49,7 @@ order by id;
 DO $$ 
 DECLARE
 	row_id integer;
-    xusername text := 'janol2002351';
+    xusername text := 'desiya0202281';
     xowner text;
     add_username text := '-delete';
 
@@ -94,34 +94,59 @@ from memberships m
 */
 
 
-select username, jbid, spid, upid, "left", "right" 
+select username, jbid, spid, upid, "left", "right", activated_at, created_at 
 from memberships m 
-where m.username in ('samsuz1502601', 'budian12015516');
+where "left" = "right" and "left" is not null and "right" is not null ;
 
-select * from sranks m where m.jbid in (23125605298,24015633344,24015633590);
+select username, jbid, spid, upid, "left", "right", updated_at  
+from memberships m 
+where m.username in ('rikiad2302541', 'ayunab0111641');
+
+select * from sranks m where m.jbid in (23115533516,24025666827);
 
 
 
+update memberships 
+set "right"  = null --case "right" IS NULL then 
+where username in ('ayunab0111641');
 
+
+update sranks  
+set upid = null
+where jbid in ('24025666827');
+
+
+-- START UPDATE UPLINE
 DO $$ 
 DECLARE
-    xusername text := 'samsuz1502601';
-    new_upline_username text := 'budian12015516';
+    xusername text := 'rikiad2302541';
+    new_upline_username text := 'ayunab0111641';
     jbid_user bigint;
     jbid_upline bigint;
+   	right_downline bigint;
+   	left_downline bigint;
 
    BEGIN
 	-- Find correct jbid for new sponsor
     SELECT jbid INTO jbid_user FROM memberships WHERE username = xusername;
-    SELECT jbid INTO jbid_upline FROM memberships WHERE username = new_upline_username;
+    SELECT jbid, "right", "left" INTO jbid_upline, right_downline, left_downline FROM memberships WHERE username = new_upline_username;
    
-   	update memberships set upid = jbid_upline where username = xusername;
-	update sranks set upid = jbid_upline where jbid = jbid_user;
-  
+   if left_downline is null then
+   		update memberships set upid = jbid_upline, update_at = now() where username = xusername;
+		update sranks set upid = jbid_upline, update_at = now() where jbid = jbid_user;
+		update memberships set "left" = jbid_user, update_at = now() where username = new_upline_username;
+	elseif right_downline is null then
+   		update memberships set upid = jbid_upline, update_at = now() where username = xusername;
+		update sranks set upid = jbid_upline, update_at = now() where jbid = jbid_user;
+		update memberships set "right" = jbid_user, update_at = now() where username = new_upline_username;
+  	end if;
+  	
     -- Display the values (you can replace this with your actual update statement)
     RAISE NOTICE 'Result: xusername = %, new_upline_username = %, jbid_upline = %', xusername, new_upline_username, jbid_upline;
 
 END $$;
+
+-- END UPDATE UPLINE
 
 
 select id, jbid, spid, upid from memberships where username = 'arwiti1911141';
@@ -347,3 +372,4 @@ select * from "transaction" t where transaction_date is not null order by transa
 
 
 
+select * from fee_pucs fp order by fp."date" desc;

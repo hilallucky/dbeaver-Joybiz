@@ -338,7 +338,7 @@ order by r1."Provinsi", r1."Kabupaten"
  * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	select * from "transaction" t where is_pickup = 1; 
-	select * from stock_packs sp ;
+	select * from ;_packs sp ;
 	select * from alamat_kabupaten ak where id in (3174,7371);
  */
 
@@ -1197,7 +1197,7 @@ select
 		when INITCAP(ap.provinsi) = 'Bali' then 'Bali'
 		when INITCAP(ap.provinsi) = 'Palu' then 'Palu'
 		else INITCAP(ak.kabupaten)
-	end as "Kabupaten",
+	end as "Kabupaten",;
 	sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost"
 from "transaction" t 
 	left outer join memberships m on (t.id_cust_fk = m.jbid)
