@@ -427,13 +427,13 @@ SELECT
 FROM memberships ms
 	join users u on u.username = ms.username 
 	JOIN sranks sr ON ms.jbid = sr.jbid
-WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('khusnu1209421'))
+WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('litalu1812381'))
 	--22115186779 --= 23075375780 --nama ilike '%qurrotun%'
 	 AND sr.srank >= 1 
 --	and AGE(now(), ms.activated_at) < INTERVAL '3 months' 
 	 or lower(ms.username) -- ILIKE ANY(ARRAY[
 	 in (
-	 lower('khusnu1209421')
+	 lower('litalu1812381')
 )
 --	])
 ORDER BY case 
@@ -618,7 +618,7 @@ select * from users u where username ='karint0212601';
 --  4 untuk JNE dan 7 untuk TIKI
 select id, code_trans, transaction_date, courier, deleted_at, status 
 from "transaction" t 
-where code_trans in ('PYPPPJ');
+where code_trans in ('VLWDFQ');
 select * from transaction_detail td where id_trans_fk =145757;
 
 select t.code_trans, status, is_pickup, shipping_name, shipping_phone, shipping_address,
@@ -642,8 +642,11 @@ select * from alamat_kelurahan ak where id_kecamatan in (7371031); --kelurahan i
 
 -- UBAH NO REKENING
 select * from memberships m where username ='karima0608691';
-select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  from users u where username ilike 'abdulm2212951'; -- in ('desry2803141');
+select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  
+from users u where username in ('fathul2012391'); --ilike 'abdulm2212951'; -- 
 select * from bank b;
+
+update users set id_bank_fk = null, bank_name = null, bank_acc_name = null, bank_acc_num = null  where username in ('nurhas050175','waliya0905761');
 
 -- Tarik data transaksi
 SELECT transaction_date , code_trans, m.jbid, m.username, u.nama, sp."name" 
@@ -739,7 +742,7 @@ where u.username in ('indrag020218');
 
 select m.id, m.username, m.jbid, m.spid, m.upid, m."left", m."right", m.activated_at, m.status 
 from memberships m 
-where m.username in ('christ290199') or jbid in (13165)
+where m.username in ('manan1011961','arikha2011201') or jbid in (23115538056,24025648483)
 --	m.username in ('daniel0412291', 'effend0412251') or m.username ilike 'esters0412451%' or m.username ilike 'afriya0412581%'
 order by m.id;
 
@@ -1115,6 +1118,6 @@ select * from budget_reserves br order by "date"  desc;
 
 
 
-select * from users u where username in ('budiwa0409571','budiwa0502621','hilal2202661') or nama ilike '%li%jemm%';
+select * from users u where username in ('budiwa0409571','budiwa0502621') or nama ilike '%li%jemm%';
 
 

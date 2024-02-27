@@ -12,7 +12,7 @@ FROM "transaction" tr
 WHERE tr.deleted_at IS NULL 
 	AND tr.pickup_stock_pack = 'MPUC001' -- 'PUC003' 
 	AND tr.is_pickup = 1 
-	AND tr.status = 'PC'
+	AND tr.status = 'PC' -- PC = BELUM PICKUP
 ORDER BY tr.pickup_stock_pack, 
 		 tr.transaction_date;
 		 

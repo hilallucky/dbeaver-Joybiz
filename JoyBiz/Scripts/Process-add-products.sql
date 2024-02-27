@@ -1,5 +1,5 @@
 
-select * --kode, nama, shipping_budget 
+select kode, nama, shipping_budget, weight, status, is_show, is_show --* 
 from barang b 
 where --nama ilike '%Joypolinse%'
 --	nama = 'Go Gamma BVB Pack (J40)'
@@ -20,6 +20,17 @@ order by id
 1658
 1659
 1660
+
+
+
+select kode, nama, shipping_budget, "desc" , weight, status, is_show, is_show, created_at  --* 
+from barang b 
+where nama ilike '%joy%omega%%' -- and ("desc" is null or "desc" = '')  --and nama not ilike '%Turbo Pack'
+--	nama = 'Go Gamma BVB Pack (J40)'
+--	or contains(nama, 'Start-Up Titanium')
+order by weight, status, id desc;
+
+
 
 select * from barang where core = true and nama ilike 'Joyrazero%'; 
 

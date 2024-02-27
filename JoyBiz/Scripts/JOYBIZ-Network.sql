@@ -31,7 +31,7 @@ WITH RECURSIVE hierarchy_cte AS (
     	left outer join users u1 on m1.username = u1.username
 --    	left outer join "transaction" t1 on m1.jbid = t1.id_cust_fk
     WHERE 
-    u1.username = 'khusnu12094213'
+    u1.username = 'nizani0602211'
 --    m1.jbid = 14922
 
     UNION ALL
@@ -206,22 +206,95 @@ from tree_path t;
 */
 
 
-WITH RECURSIVE upline_cte AS (
+WITH RECURSIVE sponsor_cte AS (
     select  distinct  on (m1.username) m1.id, m1.username, m1.jbid, m1.spid, m1.upid --, u1.nama
     FROM memberships m1
 --    	join users u1 on m1.username = u1.username
-    WHERE lower(m1.username) in ('anisha2211511')
+    WHERE lower(m1.username) in ('amarmu2305211')
     UNION
     SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid --, u2.nama
     FROM memberships m2
 --    	left outer join users u2 on m2.username = u2.username
-	    JOIN upline_cte ucte ON m2.jbid = ucte.spid
+	    JOIN sponsor_cte ucte ON m2.jbid = ucte.spid
 --    WHERE t2.transaction_date is not null
 )
 select id, username, jbid, spid, upid
-FROM upline_cte u 
+FROM sponsor_cte u 
 order by id desc;
 --ORDER BY u.username, u.transaction_date DESC;
+
+
+select * from "transaction" t where t.id_cust_fk in (22055054987) order by id desc;
+
+do 
+$$
+	declare 
+	    xusername text := 'atiksa181132';
+		_query text;
+		_cursor CONSTANT refcursor := '_cursor';
+	begin
+		_query := 'select ''' || xusername ||''' as "col1";';
+	
+		OPEN _cursor FOR EXECUTE _query;
+	end
+$$;
+FETCH ALL FROM _cursor;
+
+
+-- =====================================================================================================================================================================
+-- START CHECK UPLINE & LATEST ORDER
+-- =====================================================================================================================================================================
+
+do 
+$$
+	declare 
+	    xusername text := 'amarmu2305211';
+		_query text;
+		_cursor CONSTANT refcursor := '_cursor';
+	begin
+		_query := 'WITH RECURSIVE upline_cte AS (
+			    select  distinct  on (m1.username) ''' || xusername || '''  as x, m1.id, m1.username, m1.jbid, m1.spid, m1.upid
+			    FROM memberships m1
+			    WHERE lower(m1.username) in (''' || xusername || ''')
+			    UNION
+			    SELECT ucte.x, m2.id, m2.username, m2.jbid, m2.spid, m2.upid
+			    FROM memberships m2
+				    JOIN upline_cte ucte ON m2.jbid = ucte.upid
+			)
+			select distinct on (u.x, u.id) u.x as "source_user", u.id, u.username, --u.jbid, u.spid, u.upid, 
+				t1.t_date, t1.code_trans, t1.status, t1.bv_total, AGE(now(), t1.t_date) ,
+				case 
+					when AGE(now(), t1.t_date) > INTERVAL ''1 year'' then ''> 1 year''
+					when (t1.bv_total < 0 or t1.bv_total is null) then ''> 1 year''
+					else '''' 
+				end as "age of transaction"
+			FROM upline_cte u 
+				 left outer join (
+				 		select distinct on (tx.id_cust_fk) tx.id_cust_fk, max(tx.transaction_date) as t_date, tx.code_trans, tx.status, tx.bv_total
+				 		from "transaction" tx
+				 		where tx.status in(''PC'', ''S'', ''A'', ''I'') 
+				 		group by tx.id_cust_fk, tx.code_trans, tx.status, tx.bv_total
+				 	) t1 on u.jbid = t1.id_cust_fk --and t.code_trans = t1.code_trans 
+			order by u.x, u.id desc;';
+		
+		
+		OPEN _cursor FOR EXECUTE _query;
+	end
+$$;
+FETCH ALL FROM _cursor;
+
+-- =====================================================================================================================================================================
+-- END CHECK UPLINE & LATEST ORDER
+-- =====================================================================================================================================================================
+
+select * from stock_packs sp 
+
+select max(t.transaction_date) as "t_date", t.bv_total as "bv_total", t.status, t.code_trans
+from "transaction" t 
+where t.id_cust_fk = 22055054987
+group by t.bv_total, t.status, t.code_trans
+order by max(t.transaction_date) desc
+limit 1;
 
 
 select * from memberships m  where jbid = 22095123936;
