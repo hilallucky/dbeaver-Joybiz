@@ -210,7 +210,7 @@ WITH RECURSIVE sponsor_cte AS (
     select  distinct  on (m1.username) m1.id, m1.username, m1.jbid, m1.spid, m1.upid --, u1.nama
     FROM memberships m1
 --    	join users u1 on m1.username = u1.username
-    WHERE lower(m1.username) in ('amarmu2305211')
+    WHERE lower(m1.username) in ('marlin1309511')
     UNION
     SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid --, u2.nama
     FROM memberships m2
@@ -248,7 +248,7 @@ FETCH ALL FROM _cursor;
 do 
 $$
 	declare 
-	    xusername text := 'amarmu2305211';
+	    xusername text := 'ayuros2804701';
 		_query text;
 		_cursor CONSTANT refcursor := '_cursor';
 	begin

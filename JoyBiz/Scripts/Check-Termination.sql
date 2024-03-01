@@ -23,6 +23,7 @@ from memberships m
 --	left outer join users u4 on m.owner = u4.uid 
 where u.nama is not null and
 	m.username ILIKE ANY(ARRAY[
+		'marlin1309511%',
 		'budisa270852%',
 		'amarmu2305211',
 		'andang2508341%',
@@ -54,3 +55,23 @@ order by REPLACE(m.username,'-delete','')
 -- =====================================================================================================================================================================
 -- END CHECK TERMINATION
 -- =====================================================================================================================================================================
+
+
+
+SELECT u.username as "u_owner", m.username, u.nama ,case when (s.srank = 0 or s.srank is null) then '' else r.short_name end as "rank_desc"
+from memberships m 
+	left outer join sranks s on m.jbid = s.jbid 
+	left outer join ranks r on s.srank = r.id
+	left outer join users u on m."owner" = u.uid 
+where m.username ILIKE ANY(ARRAY[
+			'fazril0604391%',
+			'sindiw0911571%',
+			'suward1210911%',
+			'ayuros2804701%',
+			'ramlan1109281%',
+			'marlin1309511%'
+		])
+--group by u.username, m.username, u.nama, s.srank, r.short_name
+;
+
+

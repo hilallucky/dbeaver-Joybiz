@@ -623,7 +623,7 @@ select * from transaction_detail td where id_trans_fk =145757;
 
 select t.code_trans, status, is_pickup, shipping_name, shipping_phone, shipping_address,
 		shipping_city, shipping_province, shipping_village, shipping_district, shipping_cost 
-from "transaction" t where t.code_trans in ('PO9WB9') ;
+from "transaction" t where t.code_trans in ('PO9WB9','EMB49O') ;
 
 update "transaction" 
 set shipping_name= null, shipping_phone= null, shipping_address= null, courier = null,
@@ -643,7 +643,7 @@ select * from alamat_kelurahan ak where id_kecamatan in (7371031); --kelurahan i
 -- UBAH NO REKENING
 select * from memberships m where username ='karima0608691';
 select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  
-from users u where username in ('fathul2012391'); --ilike 'abdulm2212951'; -- 
+from users u where username in ('sitinu2802271'); --ilike 'abdulm2212951'; -- 
 select * from bank b;
 
 update users set id_bank_fk = null, bank_name = null, bank_acc_name = null, bank_acc_num = null  where username in ('nurhas050175','waliya0905761');

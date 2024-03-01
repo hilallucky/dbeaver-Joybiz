@@ -8,7 +8,7 @@
 do 
 $$
 	declare 
-	    xusername text := 'warsik0606571';
+	    xusername text := 'sindiw0911571';
 		_query text;
 		_cursor CONSTANT refcursor := '_cursor';
 	begin
@@ -85,3 +85,8 @@ FETCH ALL FROM _cursor;
 --
 --
 --
+
+
+--select * from memberships m where username = 'ramlan1109281' or ("left" = 21094795076 or "right"  = 21094795076);
+
+
