@@ -102,13 +102,20 @@ from memberships m
 */
 
 
+select * from users u where username in ('evaher0403371','evaher0403691');
+select * from memberships m where username in ('evaher0403371','evaher0403691');
+
+
+
 select username, jbid, spid, upid, "left", "right", activated_at, created_at 
 from memberships m 
 where "left" = "right" and "left" is not null and "right" is not null ;
 
 select username, jbid, spid, upid, "left", "right", updated_at  
 from memberships m 
-where m.username in ('hacepw2502681', 'ahmadh2602591');
+where m.username in ('esters04124518',
+'titina0103241'
+);
 
 select * from sranks m where m.jbid in (24025667435);
 
@@ -127,29 +134,48 @@ where jbid in ('24025666827');
 
 select id, "owner", username, jbid, spid, upid, "left", "right", deleted_at 
 from memberships m 
-where "left" = 24025667435 or "right" = 24025667435;
+where "left" = 24035673592 or "right" = 24035673592;
 
 update memberships set "left" = null 
-where "left" = 24025667435;
+where "left" = 24035673592;
 
+update memberships set "right" = null, "left" = 24035673592 where jbid = 24035674466;
 
 -- ===============================================================================================================
 -- START UPDATE UPLINE
 -- ===============================================================================================================
 DO $$ 
 DECLARE
-    xusername text := 'hacepw2502681';
-    new_upline_username text := 'ahmadh2602591';
+    xusername text := 'titina0103241';
+    new_upline_username text := 'esters04124518';
     jbid_user bigint;
     jbid_upline bigint;
    	right_downline bigint;
    	left_downline bigint;
+   	upline_existing text;
+   	right_existing bigint;
+   	left_existing bigint;
 
-   BEGIN
+   begin
+		
+	-- Check if this member belongs to left/right someone (upline)
+	SELECT m.username, m."left", m."right" into upline_existing, left_existing, right_existing
+	FROM memberships m 
+		 inner join memberships m2 on m."left" = m2.jbid or m."right" = m2.jbid  
+	WHERE m2.username  = xusername;
+
+	-- update to null for existing upline
+	if left_existing is not null then
+		update memberships set "left" = null, updated_at = now() where username = upline_existing;
+	elseif right_existing is not null then
+		update memberships set "right" = null, updated_at = now() where username = upline_existing;
+	end if;
+	
+	   
 	-- Find correct jbid for new sponsor
     SELECT jbid INTO jbid_user FROM memberships WHERE username = xusername;
     SELECT jbid, "right", "left" INTO jbid_upline, right_downline, left_downline FROM memberships WHERE username = new_upline_username;
-   
+	
    if left_downline is null then
    		update memberships set upid = jbid_upline, updated_at = now() where username = xusername;
 		update sranks set upid = jbid_upline, updated_at = now() where jbid = jbid_user;
@@ -161,12 +187,51 @@ DECLARE
   	end if;
   	
     -- Display the values (you can replace this with your actual update statement)
-    RAISE NOTICE 'Result: xusername = %, new_upline_username = %, jbid_upline = %', xusername, new_upline_username, jbid_upline;
+    RAISE NOTICE 'Result: xusername = %, existing_upline_username = %, new_upline_username = %, jbid_upline = %', xusername, upline_existing, new_upline_username, jbid_upline;
 
 END $$;
 -- ===============================================================================================================
 -- END UPDATE UPLINE
 -- ===============================================================================================================
+
+
+
+	SELECT m.username, m.jbid, m.spid 
+	FROM memberships m   
+	WHERE m.username  = 'titina0103241';
+
+
+-- ===============================================================================================================
+-- START UPDATE SPONSOR
+-- ===============================================================================================================
+DO $$ 
+DECLARE
+    xusername text := 'titina0103241';
+    new_sponsor_username text := 'esters04124518';
+    jbid_user bigint;
+    new_jbid_sponsor bigint;
+   	sponsor_existing text;
+   	right_existing bigint;
+   	left_existing bigint;
+
+   begin
+		
+	-- Check jbid for new sponsor
+	SELECT m.username, m.jbid into new_sponsor_username, new_jbid_sponsor
+	FROM memberships m 
+	WHERE m.username  = new_sponsor_username;
+	
+	update memberships set spid = new_jbid_sponsor, updated_at = now() where username = xusername;
+	update sranks set spid = new_jbid_sponsor, updated_at = now() where jbid = (select jbid from memberships where username = xusername);
+
+    -- Display the values (you can replace this with your actual update statement)
+    RAISE NOTICE 'Result: xusername = %, new_sponsor_username = %, new_jbid_sponsor = %', xusername, new_sponsor_username, new_jbid_sponsor;
+
+END $$;
+-- ===============================================================================================================
+-- END UPDATE SPONSOR
+-- ===============================================================================================================
+
 
 
 select id, jbid, spid, upid from memberships where username = 'arwiti1911141';

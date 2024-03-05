@@ -74,4 +74,4 @@ where m.username ILIKE ANY(ARRAY[
 --group by u.username, m.username, u.nama, s.srank, r.short_name
 ;
 
-
+select * from users u where u.username = 'tarmuj0602391';

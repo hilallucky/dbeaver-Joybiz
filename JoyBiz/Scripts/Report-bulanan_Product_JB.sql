@@ -19,7 +19,7 @@ td.id_barang_fk IN ( -- id_induk_fk dari table barang_detail
 8,
 10,
 11,
-13,;
+13,
 16,
 17,
 18,

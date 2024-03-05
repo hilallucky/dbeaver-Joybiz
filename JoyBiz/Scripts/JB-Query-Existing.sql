@@ -18,7 +18,8 @@ select * from fee_pucs fp order by "date" desc;
 select to_char(now(), 'YYYY-MM-DD');
 
 select * from users u where username like 'muarif180323';
-select * from memberships m where username like 'muarif180323';
+select * from memberships m where username like 'budiwa0409571';
+update memberships set deleted_at = now() where username = 'budiwa0409571';
 
 
 select jbid,upid,ppv,pbv,ppvj,pbvj,erank
@@ -643,7 +644,7 @@ select * from alamat_kelurahan ak where id_kecamatan in (7371031); --kelurahan i
 -- UBAH NO REKENING
 select * from memberships m where username ='karima0608691';
 select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  
-from users u where username in ('sitinu2802271'); --ilike 'abdulm2212951'; -- 
+from users u where username in ('andari0408331'); --ilike 'abdulm2212951'; -- 
 select * from bank b;
 
 update users set id_bank_fk = null, bank_name = null, bank_acc_name = null, bank_acc_num = null  where username in ('nurhas050175','waliya0905761');
@@ -692,7 +693,7 @@ select * from barang b ;
 
 -- UPDATE PICKUP KE SHIPPING ATAU SEBALIKNYA
 select * from stock_packs sp;
-select code_trans, status, is_pickup, pickup_stock_pack  from "transaction" t where code_trans = 'ULXU7K';
+select code_trans, status, is_pickup, pickup_stock_pack  from "transaction" t where code_trans = 'QTA6CM';
 
 
 -- UBAH NO HP PENGIRIMAN

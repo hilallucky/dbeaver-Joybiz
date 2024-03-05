@@ -1,5 +1,5 @@
 
-select kode, nama, shipping_budget, weight, status, is_show, is_show --* 
+select kode, nama, harga_1, harga_2, harga_3, harga_retail_1, harga_retail_2, harga_retail_3 , shipping_budget, weight, status, is_show, is_show --* 
 from barang b 
 where --nama ilike '%Joypolinse%'
 --	nama = 'Go Gamma BVB Pack (J40)'
@@ -48,7 +48,12 @@ order by b.nama ;
 
 select * from products p where code ilike '%1346%';
 
-select * from media m where id_barang_fk in (1637,1645) order by id_barang_fk  desc;
+select * from media m where id_barang_fk in (1637,1645,
+1656,
+1657,
+1658,
+1659,
+1660) order by id_barang_fk  desc;
 
 
 select id , nama, status, is_show , created_at , updated_at, deleted_at  from barang b where nama like 'Joybizer (J31)'; --id in (1560);
