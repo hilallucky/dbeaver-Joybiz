@@ -51,6 +51,7 @@
 			"custom-properties": {
 				"resultset.behavior.doubleClick": "EDITOR",
 				"resultset.grid.value.format": "UI",
+				"resultset.maxrows": "0",
 				"resultset.show.colorizeDataTypes": "true"
 			}
 		},

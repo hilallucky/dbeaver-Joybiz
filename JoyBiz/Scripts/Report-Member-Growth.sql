@@ -28,7 +28,8 @@
 				left outer join alamat_kabupaten ak on u.kota_kabupaten::int = ak.id
 			where 
 				u.deleted_at is null and
-				 to_char(u.activated_at, 'YYYY-MM') between '2023-01' and '2024-02'
+				 to_char(u.activated_at, 'YYYY-MM-DD') between '2024-01-01' and '2024-03-07'
+--				 to_char(u.activated_at, 'YYYY-MM') between '2023-01' and '2024-02'
 			group by to_char(u.activated_at, 'YYYY-MM'), ap.provinsi, ak.kabupaten
 			order by 
 					INITCAP(ap.provinsi), INITCAP(ak.kabupaten), 
