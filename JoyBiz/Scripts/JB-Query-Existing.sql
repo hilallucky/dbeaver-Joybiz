@@ -9,7 +9,7 @@ from joy_point_reward_cashes jc
 	join users u ON ms.uid = u.uid
 where jc."date" between  '2023-12-28'and current_date and jc.deleted_at is null
 and jc.deleted_at is null
-and u.username ilike 'mohammad171260' 
+and u.username ilike 'indram0911961' 
 group by u.nama, ms.username, u.handphone
 order by  total desc;
 
@@ -45,22 +45,48 @@ select * from week_periodes wp where id in (306, 307, 308) order by id;
 select * from joy_point_rewards jpr where owner='6255b234-3121-49ef-a1ca-9347cf8412be' order by date desc;
 
 
+
+-- GET EVERY NEXT 7 DAY BETWEEN 2 DATES
+select count(1) 
+from 
+  (
+  	select '2023-12-28'::date + s*'7day'::interval as datum 
+  	from generate_series(0,current_date::date - '2023-01-28'::date) s
+  ) foo 
+where extract(dow from datum)=0;
+
+
+select u.username, u.created_at, u.activated_at from users u where u.username = 'indram0911961';
+
 -- CHECK QUALIFIKASI TURKIYE (PONT REWARDS) -- MIN PERINGKAT GAMMA, TOTAL POINT REWARDS MIN 250 -- POS 1
-select ms.username, 
+select 
+	u.activated_at, 
+	case
+		when u.activated_at::date <= '2023-12-27' then (current_date::date - '2023-12-28'::date)/7 -- jika join di bawah tanggal 27 des 2023, maka hitung kamis mulai dari tanggal 28-23-2023
+		else (current_date::date - u.activated_at::date)/7 -- hitung kamis dari tanggal join
+	end	as "aging",
+	ms.username, 
 	u.nama, u.handphone, 
-	sum(jp.joy) as point_reward_joy, sum(jp.biz) as point_reward_biz, sum(jp.biz + jp.joy) as total,
+	sum(jp.joy) as point_reward_joy, sum(jp.biz) as point_reward_biz, sum(jp.biz + jp.joy) as total, s.srank, r.short_name,
 	case 
-		when sum(jp.biz + jp.joy) between 250 and 499.999 then 'POS 1'
-		when sum(jp.biz + jp.joy) >= 500 then 'POS 2'
+		when sum(jp.biz + jp.joy) between 100 and 549 then 'POS 1' -- 250 and 499.999 (2023)
+		when sum(jp.biz + jp.joy) between 550 and 4099 then 'POS 2' -- 500 (2023)
+		when sum(jp.biz + jp.joy) >= 4100 then 'POS 3'
 	end
 from joy_point_rewards jp
 	join memberships ms on jp.owner = ms.uid 
 	left outer join users u on ms.uid = u.uid or ms."owner" = u.uid 
-where jp."date" BETWEEN '2022-12-29'and now()::date and jp.deleted_at is null
+	left outer join sranks s on ms.jbid = s.jbid 
+	left outer join ranks r on s.srank = r.id 
+where 
+	jp."date" BETWEEN '2023-12-28'and now()::date and jp.deleted_at is null
+--	jp."date" between  '2023-12-28'and current_date and jp.deleted_at is null
 	and jp.deleted_at is null
---	and ms.username ='bessew210665'
-group by ms.username, u.nama, u.handphone
-having sum(jp.biz + jp.joy) >= 250 --between 200 and 249-- 
+--	and ms.username ='indram0911961'
+group by 
+	u.activated_at, 
+	ms.username, u.nama, u.handphone, s.srank, r.short_name
+having sum(jp.biz + jp.joy) >= 50 --between 200 and 249-- 
 order by point_reward_joy asc;
 
 -- CHECK QUALIFIKASI CASH REWARDS
@@ -68,8 +94,8 @@ select u.nama, ms.username, u.handphone, sum(jc.joy) as point_reward_joy, sum(jc
 from joy_point_reward_cashes jc
 	join memberships ms on jc.owner = ms.uid 
 	left outer join users u on ms.uid = u.uid or ms."owner" = u.uid 
-where jc."date" between '2022-12-29'and now()::date
---	and ms.username ='ridwan0807538'
+where jc."date" between '2023-12-29'and now()::date
+	and ms.username ='indram0911961'
 	and jc.deleted_at is null
 --	and jc.deleted_at is null 
 group by u.nama, ms.username, u.handphone
@@ -644,7 +670,7 @@ select * from alamat_kelurahan ak where id_kecamatan in (7371031); --kelurahan i
 -- UBAH NO REKENING
 select * from memberships m where username ='karima0608691';
 select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  
-from users u where username in ('karto0611411'); --ilike 'abdulm2212951'; -- 
+from users u where username in ('firman191136'); --ilike 'abdulm2212951'; -- 
 select * from bank b;
 
 update users set id_bank_fk = null, bank_name = null, bank_acc_name = null, bank_acc_num = null  where username in ('nurhas050175','waliya0905761');
@@ -693,7 +719,7 @@ select * from barang b ;
 
 -- UPDATE PICKUP KE SHIPPING ATAU SEBALIKNYA
 select * from stock_packs sp;
-select code_trans, status, is_pickup, pickup_stock_pack  from "transaction" t where code_trans = 'QTA6CM';
+select code_trans, status, is_pickup, pickup_stock_pack  from "transaction" t where code_trans in ('05AQMY','TN1ZD3');
 
 
 -- UBAH NO HP PENGIRIMAN

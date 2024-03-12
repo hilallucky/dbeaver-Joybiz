@@ -113,9 +113,9 @@ where "left" = "right" and "left" is not null and "right" is not null ;
 
 select username, jbid, spid, upid, "left", "right", updated_at  
 from memberships m 
-where m.username in ('esters04124518',
-'titina0103241'
-);
+where m.username in ('saepul0703901',
+'hujang0803991'
+) or jbid in (24035679450);
 
 select * from sranks m where m.jbid in (24035673713);
 
@@ -123,7 +123,7 @@ select * from sranks m where m.jbid in (24035673713);
 
 update memberships 
 set "right"  = null --case "right" IS NULL then 
-where username in ('ayunab0111641');
+where username in ('saepul0703901');
 
 
 update sranks  
@@ -146,8 +146,8 @@ update memberships set "right" = null, "left" = 24035673592 where jbid = 2403567
 -- ===============================================================================================================
 DO $$ 
 DECLARE
-    xusername text := 'titina0103241';
-    new_upline_username text := 'esters04124518';
+    xusername text := 'saepul0703901';
+    new_upline_username text := 'hjaanr1003641';
     jbid_user bigint;
     jbid_upline bigint;
    	right_downline bigint;
