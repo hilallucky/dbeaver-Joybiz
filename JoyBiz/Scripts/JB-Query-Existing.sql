@@ -502,13 +502,18 @@ from users u
 where u.username in ('daniel0412291', 'effend0412251','esters0412451','afriya0412581')
 order by m.id;
 
+select * from alamat_provinsi ap where provinsi ilike '%sul%sel%';
+select * from alamat_kabupaten ak2 where id_provinsi in (73) and kabupaten ilike '%makassar%'; ;--id in (3209, 3404);--3172
+select * from alamat_kecamatan ak where id_kabupaten in (7371); -- kecamatan ilike '%jember%';-- id_kabupaten in (1802);--3673060 --
+select * from alamat_kelurahan ak where kelurahan ilike '%ramatwatu%'; -- 3673060001 id_kecamatan = 1802043; -- 7371031001 id_kecamatan in (7371031); --
+
 
 -- UBAH SPONSOR/ALAMAT
 select ID,nama,  username, email, handphone, alamat, kelurahan, kecamatan, kota_kabupaten, provinsi, status , no_npwp, 
 	id_bank_fk, bank_name, bank_acc_num, bank_acc_name, created_at, activated_at, uid 
 from users u 
 where 
-	username ilike ('widyan2002721') -- or 
+	username ilike ('abdulm1310721') -- or 
 --	username ilike 'zalimi0301211' -- or username ilike 'andang0812121%' or username ilike 'budisa0812841%'; 
 --	 email in ('atisanti77@gmail.com','daraesanr@gmail.com','yanakayaraya@gmail.com','iamulyaningsih262@gmail.com','agusmpasya@gmail.com');
 ;
@@ -645,7 +650,7 @@ select * from users u where username ='karint0212601';
 --  4 untuk JNE dan 7 untuk TIKI
 select id, code_trans, transaction_date, courier, deleted_at, status 
 from "transaction" t 
-where code_trans in ('VLWDFQ');
+where code_trans in ('QPIGGN');
 select * from transaction_detail td where id_trans_fk =145757;
 
 select t.code_trans, status, is_pickup, shipping_name, shipping_phone, shipping_address,
@@ -669,8 +674,8 @@ select * from alamat_kelurahan ak where id_kecamatan in (7371031); --kelurahan i
 
 -- UBAH NO REKENING
 select * from memberships m where username ='karima0608691';
-select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp  
-from users u where username in ('firman191136'); --ilike 'abdulm2212951'; -- 
+select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp, handphone 
+from users u where username in ('wiwikr230842'); --ilike 'abdulm2212951'; -- 
 select * from bank b;
 
 update users set id_bank_fk = null, bank_name = null, bank_acc_name = null, bank_acc_num = null  where username in ('nurhas050175','waliya0905761');
@@ -728,7 +733,7 @@ select id, code_trans, transaction_date, created_at, purchase_cost, shipping_cos
 from "transaction" t 
 where code_trans in ('ORJ3JL');
 select * from transaction_detail td where id_trans_fk = '144918';
-select * from tra td where id_trans_fk = '144376';
+select * from transaction_detail td where id_trans_fk = '144376';
 
 
 UPDATE "transaction"

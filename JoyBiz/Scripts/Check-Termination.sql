@@ -58,20 +58,27 @@ order by REPLACE(m.username,'-delete','')
 
 
 
-SELECT u.username as "u_owner", m.username, u.nama ,case when (s.srank = 0 or s.srank is null) then '' else r.short_name end as "rank_desc"
+SELECT u.username as "u_owner", m.jbid, m.username, u.nama, 
+		m.spid, m3.username as "sp;_name", m.upid, m2.username as "up_name", 
+		s.srank, case when (s.srank = 0 or s.srank is null) then '' else r.short_name end as "rank_desc"
 from memberships m 
+	left outer join memberships m2 on m.upid = m2.jbid 
+	left outer join memberships m3 on m.spid = m3.jbid 
 	left outer join sranks s on m.jbid = s.jbid 
 	left outer join ranks r on s.srank = r.id
 	left outer join users u on m."owner" = u.uid 
 where m.username ILIKE ANY(ARRAY[
-			'fazril0604391%',
-			'sindiw0911571%',
-			'suward1210911%',
-			'ayuros2804701%',
-			'ramlan1109281%',
-			'marlin1309511%'
+--			'fazril0604391',
+			'sindiw0911571',
+			'suward1210911',
+			'ayuros2804701',
+			'ramlan1109281',
+			'marlin1309511'
 		])
 --group by u.username, m.username, u.nama, s.srank, r.short_name
 ;
 
+select * from sranks s where s.jbid = 21094795076;
 select * from users u where u.username = 'tarmuj0602391';
+
+

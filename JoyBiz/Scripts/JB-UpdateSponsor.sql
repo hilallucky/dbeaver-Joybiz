@@ -49,15 +49,20 @@ username ilike 'desiya0202281'
 --where m."left" is null and m."right" is null
 order by id;
 
+select * from lmh_remove_units('mjefry1202711');
+select * from memberships m where username ilike 'mjefry1202711%';
+
 /*  ==================================================================================================================================
  *  START UPDATE HAPUS HU
  *  ==================================================================================================================================
  */
 
+
+
 DO $$ 
 DECLARE
 	row_id integer;
-    xusername text := 'desiya0202281';
+    xusername text := 'mjefry1202711';
     xowner text;
     add_username text := '-delete';
 
@@ -113,9 +118,9 @@ where "left" = "right" and "left" is not null and "right" is not null ;
 
 select username, jbid, spid, upid, "left", "right", updated_at  
 from memberships m 
-where m.username in ('saepul0703901',
-'hujang0803991'
-) or jbid in (24035679450);
+where m.username in ('marlin1309511',
+'ramlan1109281'
+);
 
 select * from sranks m where m.jbid in (24035673713);
 
@@ -141,15 +146,57 @@ where "left" = 24035673592;
 
 update memberships set "right" = null, "left" = 24035673592 where jbid = 24035674466;
 
+
+	-- Check if this member belongs to left/right someone (upline)
+	SELECT m.username, m."left", m."right"
+	FROM memberships m 
+		 inner join memberships m2 on m."left" = m2.jbid or m."right" = m2.jbid  
+	WHERE m2.username  ='marlin1309511';
+
+
+
+
+
+
+
+
+
+select username, jbid, spid, upid, "left", "right", updated_at  
+from memberships m 
+where m."left"  = m."right" and "right" is not null and "left" is not null
+order by updated_at desc ;
+
+update memberships set "right" = null where username = 'dewapu2009561';
+
+
+
+select username, jbid, spid, upid, "left", "right", updated_at, status, activated_at 
+from memberships m 
+where m.username in ('marlin1309511','ayuros2804701');
+
+
+select username, jbid, spid, upid, "left", "right", updated_at  
+from memberships m 
+where m.upid in (24035680055);
+
+-- UPDATE UPLINE & SPONSOR WITH FUNCTION
+-- lmh_update_upline_sponsor(:p_username, :p_new_upline, :p_change_sponsor_also, :p_new_sponsor)
+select * from lmh_update_upline_sponsor('marlin1309511', 'ramlan11092815', true, 'ramlan1109281');
+select * from lmh_update_upline_sponsor('suward1210911', 'ramlan11092812', true, 'ramlan1109281');
+
+
 -- ===============================================================================================================
 -- START UPDATE UPLINE
 -- ===============================================================================================================
 DO $$ 
 DECLARE
-    xusername text := 'saepul0703901';
-    new_upline_username text := 'hjaanr1003641';
+    xusername text := 'marlin1309511';
+    new_upline_username text := 'ramlan11092815';
+   	change_sponsor_also boolean := true;
+    new_sponsor_username text := 'ramlan11092815';
     jbid_user bigint;
     jbid_upline bigint;
+    jbid_sponsor bigint;
    	right_downline bigint;
    	left_downline bigint;
    	upline_existing text;
@@ -172,7 +219,7 @@ DECLARE
 	end if;
 	
 	   
-	-- Find correct jbid for new sponsor
+	-- Find correct jbid for new upline
     SELECT jbid INTO jbid_user FROM memberships WHERE username = xusername;
     SELECT jbid, "right", "left" INTO jbid_upline, right_downline, left_downline FROM memberships WHERE username = new_upline_username;
 	
@@ -185,9 +232,18 @@ DECLARE
 		update sranks set upid = jbid_upline, updated_at = now() where jbid = jbid_user;
 		update memberships set "right" = jbid_user, updated_at = now() where username = new_upline_username;
   	end if;
+  
+  	-- If also want to change sponsor
+	if change_sponsor_also = true then
+    	SELECT jbid INTO jbid_sponsor FROM memberships WHERE username = new_sponsor_username;
+    
+		update memberships set spid = jbid_sponsor, updated_at = now() where username = xusername;
+		update sranks set spid = jbid_sponsor, updated_at = now() where jbid = jbid_user;
+	end if;
   	
     -- Display the values (you can replace this with your actual update statement)
-    RAISE NOTICE 'Result: xusername = %, existing_upline_username = %, new_upline_username = %, jbid_upline = %', xusername, upline_existing, new_upline_username, jbid_upline;
+    RAISE NOTICE 'Result: xusername = %, existing_upline_username = %, new_upline_username = %, jbid_upline = %', 
+   				xusername, upline_existing, new_upline_username, jbid_upline;
 
 END $$;
 -- ===============================================================================================================
@@ -458,3 +514,27 @@ select * from "transaction" t where transaction_date is not null order by transa
 
 
 select * from fee_pucs fp order by fp."date" desc;
+
+
+/*
+ic.test(
+		p_username text,
+		p_new_upline text,
+		p_change_sponsor_also boolean,
+		p_new_sponsor text
+*/
+
+select username, jbid, spid, upid, "left", "right", updated_at  
+from memberships m 
+where m.username in ('marlin1309511',
+'ramlan11092815'
+);
+
+
+select * from test('marlin1309511', 'ramlan11092815', true, 'ramlan11092815');
+
+
+
+select * from memberships m where username = 'ramlan11092815');
+
+

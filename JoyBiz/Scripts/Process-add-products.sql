@@ -21,6 +21,15 @@ order by id
 1659
 1660
 
+select 
+--	*
+	nama, status, is_show, is_show_sc, created_at, updated_at 
+from barang b where nama ILIKE 
+	ANY(ARRAY[
+		'%promari%',
+		'%projanfe%'
+		])
+order by created_at desc;
 
 
 select kode, nama, shipping_budget, "desc" , weight, status, is_show, is_show, created_at  --* 
@@ -32,7 +41,7 @@ order by weight, status, id desc;
 
 
 
-select * from barang where core = true and nama ilike 'Joyrazero%'; 
+select * from barang where nama ilike 'gamma%pack%pro%' order by created_at desc; --core = true and 
 
 
 select 	*

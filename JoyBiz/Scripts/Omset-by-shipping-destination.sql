@@ -1165,7 +1165,7 @@ where
 	t.deleted_at is null
 	and t.status in('PC', 'S', 'A', 'I') -- PAID
 --	and t.transaction_date::date -- >= '2023-05-29'  --		between '2023-11-28' and '2023-12-27' -- now() --'2024-12-10'
-	and to_char(t.transaction_date, 'YYYY-MM') between '2023-05' and '2023-12'
+	and to_char(t.transaction_date, 'YYYY-MM') between '2024-01' and '2024-02'
 	and (
 			ak.kabupaten ILIKE ANY(ARRAY['%Makassar%','%Banyuwangi%','%Kota Jambi%','%Jember%',
 										 '%Bombana%','%Purbalingga%','%Buton%Tengah%',
