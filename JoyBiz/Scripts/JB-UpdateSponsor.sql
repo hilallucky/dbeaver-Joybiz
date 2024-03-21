@@ -1,3 +1,5 @@
+select * from users u where username ilike 'mula';
+
 
 select m.id, m."owner", m.username, m.jbid, m.spid, m.upid, "left", "right", m.deleted_at
 from memberships m 
@@ -49,7 +51,7 @@ username ilike 'desiya0202281'
 --where m."left" is null and m."right" is null
 order by id;
 
-select * from lmh_remove_units('mjefry1202711');
+select * from lmh_remove_units('samsi0203281');
 select * from memberships m where username ilike 'mjefry1202711%';
 
 /*  ==================================================================================================================================
@@ -168,21 +170,40 @@ order by updated_at desc ;
 
 update memberships set "right" = null where username = 'dewapu2009561';
 
-
+select * from users u where username = 'marham1903331' or nama ='Marhamah';
 
 select username, jbid, spid, upid, "left", "right", updated_at, status, activated_at 
 from memberships m 
-where m.username in ('marlin1309511','ayuros2804701');
+where m.username in ('marham1903331','marham1903291');
 
+update memberships set "right" = null where username in ('noahkl2708631') and "right" = 24035683282000;
 
 select username, jbid, spid, upid, "left", "right", updated_at  
 from memberships m 
 where m.upid in (24035680055);
 
+
+select username, jbid, spid, upid, "left", "right", updated_at, status, activated_at 
+from memberships m 
+where m.right in (24035683282000);
+
+select * from users s where username ilike '%mulast%';
+select * from memberships m where username in ('mulast1803661','nasria2302811')  or jbid  in (24035683282,22014939977);
+select * from sranks s where s.jbid in (24035683282);
+select * from "transaction" t where t.id_cust_fk  in (24035683282);
+
 -- UPDATE UPLINE & SPONSOR WITH FUNCTION
 -- lmh_update_upline_sponsor(:p_username, :p_new_upline, :p_change_sponsor_also, :p_new_sponsor)
-select * from lmh_update_upline_sponsor('marlin1309511', 'ramlan11092815', true, 'ramlan1109281');
-select * from lmh_update_upline_sponsor('suward1210911', 'ramlan11092812', true, 'ramlan1109281');
+select * from lmh_update_upline_sponsor('adrike1603461', 'ramlan11092815', true, 'ramlan1109281');
+select * from lmh_update_upline_sponsor('gitonu1902681', 'gitonu1902681', false, '');
+
+--
+--#	username	jbid	spid	upid	left	right	updated_at	status	activated_at
+--1	"achmat2101171"	"22,014,939,977"	"21,074,713,651"	"22,014,934,120"	"22,024,985,928"	"22,085,097,593"	"2022-08-02 12:05:14.000"	"1"	"2022-01-22"
+--2	"mulast1803661"	"24,035,683,282,000"	"21,074,713,651"	"[NULL]"	"[NULL]"	"[NULL]"	"2024-03-19 13:07:00.000"	"1"	"2024-03-18"
+
+--hennie0911641	23115544555	23115544372	23115544372	23125587937	24015616535	2024-01-05 19:12:45.000	1	2023-11-09
+--suward1210911	22105148740	21094795076	21094795053	22115170729		2024-03-15 13:47:09.000	1	2022-10-12
 
 
 -- ===============================================================================================================

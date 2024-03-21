@@ -92,13 +92,15 @@ select 	*
 from barang b  
 where 
 --	b.nama 
---	ILIKE 
---	ANY(ARRAY[
---		'Go Gamma BVB Pack%(J39)',
---		'Start-Up Titanium%(J39)',
---		'Start-Up platinum%(J39)'
+--	ILIKE ANY(ARRAY[
+----		'Go Gamma BVB Pack%(J39)',
+----		'Start-Up Titanium%(J39)',
+----		'Start-Up platinum%(J39)'
+--		'%propolis%(j39)%',
+--		'%omega%(j39)%'
 --		])
-	b.id in (1637,1638,1639,1640)
+--	and 
+	b.id in (1568,1564) or kode in ('I002B')
 order by b.nama ;
 
 

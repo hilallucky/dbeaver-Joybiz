@@ -1,5 +1,6 @@
 
 
+
 /*
  * 
  * $this->data['status_payment'] = [
@@ -1227,4 +1228,130 @@ order by ap.provinsi, ak.kabupaten, to_char(t.transaction_date, 'YYYY-MM')
  * END OMZET BERDASARKAN TUJUAN PENGIRIMAN MONTHLY -- MARKETING -- LELA
  * ---------------------------------------------------------------------------------------------------------------------------------------------------------------
  */
+
+
+
+/*
+
+Omset bulan Desember, Januari, Februari dan 3 username yg belanja terbanyak 
+.
+1. Pringsewu Lampung
+2. Pesawaran Lampung
+3. Tulang Bawang Lampung
+4. Kotabumi Lampung
+*/
+
+
+select * from week_periodes wp;
+
+select * from barang b;
+
+
+
+select *
+from (
+		select   
+				ap.provinsi, 
+				ak.kabupaten,
+				ak2.kecamatan, 
+				u.username, 
+				u.nama,  
+				u.handphone,
+				sum(pdj.omzet) as omzet, 
+				rank() OVER (
+			        PARTITION BY ap.provinsi, 
+								ak.kabupaten,
+								ak2.kecamatan,to_char(wp."eDate", 'YYYY-MM')
+			        ORDER BY ak.kabupaten, ak2.kecamatan, sum(pdj.omzet) DESC
+			    ),
+		--		pdj.wid ,
+		--		wp."sDate", wp."eDate" 
+				to_char(wp."eDate", 'YYYY-MM') 
+		from alamat_provinsi ap
+			 inner join alamat_kabupaten ak on ap.id  = ak.id_provinsi  
+			 inner join alamat_kecamatan ak2 on ak.id  = ak2.id_kabupaten 
+			 inner join users u on u.kecamatan::bigint = ak2.id 
+			 inner join memberships m on u.uid = m."owner"  
+			 inner join prepared_data_joys pdj on m.jbid = pdj.jbid 
+			 inner join week_periodes wp on pdj.wid = wp.id 
+		where  ap.provinsi ilike '%lampung%'
+				and (
+						ak.kabupaten ILIKE ANY(ARRAY['%pringsewu%','%pesawaran%','%tulang%bawang%','%kotabumi%'])
+						or ak2.kecamatan ILIKE any(ARRAY['%pringsewu%','%pesawaran%','%tulang%bawang%','%kotabumi%']) 
+					)
+				and to_char(wp."eDate", 'YYYY-MM') between '2023-12' and '2024-02'
+				and u.username not ilike 'dgsc%'
+		--	ak.kabupaten ilike '%pringsewu%'
+		group by ap.provinsi, 
+				ak.kabupaten,
+				ak2.kecamatan, 
+				u.username, 
+				u.nama,  
+				u.handphone,
+		--		wp."sDate", 
+				to_char(wp."eDate", 'YYYY-MM') 
+		--order by ap.provinsi, ak.kabupaten, u.username 
+	) as data
+where data.rank <= 3;
+;
+
+--		NOT ILIKE ALL(ARRAY['%Bombana%','%Baubau%','%Makassar%','%Palu%'])
+
+
+
+
+
+
+SELECT rank_filter.* 
+FROM (
+	    SELECT items.*, 
+	    rank() OVER (
+	        PARTITION BY color
+	        ORDER BY created_at DESC
+	    )
+	    FROM items
+	    WHERE items.cost < 50
+	) rank_filter WHERE RANK = 1;
+
+
+
+
+
+
+select
+	to_char(t.transaction_date, 'YYYY-MM') as "Period", 
+	INITCAP(ap.provinsi) as "Provinsi", 
+--	INITCAP(ak.kabupaten) as "Kabupaten",
+	case
+		when INITCAP(ap.provinsi) = 'Bengkulu' then 'Bengkulu'
+		when INITCAP(ap.provinsi) = 'Lampung' then 'Lampung'
+		when INITCAP(ap.provinsi) = 'Bali' then 'Bali'
+		when INITCAP(ap.provinsi) = 'Palu' then 'Palu'
+		else INITCAP(ak.kabupaten)
+	end as "Kabupaten",;
+	sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost"
+from "transaction" t 
+	left outer join memberships m on (t.id_cust_fk = m.jbid)
+	left outer join alamat_provinsi ap on t.shipping_province::int =ap.id  
+	left outer join alamat_kabupaten ak on t.shipping_city::int = ak.id
+where 
+	t.deleted_at is null
+	and t.status in('PC', 'S', 'A', 'I') -- PAID
+--	and t.transaction_date::date -- >= '2023-05-29'  --		between '2023-11-28' and '2023-12-27' -- now() --'2024-12-10'
+	and to_char(t.transaction_date, 'YYYY-MM') between '2023-11' and '2024-02'
+	and (
+			ak.kabupaten ILIKE ANY(ARRAY['%garut%','%Bangkalan%']) 
+--			or ap.provinsi ILIKE ANY(ARRAY['%Bengkulu%','%Lampung%','%Bali%']) 
+		)
+--	ak.kabupaten ilike '%bau%bau%'
+--		NOT ILIKE ALL(ARRAY['%Bombana%','%Baubau%','%Makassar%','%Palu%'])
+--	and ap.provinsi ilike '%b%ton%'
+group by 
+	to_char(t.transaction_date, 'YYYY-MM'), 
+	ap.provinsi, ak.kabupaten --t.code_trans,
+order by ap.provinsi, ak.kabupaten, to_char(t.transaction_date, 'YYYY-MM') 
+;
+
+
+select * from memberships m where m.username = 'dgsc-dgsc-elfina0108261';
 

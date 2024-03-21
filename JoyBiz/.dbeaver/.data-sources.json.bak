@@ -13,6 +13,7 @@
 				"url": "jdbc:postgresql://localhost:5432/joyawesome",
 				"configurationType": "MANUAL",
 				"type": "dev",
+				"closeIdleConnection": false,
 				"config-profile": "JoyBiz",
 				"properties": {
 					"connectTimeout": "20",
@@ -28,7 +29,8 @@
 					"read-keys-with-columns": "false",
 					"@dbeaver-use-prepared-statements-db@": "false",
 					"postgresql.dd.plain.string": "false",
-					"postgresql.dd.tag.string": "false"
+					"postgresql.dd.tag.string": "false",
+					"@dbeaver-chosen-role@": ""
 				},
 				"auth-model": "native",
 				"handlers": {
@@ -51,6 +53,7 @@
 			"custom-properties": {
 				"resultset.behavior.doubleClick": "EDITOR",
 				"resultset.grid.value.format": "UI",
+				"resultset.maxrows": "800",
 				"resultset.show.colorizeDataTypes": "true"
 			}
 		},
@@ -66,6 +69,7 @@
 				"url": "jdbc:postgresql://localhost:5432/postgres",
 				"configurationType": "MANUAL",
 				"type": "dev",
+				"closeIdleConnection": false,
 				"provider-properties": {
 					"@dbeaver-show-non-default-db@": "true",
 					"@dbeaver-show-template-db@": "false",
@@ -76,6 +80,45 @@
 					"@dbeaver-use-prepared-statements-db@": "false",
 					"postgresql.dd.plain.string": "false",
 					"postgresql.dd.tag.string": "false"
+				},
+				"auth-model": "native"
+			}
+		},
+		"mariaDB-18e40e7b571-a76cc6731930437": {
+			"provider": "mysql",
+			"driver": "mariaDB",
+			"name": "localhost",
+			"save-password": true,
+			"configuration": {
+				"host": "localhost",
+				"port": "33060",
+				"url": "jdbc:mariadb://localhost:33060/",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"closeIdleConnection": false,
+				"properties": {
+					"allowPublicKeyRetrieval": "true"
+				},
+				"auth-model": "native"
+			}
+		},
+		"mysql8-18e40e9df62-4435be3198a0bd60": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "localhost 2",
+			"save-password": true,
+			"configuration": {
+				"host": "localhost",
+				"port": "3306",
+				"url": "jdbc:mysql://localhost:3306/",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"closeIdleConnection": false,
+				"properties": {
+					"connectTimeout": "20000",
+					"rewriteBatchedStatements": "true",
+					"enabledTLSProtocols": "TLSv1,TLSv1.1,TLSv1.2,TLSv1.3",
+					"allowPublicKeyRetrieval": "TRUE"
 				},
 				"auth-model": "native"
 			}
@@ -114,7 +157,9 @@
 			"smart-commit": false,
 			"smart-commit-recover": false,
 			"auto-close-transactions": true,
-			"close-transactions-period": 1800
+			"close-transactions-period": 1800,
+			"auto-close-connections": true,
+			"close-connections-period": 14400
 		}
 	}
 }
