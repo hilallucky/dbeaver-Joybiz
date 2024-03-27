@@ -5,21 +5,7 @@ where code_trans in ('KLVZDS','OL6P8U');
 
 select code_trans, status 
 from  transaction tr  
-where code_trans in ( '3AIL4P',
-'KCOEZC',
-'RUL5S6',
-'ROSKGE',
-'HF230Y',
-'7NOY4H',
-'ECRMLV',
-'9MTGCH',
-'LQVMJ6',
-'ORJ3JL',
-'RMOF0I',
-'7VNXYP',
-'OKOM7T',
-'6D9CEO'
-);
+where code_trans in ( 'YKOUNL','ZPEKVS','F8DGYL','23GL4P');
 
 
 

@@ -1,37 +1,32 @@
 
 
-/* 
- * 1 = PICKUP MPU/PUC
- * 2 = SHIP TO ADDRESS
- * ===============================================================================================================================================================
- * START OMZET COMPARISON CUR MONTH AND PREV MONTH
- * ===============================================================================================================================================================
+
+/*
+ * 
+ * $this->data['status_payment'] = [
+            "P"=>"Process",
+            "WP"=>"Pending",
+            "CP"=>"Menunggu Verifikasi",
+            "PC"=>"Settlement",
+            "PR"=>"Pembayaran ditolak",
+            "S"=>"Delivered",
+            "A"=>"Picked",
+            "R"=> "Transaksi ditolak",
+            "I"=> "Indent",        
+            "J"=> "Partial",
+            "X"=> "Promo Anniversary",
+            "COD"=> "Cash On Delivery",
+        ]; 
+
+
+
+select t.* 
+from "transaction" t 
+--	 join 
+where t.code_trans ILIKE ANY(array['SJPDB3','EQ91HJ','YGNDSI%','F24E5Z%'])
+	  and t.deleted_at is null;
+	 
  */
-	select -- t.code_trans, 
-			to_char(t.transaction_date, 'YYYY-MM') as "Period", 
-			sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost",
-			sum(t.bv_total) as "BV", sum(t.pv_total) as "PV", sum(t.rv_total) as "RV"
-	from "transaction" t 
-	where 
-		t.deleted_at is null
-		and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-		and t.transaction_date::date between '2024-02-01' and '2024-03-27'
-	group by to_char(t.transaction_date, 'YYYY-MM')
-	order by to_char(t.transaction_date, 'YYYY-MM')
-				
-
-/* 
- * ===============================================================================================================================================================
- * START OMZET COMPARISON CUR MONTH AND PREV MONTH
- * ===============================================================================================================================================================
- */
-
-
-
---
-
-
-
 
 select * from "transaction" t where t.is_pickup = 1;
 	 

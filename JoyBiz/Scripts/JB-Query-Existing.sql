@@ -454,13 +454,13 @@ SELECT
 FROM memberships ms
 	join users u on u.username = ms.username 
 	JOIN sranks sr ON ms.jbid = sr.jbid
-WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('litalu1812381'))
+WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('mamans2907761'))
 	--22115186779 --= 23075375780 --nama ilike '%qurrotun%'
 	 AND sr.srank >= 1 
 --	and AGE(now(), ms.activated_at) < INTERVAL '3 months' 
 	 or lower(ms.username) -- ILIKE ANY(ARRAY[
 	 in (
-	 lower('litalu1812381')
+	 lower('mamans2907761')
 )
 --	])
 ORDER BY case 
@@ -655,7 +655,7 @@ select * from transaction_detail td where id_trans_fk =145757;
 
 select t.code_trans, status, is_pickup, shipping_name, shipping_phone, shipping_address,
 		shipping_city, shipping_province, shipping_village, shipping_district, shipping_cost 
-from "transaction" t where t.code_trans in ('PO9WB9','EMB49O') ;
+from "transaction" t where t.code_trans in ('NMQMAF') ;
 
 update "transaction" 
 set shipping_name= null, shipping_phone= null, shipping_address= null, courier = null,
@@ -675,7 +675,7 @@ select * from alamat_kelurahan ak where id_kecamatan in (7371031); --kelurahan i
 -- UBAH NO REKENING
 select * from memberships m where username ='karima0608691';
 select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp, handphone 
-from users u where username in ('sitinu1903301'); --ilike 'abdulm2212951'; -- 
+from users u where username in ('triwin250412'); --ilike 'abdulm2212951'; -- 
 select * from bank b;
 
 update users set id_bank_fk = null, bank_name = null, bank_acc_name = null, bank_acc_num = null  where username in ('nurhas050175','waliya0905761');
@@ -1617,3 +1617,6 @@ select * from sranks r
 where r.jbid  in (
 	select  jbid  from memberships m where username ILIKE ANY(ARRAY['risno1309871']))
 
+
+	
+select * from "transaction" t where t.code_trans in ('OYMPG1');
