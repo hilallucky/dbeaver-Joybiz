@@ -1171,15 +1171,16 @@ where
 	t.deleted_at is null
 	and t.status in('PC', 'S', 'A', 'I') -- PAID
 --	and t.transaction_date::date -- >= '2023-05-29'  --		between '2023-11-28' and '2023-12-27' -- now() --'2024-12-10'
-	and to_char(t.transaction_date, 'YYYY-MM') between '2024-01' and '2024-02'
+	and to_char(t.transaction_date, 'YYYY-MM') between '2023-08' and '2024-03'
 	and (
 			ak.kabupaten ILIKE ANY(ARRAY['%Makassar%','%Banyuwangi%','%Kota Jambi%','%Jember%',
 										 '%Bombana%','%Purbalingga%','%Buton%Tengah%',
 										 '%mamuju%utara', --'%Pasang%kayu%',
 										 '%Bau%bau%','%Cianjur%','%Tangerang%','%Madura%','%Kota%Bandung%',
 										 '%Bangkalan%','%Sampang%','%Pamekasan%','%Sumenep%','%Kalianget%', --Madura
-										 '%Cilegon%','%Surabaya%','%Lumajang%','%Palu%']) 
+										 '%Cilegon%','%Surabaya%','%Lumajang%','%Palu%','%Garut%','%serang%']) 
 			or ap.provinsi ILIKE ANY(ARRAY['%Bengkulu%','%Lampung%','%Bali%']) 
+--			ak.kabupaten ILIKE ANY(ARRAY['%serang%']) 
 		)
 --	ak.kabupaten ilike '%bau%bau%'
 --		NOT ILIKE ALL(ARRAY['%Bombana%','%Baubau%','%Makassar%','%Palu%'])
@@ -1203,7 +1204,7 @@ select
 		when INITCAP(ap.provinsi) = 'Bali' then 'Bali'
 		when INITCAP(ap.provinsi) = 'Palu' then 'Palu'
 		else INITCAP(ak.kabupaten)
-	end as "Kabupaten",;
+	end as "Kabupaten",
 	sum(t.purchase_cost) as "Purchase Cost", sum(t.shipping_cost) as "Shipping Cost"
 from "transaction" t 
 	left outer join memberships m on (t.id_cust_fk = m.jbid)
@@ -1213,10 +1214,10 @@ where
 	t.deleted_at is null
 	and t.status in('PC', 'S', 'A', 'I') -- PAID
 --	and t.transaction_date::date -- >= '2023-05-29'  --		between '2023-11-28' and '2023-12-27' -- now() --'2024-12-10'
-	and to_char(t.transaction_date, 'YYYY-MM') between '2023-11' and '2024-02'
+	and to_char(t.transaction_date, 'YYYY-MM') between '2023-11' and '2024-03'
 	and (
 			ak.kabupaten ILIKE ANY(ARRAY['%garut%','%Bangkalan%']) 
---			or ap.provinsi ILIKE ANY(ARRAY['%Bengkulu%','%Lampung%','%Bali%']) 
+			or ap.provinsi ILIKE ANY(ARRAY['%Bengkulu%','%Lampung%','%Bali%']) 
 		)
 --	ak.kabupaten ilike '%bau%bau%'
 --		NOT ILIKE ALL(ARRAY['%Bombana%','%Baubau%','%Makassar%','%Palu%'])

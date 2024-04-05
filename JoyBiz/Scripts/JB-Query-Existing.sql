@@ -454,13 +454,13 @@ SELECT
 FROM memberships ms
 	join users u on u.username = ms.username 
 	JOIN sranks sr ON ms.jbid = sr.jbid
-WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('mamans2907761'))
+WHERE ms.spid = (select m.jbid from memberships m where lower(m.username) = lower('moelja1301911'))
 	--22115186779 --= 23075375780 --nama ilike '%qurrotun%'
 	 AND sr.srank >= 1 
 --	and AGE(now(), ms.activated_at) < INTERVAL '3 months' 
 	 or lower(ms.username) -- ILIKE ANY(ARRAY[
 	 in (
-	 lower('mamans2907761')
+	 lower('moelja1301911')
 )
 --	])
 ORDER BY case 
@@ -675,7 +675,7 @@ select * from alamat_kelurahan ak where id_kecamatan in (7371031); --kelurahan i
 -- UBAH NO REKENING
 select * from memberships m where username ='karima0608691';
 select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp, handphone 
-from users u where username in ('triwin250412'); --ilike 'abdulm2212951'; -- 
+from users u where username in ('anasta1706521'); --ilike 'abdulm2212951'; -- 
 select * from bank b;
 
 update users set id_bank_fk = null, bank_name = null, bank_acc_name = null, bank_acc_num = null  where username in ('nurhas050175','waliya0905761');
@@ -1491,7 +1491,7 @@ select * from memberships m where username = 'indram0911961';
 
 
 
-select * from barang b where nama ilike 'JoyCoffee (J39)';
+select * from barang b where nama ilike '%Joypolinse (J39)%';
 
 
 
@@ -1620,3 +1620,15 @@ where r.jbid  in (
 
 	
 select * from "transaction" t where t.code_trans in ('OYMPG1');
+
+
+-- BACKDATE TRANSACTION
+select t.id, t.code_trans, t.transaction_date, t.transaction_date - 1, t.created_at, t.status
+from "transaction" t 
+where code_trans in ('HWP3ZC','JLBTFS');
+
+
+update "transaction"
+set transaction_date = transaction_date - 1
+where code_trans in ('HWP3ZC','JLBTFS');
+

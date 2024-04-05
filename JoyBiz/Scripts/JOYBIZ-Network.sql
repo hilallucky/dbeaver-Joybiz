@@ -210,7 +210,7 @@ WITH RECURSIVE sponsor_cte AS (
     select  distinct  on (m1.username) m1.id, m1.username, m1.jbid, m1.spid, m1.upid --, u1.nama
     FROM memberships m1
 --    	join users u1 on m1.username = u1.username
-    WHERE lower(m1.username) in ('marlin1309511')
+    WHERE lower(m1.username) in ('joysys18')
     UNION
     SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid --, u2.nama
     FROM memberships m2
@@ -324,7 +324,7 @@ order by to_char(wp."sDate", 'YYYY-MM'), pdj.jbid;
 WITH RECURSIVE descendants AS (
     SELECT id, username, jbid, spid, upid, 0 AS depth, "owner"
     FROM memberships m1
-    WHERE lower(m1.username) in ('anisha2211511') -- root khusnu1209421 right khusnu12094212 left khusnu12094213
+    WHERE lower(m1.username) in ('rohime07034') -- root khusnu1209421 right khusnu12094212 left khusnu12094213
 UNION    
     SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid, d.depth+ 1, m2."owner"
     FROM memberships m2

@@ -195,7 +195,7 @@ select * from "transaction" t where t.id_cust_fk  in (24035683282);
 -- UPDATE UPLINE & SPONSOR WITH FUNCTION
 -- lmh_update_upline_sponsor(:p_username, :p_new_upline, :p_change_sponsor_also, :p_new_sponsor)
 select * from lmh_update_upline_sponsor('adrike1603461', 'ramlan11092815', true, 'ramlan1109281');
-select * from lmh_update_upline_sponsor('gitonu1902681', 'gitonu1902681', false, '');
+select * from lmh_update_upline_sponsor('hanisa2701371', 'hendra2208721', false, '');
 
 --
 --#	username	jbid	spid	upid	left	right	updated_at	status	activated_at
@@ -209,12 +209,12 @@ select * from lmh_update_upline_sponsor('gitonu1902681', 'gitonu1902681', false,
 -- ===============================================================================================================
 -- START UPDATE UPLINE
 -- ===============================================================================================================
-DO $$ 
+DO $$ -- hanisa2701371', 'hendra220872
 DECLARE
-    xusername text := 'marlin1309511';
-    new_upline_username text := 'ramlan11092815';
-   	change_sponsor_also boolean := true;
-    new_sponsor_username text := 'ramlan11092815';
+    xusername text := 'hanisa2701371';
+    new_upline_username text := 'hendra220872';
+   	change_sponsor_also boolean := false;
+    new_sponsor_username text := '';
     jbid_user bigint;
     jbid_upline bigint;
     jbid_sponsor bigint;
@@ -283,8 +283,8 @@ END $$;
 -- ===============================================================================================================
 DO $$ 
 DECLARE
-    xusername text := 'titina0103241';
-    new_sponsor_username text := 'esters04124518';
+    xusername text := 'ainuly0304731';
+    new_sponsor_username text := 'ismawa0304571';
     jbid_user bigint;
     new_jbid_sponsor bigint;
    	sponsor_existing text;
@@ -557,5 +557,8 @@ select * from test('marlin1309511', 'ramlan11092815', true, 'ramlan11092815');
 
 
 select * from memberships m where username = 'ramlan11092815');
+
+select * from memberships m where username ilike '%joysys%'
+
 
 

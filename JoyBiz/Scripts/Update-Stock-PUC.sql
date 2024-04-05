@@ -1,17 +1,17 @@
 -- START UPDATE STOCK PUC/MPU
-SELECT * FROM stock_packs sp where code = 'MPUC004'; -- 10
+SELECT * FROM stock_packs sp where code = 'MPUC001'; -- 10
 
 
 select * 
 from stock_pack_stock_details spsd 
 where 
-	tcode in ('ZY8XMG') 
+	tcode in ('MPUC001') 
 --	jspid in ('MPUC004')
 ;
 
 select *
 from stock_pack_stocks sps 
-where jspid in ('MPUC004') and pcode in ('E002LAE1EB','E002LAE1DB');
+where jspid in ('MPUC001') and pcode in ('E002LAE1EB','E002LAE1DB');
 -- END UPDATE STOCK PUC/MPU
 
 

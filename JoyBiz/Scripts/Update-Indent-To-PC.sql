@@ -1,13 +1,19 @@
 
 select code_trans, status 
 from "transaction" t 
-where code_trans in ('KLVZDS','OL6P8U');
+where code_trans in ('Z03WEX');
+
+
+update "transaction" 
+set status = 'PC'
+where code_trans in ('JHDTWS');
 
 select code_trans, status 
 from  transaction tr  
-where code_trans in ( 'YKOUNL','ZPEKVS','F8DGYL','23GL4P');
+where code_trans in ('K3TPPH','HSNWIA','FAIC9O' ,'H9FZ0O');
 
 
+select * from stock_packs sp 
 
 
 	select tr.code_trans

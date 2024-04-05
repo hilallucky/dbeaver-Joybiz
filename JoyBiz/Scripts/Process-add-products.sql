@@ -44,13 +44,17 @@ order by weight, status, id desc;
 select * from barang where nama ilike 'gamma%pack%pro%' order by created_at desc; --core = true and 
 
 
-select 	*
-from barang b  
+select b.id, b.kode, b.nama, b.pv, b.bv, b.xv , 
+--		b.harga_1, b.harga_2, b.harga_3,
+--		b.status, b.is_show, b.is_show_sc, b.weight,
+		b.created_at, b.updated_at,  
+		m.id, m.link,m."type", m.created_at, m.updated_at 
+from barang b
+	 left outer join media m on b.id = m.id_barang_fk 
 where b.nama 
 	ILIKE 
 	ANY(ARRAY[
-		'Joybizer (J40)',
-		'Special Customer (J29)'
+		'flash%alpha%'
 		])
 order by b.nama ;
 
@@ -91,29 +95,55 @@ where id
 select 	*
 from barang b  
 where 
---	b.nama 
---	ILIKE ANY(ARRAY[
-----		'Go Gamma BVB Pack%(J39)',
-----		'Start-Up Titanium%(J39)',
-----		'Start-Up platinum%(J39)'
---		'%propolis%(j39)%',
---		'%omega%(j39)%'
---		])
---	and 
-	b.id in (1568,1564) or kode in ('I002B')
+	b.nama 
+	ILIKE ANY(ARRAY[
+		'%dba Turbo Pack%',
+		'%Immune 01 BVB Pack%',
+		'%dba basic 1 BVB Pack%',
+		'%Go Gamma BVB Pack%40%'
+		'%Start-Up Titanium%',
+		'%Start-Up Platinum%',
+		'%Start-Up Gold%',
+		'%Flash Alpha 06%',
+		'%Flash Alpha 08%'
+		])
+	and
+	b.kode in ('dba001BVBJ39',
+				'DBATPJ39',
+				'FA006J39',
+				'FA008J39',
+				'I005BVB01J39',
+				'SUG001J39',
+				'SUP001J40',
+				'SUT001J40',
+				'GGBVB001J40'
+				)
+--	b.id in (1568,1564) or kode in ('I002B')
 order by b.nama ;
 
+select id, nama, kode, weight, status, is_show, is_show_sc  
+from barang b 
+where b.nama ilike '%(j41)%' 
+	 and remarks ='add new J41' 
+order by b.nama, created_at desc;
 
 select * from products p;
 
 
-select *
+select --*
+		bd.id, 
+		bd.id_induk_fk,
+		bd.id_barang_fk, b.nama,  
+		bd.qty, 
+		bd.product_code,
+	 	b2.nama as "nama paket", b.nama as "nama product"
 from barang_detail bd  
+	 inner join barang b on bd.id_barang_fk = b.id 
+	 inner join barang b2 on bd.id_induk_fk = b2.id 
 where id_induk_fk  in (
-1641,1622,1643,1644,1645,
-1656,1657,1658,1659,1660
+1595,1586,1606,1608,1593,1600,1639,1640,1638
 )
-order by bd.id_induk_fk, bd.id_barang_fk ;
+order by b2.nama, bd.id_induk_fk, bd.id_barang_fk ;
 
 /*
 JoyPolinse - 1335
@@ -129,6 +159,14 @@ JoyCoffee - 1346
 JoyOmega3 - 1347
 JoyCoffee Sachet - 1505
 */
+
+select *
+from barang_detail bd  
+where id_induk_fk  in (
+1595,1586,1606,1608,1593,1600,1639,1640,1638
+)
+order by bd.id_induk_fk, bd.id_barang_fk ;
+
 
 select * from users u where u.username ilike'zainal0902411%';
 select * from memberships m  where m.username ='yasmar1312861';
@@ -147,13 +185,21 @@ FROM barang b
 WHERE
 b.id IN  (
 --select id from barang b2 where nama ilike '%RTS%'
-1656,1657,1658,1659,1660
+1665,1666,1671,1667,1668,1669,1670,1664,1663
+
 		) 
 ORDER BY b."id", d.id;
 -- END PRODUCT LISTING;
 
-select * from media m 
-where id_barang_fk in (1656,1657,1658,1659,1660)
+select * 
+from media m 
+where id_barang_fk in (1665,1666,1671,1667,1668,1669,1670,1664,1663)
+order by m.created_at desc;
+
+
+select * 
+from media m 
+where id_barang_fk in (1595,1586,1606,1608,1593,1600,1639,1640,1638)
 order by m.created_at desc;
 
 
@@ -170,3 +216,6 @@ from stock_pack_stocks sps
 order by sps.jspid, sps.pcode ;
 
 
+
+
+SELECT * FROM barang b where status in ('A','I') and deleted_at is null and is_show = 1;
