@@ -6,7 +6,7 @@ where code_trans in ('Z03WEX');
 
 update "transaction" 
 set status = 'PC'
-where code_trans in ('JHDTWS');
+where code_trans in ('TPSJWW');
 
 select code_trans, status 
 from  transaction tr  

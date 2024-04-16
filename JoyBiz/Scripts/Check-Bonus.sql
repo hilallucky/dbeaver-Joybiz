@@ -5,14 +5,14 @@ select * from week_periodes wp where to_char("eDate" , 'YYYY-MM') = '2024-04' or
 -- BONUS JOY
 select *
 from joy_bonus_summaries jbs 
-where jbs.wid = 328
+where jbs.wid = 330
 order by jbs."date"  desc 
 limit 100;
 
 -- BONUS PLAN
 select * 
 from bonus_weeklies bw 
-where bw.wid = 328
+where bw.wid = 330
 order by bw.created_at desc, bw.total_transfer
 limit 100;
 
@@ -38,7 +38,7 @@ select bw."owner", u.username,
 from bonus_weeklies bw 
 	 inner join joy_bonus_summaries jbs on bw."owner" = jbs."owner" and bw.wid = jbs.wid 
 	 inner join users u on bw."owner" = u.uid 
-where bw.wid = 328 and bw.total + jbs.total >= 90000
+where bw.wid = 330 and bw.total + jbs.total >= 90000
 order by (bw.total - (bw.voucher + bw.ppn)) + (jbs.total - (jbs.voucher + jbs.tax)) -- bw.total
 limit 100; 
 
@@ -49,7 +49,7 @@ select bw.id, bw.wid, bw.created_at, bw."owner", u.username, bw.total, bw.vouche
 		end as "nett_bonus"
 from bonus_weeklies bw 
 	inner join users u on bw."owner" = u.uid 
-where bw.wid = 328 and (bw.total_transfer - (bw.voucher + bw.ppn)) < 60000 
+where bw.wid = 330 and (bw.total_transfer - (bw.voucher + bw.ppn)) < 60000 
 order by bw.total
 limit 100; 
 

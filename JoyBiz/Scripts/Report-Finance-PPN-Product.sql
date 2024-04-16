@@ -52,7 +52,8 @@ select round(1.5, 0);
 		left outer join users u on m."owner" = u.uid 
 		left outer join alamat_provinsi ap on ap.id = u.provinsi::bigint
 	where t.status in('PC', 'S', 'A', 'I')
-		 and to_char(t.transaction_date, 'YYYY-MM-DD') between '2024-02-01' and '2024-02-29'
+--		 and to_char(t.transaction_date, 'YYYY-MM-DD') between '2024-03-01' and '2024-02-29'
+		 and to_char(t.transaction_date, 'YYYY-MM') = '2024-03'
 		 and t.deleted_at is null 
 		 and m.username not in ('joy201741')
 	--	 and t.code_trans in ('Q1ONGB', 'JIZUU8', 'PGHMEV', '2JD52F','B7BEIX')
@@ -93,7 +94,8 @@ select round(1.5, 0);
 		inner join barang b on td2.id_barang_fk = b.id
 		left outer join memberships m on t.id_cust_fk = m.jbid
 	where  t.status in('PC', 'S', 'A', 'I')
-		 and to_char(t.transaction_date, 'YYYY-MM-DD') between '2024-02-01' and '2024-02-29'
+--		 and to_char(t.transaction_date, 'YYYY-MM-DD') between '2024-02-01' and '2024-02-29'
+		 and to_char(t.transaction_date, 'YYYY-MM') = '2024-03'
 		 and t.deleted_at is null 
 		 and m.username not in ('joy201741')
 	--	 and t.code_trans in ('Q1ONGB', 'JIZUU8', 'PGHMEV', '2JD52F','B7BEIX')
@@ -130,7 +132,8 @@ select round(1.5, 0);
 		left outer join memberships m on t.id_cust_fk = m.jbid 
 		left outer join users u on m."owner" = u.uid 
 	where t.status in('PC', 'S', 'A', 'I')
-		 and to_char(t.transaction_date, 'YYYY-MM-DD') between '2024-02-01' and '2024-02-29'
+--		 and to_char(t.transaction_date, 'YYYY-MM-DD') between '2024-02-01' and '2024-02-29'
+		 and to_char(t.transaction_date, 'YYYY-MM') = '2024-03'
 		 and t.deleted_at is null 
 		 and b.kode not in ('MK001L','MK001M','MC002L','MC002XL','MC002S','MC002XXL','MK002M','MC006jp','MC006jps','MC006core','MT0002','MK001Lf','MK001XLf','MK004',
 							'MC006yg','MC001APS','MC001APM','MC001APXXL','MK005','MC000G2','MK006','MT0004','MT0005','MC000G4','MK007','RC001','MC001TGS','MK002MP',
