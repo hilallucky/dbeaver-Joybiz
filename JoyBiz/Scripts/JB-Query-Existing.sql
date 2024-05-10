@@ -1,3 +1,6 @@
+select * from "transaction" t where t.transaction_date >= '2024-04-01' and t.status = 'I';
+select * from barang where status ='I';
+
 select * from users u 
 where u.username  ilike 'lauren200170';
 
@@ -82,7 +85,7 @@ where
 	jp."date" BETWEEN '2023-12-28'and now()::date and jp.deleted_at is null
 --	jp."date" between  '2023-12-28'and current_date and jp.deleted_at is null
 	and jp.deleted_at is null
---	and ms.username ='indram0911961'
+	and ms.username ='ipanka1111751'
 group by 
 	u.activated_at, 
 	ms.username, u.nama, u.handphone, s.srank, r.short_name
@@ -95,18 +98,18 @@ from joy_point_reward_cashes jc
 	join memberships ms on jc.owner = ms.uid 
 	left outer join users u on ms.uid = u.uid or ms."owner" = u.uid 
 where jc."date" between '2023-12-29'and now()::date
-	and ms.username ='indram0911961'
+--	and ms.username ='indram0911961'
 	and jc.deleted_at is null
 --	and jc.deleted_at is null 
 group by u.nama, ms.username, u.handphone
-having sum(jc.biz + jc.joy) >= 100 --between 60 and 99 -- 
+having sum(jc.biz + jc.joy) >= 50 --between 60 and 99 -- 
 order by total desc;
 
 -- CHECK NETWORK BASED ON MEMBER NAME ETC...
 SELECT ('A' ILIKE ANY(ARRAY['A','S'])) as logical_test ;
 
-select * from memberships m where jbid in (21042801174,21072801115);
-select * from users u where username in ('esters0402196','esters0402198','esters040219');
+select * from memberships m where username = 'melian0405951' or "owner" = '99f17911-995e-43de-9a64-cccf4c39889d';
+select * from users u where username in ('ipanka1111751');
 
 select 	u.username , u.nama, m.jbid, 
 		m.spid, sp.username, sp.jbid as sp_jbid, usp.nama as sp_nama,
@@ -193,7 +196,7 @@ order by jbid;
 
 
 select * from users u where username ='nuryan171272';
-select * from memberships m  where username ='mamans29077613';
+select * from memberships m  where username ilike 'mamans29077613';
 
 SELECT m1.id, m1.username, u1.nama, m1.jbid, m1.spid, m1.upid, cast('' AS VARCHAR) AS upline_name, 0 AS upline_no, 0 as level
 FROM memberships m1
@@ -503,9 +506,9 @@ where u.username in ('daniel0412291', 'effend0412251','esters0412451','afriya041
 order by m.id;
 
 select * from alamat_provinsi ap where provinsi ilike '%sul%sel%';
-select * from alamat_kabupaten ak2 where id_provinsi in (73) and kabupaten ilike '%makassar%'; ;--id in (3209, 3404);--3172
-select * from alamat_kecamatan ak where id_kabupaten in (7371); -- kecamatan ilike '%jember%';-- id_kabupaten in (1802);--3673060 --
-select * from alamat_kelurahan ak where kelurahan ilike '%ramatwatu%'; -- 3673060001 id_kecamatan = 1802043; -- 7371031001 id_kecamatan in (7371031); --
+select * from alamat_kabupaten ak2 where kabupaten ilike '%kendari%'; ;--id in (3209, 3404);--3172 7471
+select * from alamat_kecamatan ak where id_kabupaten in (7471); -- kecamatan ilike '%jember%';-- id_kabupaten in (1802);--3673060 -- 7471031
+select * from alamat_kelurahan ak where kelurahan ilike '%LAHUNDAPE%'; -- 3673060001 id_kecamatan = 1802043; -- 7371031001 id_kecamatan in (7371031); -- 7471031009
 
 
 -- UBAH SPONSOR/ALAMAT
@@ -513,7 +516,7 @@ select ID,nama,  username, email, handphone, alamat, kelurahan, kecamatan, kota_
 	id_bank_fk, bank_name, bank_acc_num, bank_acc_name, created_at, activated_at, uid 
 from users u 
 where 
-	username ilike ('abdulm1310721') -- or 
+	username ilike ('muhind1508321') -- or 
 --	username ilike 'zalimi0301211' -- or username ilike 'andang0812121%' or username ilike 'budisa0812841%'; 
 --	 email in ('atisanti77@gmail.com','daraesanr@gmail.com','yanakayaraya@gmail.com','iamulyaningsih262@gmail.com','agusmpasya@gmail.com');
 ;
@@ -587,7 +590,7 @@ from sranks s
 where m.username in ('fanian2611901', 'agusti1711761', 'agussu2707481'); 
 --s.upid 
 
-select * from "transaction" t where id_cust_fk = 23125582013;
+select * from "transaction" t where code_trans = 'J3T373';
 
 -- UBAH NAMA
 select * from users u where u.username in ('saswin0512941','wenzir050324','esters0412451',
@@ -644,18 +647,28 @@ order by id_trans_fk , id_barang_fk;
 select * from memberships m where username ='anissa09121918';
 
 -- UBAH ALAMAT PENGIRIMAN
-select * from users u where username ='karint0212601';
+select * from users u where username ='khaeru011221';
+
+select * from delivery_orders do2 where code in ('240425157095');
+select * from stock_pack_deliveries spd where code in ('240425157095'); -- 240425157095 174
+select * from stock_pack_delivery_details spdd where delivery_code in ('240425157095'); 
+select spp.delivery_code, spp.deleted_at, t.code_trans, t.transaction_date 
+from stock_pack_pickeds spp 
+	inner join "transaction" t on spp.transaction_code = t.code_trans 
+where delivery_code in ('240425157095');
+
+select * from stock_packs sp 
 
 -- UBAH EXPEDISI
 --  4 untuk JNE dan 7 untuk TIKI
-select id, code_trans, transaction_date, courier, deleted_at, status 
+select id, code_trans, transaction_date, courier, deleted_at, status, pickup_stock_pack 
 from "transaction" t 
-where code_trans in ('QPIGGN');
+where code_trans in ('FPLGBT');
 select * from transaction_detail td where id_trans_fk =145757;
 
 select t.code_trans, status, is_pickup, shipping_name, shipping_phone, shipping_address,
 		shipping_city, shipping_province, shipping_village, shipping_district, shipping_cost 
-from "transaction" t where t.code_trans in ('NMQMAF') ;
+from "transaction" t where t.code_trans in ('CQ4YCP') ;
 
 update "transaction" 
 set shipping_name= null, shipping_phone= null, shipping_address= null, courier = null,
@@ -674,8 +687,8 @@ select * from alamat_kelurahan ak where id_kecamatan in (7371031); --kelurahan i
 
 -- UBAH NO REKENING
 select * from memberships m where username ='karima0608691';
-select id, username, nama, email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp, handphone 
-from users u where username in ('anasta1706521'); --ilike 'abdulm2212951'; -- 
+select id, username, nama, no_ktp , email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp, handphone 
+from users u where username in ('netisu1102381'); --ilike 'abdulm2212951'; -- 
 select * from bank b;
 
 update users set id_bank_fk = null, bank_name = null, bank_acc_name = null, bank_acc_num = null  where username in ('nurhas050175','waliya0905761');
@@ -770,11 +783,19 @@ select -- u.id, u.username,
 	u.provinsi,
 	u.disabled, u.activated_at, u.status 
 from users u
-where u.username in ('bahija300967'); 
+where u.username in ('laz0206211'); 
+
+select t.transaction_date, t.code_trans, m.username, t.id_cust_fk, m.id, m.jbid, m."owner" , u.nama , t.pv_total 
+from "transaction" t 
+	 inner join memberships m on t.id_cust_fk = m.jbid 
+	 inner join users u on m."owner" = u.uid 
+where transaction_date = '2024-04-11'
+	and t.status in('PC', 'S', 'A', 'I') -- PAID		
 
 select m.id, m.username, m.jbid, m.spid, m.upid, m."left", m."right", m.activated_at, m.status 
 from memberships m 
-where m.username in ('manan1011961','arikha2011201') or jbid in (23115538056,24025648483)
+where m.username in ('hjllis1704681','hjllis17046812','hjllis17046813') 
+--	or jbid in (23115538056,24025648483)
 --	m.username in ('daniel0412291', 'effend0412251') or m.username ilike 'esters0412451%' or m.username ilike 'afriya0412581%'
 order by m.id;
 
@@ -1625,10 +1646,34 @@ select * from "transaction" t where t.code_trans in ('OYMPG1');
 -- BACKDATE TRANSACTION
 select t.id, t.code_trans, t.transaction_date, t.transaction_date - 1, t.created_at, t.status
 from "transaction" t 
-where code_trans in ('HWP3ZC','JLBTFS');
+where code_trans in ('SSEK2J');
 
 
 update "transaction"
 set transaction_date = transaction_date - 1
 where code_trans in ('HWP3ZC','JLBTFS');
+
+
+select *
+from users u 
+where no_ktp is null;
+
+select * from "transaction" t where code_trans ilike '09IX9B%';
+select * from transaction_detail td where td.id_trans_fk between 148859 and 148859;
+
+
+
+
+
+select * from barang 
+where 
+	(nama ilike 'dba basic 1%' or id in (select id_induk_fk from barang_detail bd where bd.product_code = 'B001J39' and id_barang_fk <> 1562))
+	and status = 'A' and remarks = 'add new J41'
+order by id desc;
+select * from barang_detail bd where bd.id_induk_fk  = 1663;
+select * from barang_detail bd 
+where 
+	(bd.product_code = 'B001J39' and id_barang_fk <> 1562)
+--	and bd.id_induk_fk in (1671,1670,1669,1666,1665,1664,1663)
+;
 

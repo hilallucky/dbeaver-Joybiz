@@ -62,7 +62,7 @@ from barang_detail bd
 					from barang_detail bd 
 --					where bd.id_barang_fk in (3,254,325, 695, 746, 822, 923, 996, 1064, 1148, 1205, 1263, 1335)
 				) 
-				and to_char(t.transaction_date, 'YYYY-MM') = '2024-01' 
+				and to_char(t.transaction_date, 'YYYY-MM') = '2024-04' 
 --				and t.code_trans in ('3EF0KN','LNAGVI')
 --					t.transaction_date BETWEEN '2023-12-01' and '2023-12-27'
 					-- '2023-08-31' and '2023-09-27'  -- (kamis pertama di bulan berjalan sampai rabu terakhir di bulan selanjutnya)

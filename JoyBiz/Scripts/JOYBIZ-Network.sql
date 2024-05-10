@@ -47,10 +47,15 @@ WITH RECURSIVE hierarchy_cte AS (
 INSERT INTO tree_path(row_num, id, username, nama, jbid, spid, upid, upline_name, upline_no, level)
 --			, bnsperiod, amount, bv, pv, xv, g_amount, g_bv, g_pv, g_xv)
 SELECT
-    ROW_NUMBER() OVER (order by level, upline_name, upid, id) AS row_num,
-    id, username, nama, jbid, spid, upid, upline_name, upline_no, level
+    ROW_NUMBER() OVER (order by level, hcte.upline_name, hcte.upid, hcte.id) AS row_num,
+    hcte.id, hcte.username, hcte.nama, 
+--    s.srank, r.short_name, 
+    hcte.jbid, hcte.spid, hcte.upid, hcte.upline_name, hcte.upline_no, hcte.level
 --    ,  hcte.bnsperiod, hcte.amount, hcte.bv, hcte.pv, hcte.xv, hcte.g_amount, hcte.g_bv, hcte.g_pv, hcte.g_xv
 FROM hierarchy_cte hcte
+	 inner join sranks s on hcte.jbid = s.jbid -- GET rank
+	 inner join ranks r on s.srank = r.id -- rank NAME
+where s.srank >= 3
 ORDER BY level, upline_name, upid, id;
 
 -- Step 3: Query the temporary table to retrieve the results
@@ -131,7 +136,7 @@ DROP TABLE IF EXISTS tree_path;
 
 
 
-/*
+/* */
 
 select * from "transaction" t where id_cust_fk = 21094807831 and t.transaction_date is not null order by transaction_date desc;
 
@@ -184,7 +189,7 @@ WITH RECURSIVE upline_cte AS (
     	join users u1 on m1.username = u1.username
     	join transaction t1 on t1.id_cust_fk = m1.jbid 
     WHERE lower(u1.username) in (
-				'anisha2211511')
+				'mamans2907761')
 		and t1.transaction_date is not null
     UNION
     SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid, u2.nama, t2.transaction_date, t2.bv_total
@@ -203,14 +208,15 @@ ORDER BY u.username, u.transaction_date DESC;
 select *
 from tree_path t;
 
-*/
+/* */
 
 
+    
 WITH RECURSIVE sponsor_cte AS (
     select  distinct  on (m1.username) m1.id, m1.username, m1.jbid, m1.spid, m1.upid --, u1.nama
     FROM memberships m1
 --    	join users u1 on m1.username = u1.username
-    WHERE lower(m1.username) in ('joysys18')
+    WHERE lower(m1.username) in ('mashil2512161')
     UNION
     SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid --, u2.nama
     FROM memberships m2
@@ -222,6 +228,33 @@ select id, username, jbid, spid, upid
 FROM sponsor_cte u 
 order by id desc;
 --ORDER BY u.username, u.transaction_date DESC;
+
+
+
+    
+WITH RECURSIVE upline_cte AS (
+    select  distinct  on (m1.username) m1.id, m1.username, m1.jbid, m1.spid, m1.upid --, u1.nama
+    FROM memberships m1
+--    	join users u1 on m1.username = u1.username
+    WHERE lower(m1.username) in ('eniknu2411611')
+    UNION
+    SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid --, u2.nama
+    FROM memberships m2
+--    	left outer join users u2 on m2.username = u2.username
+	    JOIN upline_cte ucte ON m2.jbid = ucte.upid
+--    WHERE t2.transaction_date is not null
+)
+select u.id, u.username, u.jbid, u.spid, u.upid, s.srank, r.name
+FROM upline_cte u 
+	 inner join sranks s on u.jbid = s.jbid -- GET rank
+	 inner join ranks r on s.srank = r.id -- rank NAME
+where s.srank >= 3
+--order by id desc
+;
+--ORDER BY u.username, u.transaction_date DESC;
+
+
+
 
 
 select * from "transaction" t where t.id_cust_fk in (22055054987) order by id desc;
@@ -248,7 +281,7 @@ FETCH ALL FROM _cursor;
 do 
 $$
 	declare 
-	    xusername text := 'ayuros2804701';
+	    xusername text := 'mamans2907761';
 		_query text;
 		_cursor CONSTANT refcursor := '_cursor';
 	begin
@@ -324,7 +357,7 @@ order by to_char(wp."sDate", 'YYYY-MM'), pdj.jbid;
 WITH RECURSIVE descendants AS (
     SELECT id, username, jbid, spid, upid, 0 AS depth, "owner"
     FROM memberships m1
-    WHERE lower(m1.username) in ('rohime07034') -- root khusnu1209421 right khusnu12094212 left khusnu12094213
+    WHERE lower(m1.username) in ('anisha2211511') -- root khusnu1209421 right khusnu12094212 left khusnu12094213
 UNION    
     SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid, d.depth+ 1, m2."owner"
     FROM memberships m2

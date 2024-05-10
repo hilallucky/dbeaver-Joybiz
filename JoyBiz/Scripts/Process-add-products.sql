@@ -1,10 +1,76 @@
 
-select kode, nama, harga_1, harga_2, harga_3, harga_retail_1, harga_retail_2, harga_retail_3 , shipping_budget, weight, status, is_show, is_show --* 
+select 
+		id, kode, nama, harga_1, harga_2, harga_3, harga_retail_1, harga_retail_2, harga_retail_3 , shipping_budget, weight, status, is_show, is_show, is_register 
+--	* 
 from barang b 
 where --nama ilike '%Joypolinse%'
 --	nama = 'Go Gamma BVB Pack (J40)'
 --	or contains(nama, 'Start-Up Titanium')
-nama ILIKE '%J41%%' -- or kode in ('TJ007','TJ008','TJ008','TJ003','TJ005','TJ002','MC008')
+kode in (
+'DBATPJ41',
+'SUT001J41',
+'SUP001J41',
+'SUG001J41',
+'I005BVB01J41',
+'GGBVB001J41',
+'GPJ001J42',
+'GPJ002J42',
+'BP001J42',
+'JP001BVBJ39',
+'dba002BVB',
+'I005BVB01J39',
+'FTP001J39',
+'JP001TPJ39',
+'JP001J39',
+'I002J39',
+'I002GAOJ39',
+'FA004J39',
+'FA002J39',
+'SUG001J39',
+'dba001BVBJ41',
+'DBATPJ41',
+'SUT001J41',
+'SUP001J41',
+'SUG001J41',
+'GGBVB001J41',
+'GPJ001J42',
+'GPJ002J42',
+'BP001J42',
+'JOBVBP001J39',
+'I005BVB02J39',
+'FTP001J39',
+'JOTP001J39',
+'I005PJ39',
+'I005J39',
+'DTP001J39',
+'I005GAOJ39',
+'FA007J39',
+'FA005J39',
+'FA001J39',
+'SUG001J39',
+'dba001BVBJ41',
+'DBATPJ41',
+'SUT001J41',
+'SUP001J41',
+'SUG001J41',
+'GGBVB001J41',
+'GPJ001J42',
+'GPJ002J42',
+'BP001J42',
+'JOBVBP001J39',
+'I005BVB02J39',
+'FTP001J39',
+'JOTP001J39',
+'I005PJ39',
+'I005J39',
+'DTP001J39',
+'I005GAOJ39',
+'FA007J39',
+'FA005J39',
+'FA001J39',
+'SUG001J39'
+) 
+	-- nama ILIKE '%J41%%' -- 
 --and created_at::date = '2023-12-27'
 --or nama ilike '%pronovde%'
 order by id
@@ -45,8 +111,8 @@ select * from barang where nama ilike 'gamma%pack%pro%' order by created_at desc
 
 
 select b.id, b.kode, b.nama, b.pv, b.bv, b.xv , 
---		b.harga_1, b.harga_2, b.harga_3,
---		b.status, b.is_show, b.is_show_sc, b.weight,
+		b.harga_1, b.harga_2, b.harga_3, b.shipping_budget,
+		b.status, b.is_show, b.is_show_sc, b.weight,
 		b.created_at, b.updated_at,  
 		m.id, m.link,m."type", m.created_at, m.updated_at 
 from barang b
@@ -54,8 +120,11 @@ from barang b
 where b.nama 
 	ILIKE 
 	ANY(ARRAY[
-		'flash%alpha%'
+		'%JoyOmega3 GAO%',
+		'JoyOmega3 BVB Pack%',
+		'JoyOmega3 Pack'
 		])
+--		and b.kode in ('I005J39')
 order by b.nama ;
 
 
@@ -73,8 +142,18 @@ select id , nama, status, is_show , created_at , updated_at, deleted_at  from ba
 
 select *
 from barang_detail bd  
-where id_induk_fk  in (1647,1648,1649)
-order by id ;
+where id_induk_fk  in (1673,
+1674,
+1675,
+1676,
+1677,
+1656,
+1657,
+1658,
+1659,
+1660
+)
+order by id_induk_fk, id_barang_fk ;
 
 1637
 
@@ -127,7 +206,8 @@ where b.nama ilike '%(j41)%'
 	 and remarks ='add new J41' 
 order by b.nama, created_at desc;
 
-select * from products p;
+select * from products p where code in ('I005J39');
+select id, kode, nama, status from barang b where b.kode in ('I005J39') or id in (1601);
 
 
 select --*
@@ -136,12 +216,12 @@ select --*
 		bd.id_barang_fk, b.nama,  
 		bd.qty, 
 		bd.product_code,
-	 	b2.nama as "nama paket", b.nama as "nama product"
+	 	b2.nama as "nama paket", b.nama as "nama product", b.status, b2.status 
 from barang_detail bd  
 	 inner join barang b on bd.id_barang_fk = b.id 
 	 inner join barang b2 on bd.id_induk_fk = b2.id 
 where id_induk_fk  in (
-1595,1586,1606,1608,1593,1600,1639,1640,1638
+1601
 )
 order by b2.nama, bd.id_induk_fk, bd.id_barang_fk ;
 
@@ -184,9 +264,7 @@ FROM barang b
 	LEFT JOIN products p ON d.product_code = p.code
 WHERE
 b.id IN  (
---select id from barang b2 where nama ilike '%RTS%'
-1665,1666,1671,1667,1668,1669,1670,1664,1663
-
+	select id from barang b2 where remarks = 'add new J42'
 		) 
 ORDER BY b."id", d.id;
 -- END PRODUCT LISTING;

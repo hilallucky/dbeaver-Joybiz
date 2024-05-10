@@ -1,4 +1,18 @@
 
+--TOTAL MEMBER
+select username, nama, no_ktp, email, "password", handphone, status, disabled, deleted_at, activated_at
+from users u 
+where disabled = 0 and activated_at is not null and status = '1' and email not ilike '%terminat%'
+--order by status desc
+;
+
+select * from stock_pack_deliveries spd where code = '240425153525';
+select * from stock_pack_delivery_details spdd where delivery_code = '240425153525';
+
+select * from barang b where b.kode in ('D001B','I005B','P001B','I003B','I004B','I002B') or nama ='dba basic 1 BVB Pack (J41)';
+
+select * from barang_detail bd where id_induk_fk = 1663;
+
 
 /* 
  * 1 = PICKUP MPU/PUC
@@ -14,8 +28,8 @@
 	from "transaction" t 
 	where 
 		t.deleted_at is null
-		and t.status in('PC', 'S', 'A') -- , 'I') -- PAID
-		and t.transaction_date::date between '2024-02-01' and '2024-03-27'
+		and t.status in('PC', 'S', 'A', 'I') -- PAID
+		and t.transaction_date::date between '2024-03-01' and '2024-03-29'
 	group by to_char(t.transaction_date, 'YYYY-MM')
 	order by to_char(t.transaction_date, 'YYYY-MM')
 				

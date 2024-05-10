@@ -188,15 +188,23 @@ from memberships m
 where m.right in (24035683282000);
 
 select * from users s where username ilike '%mulast%';
-select * from memberships m where username in ('mulast1803661','nasria2302811')  or jbid  in (24035683282,22014939977);
+select * from memberships m where username in ('irmasa2702801','leoniv25067016') or jbid = 23125586173;
 select * from sranks s where s.jbid in (24035683282);
 select * from "transaction" t where t.id_cust_fk  in (24035683282);
 
 -- UPDATE UPLINE & SPONSOR WITH FUNCTION
 -- lmh_update_upline_sponsor(:p_username, :p_new_upline, :p_change_sponsor_also, :p_new_sponsor)
-select * from lmh_update_upline_sponsor('adrike1603461', 'ramlan11092815', true, 'ramlan1109281');
-select * from lmh_update_upline_sponsor('hanisa2701371', 'hendra2208721', false, '');
+select * from lmh_update_upline_sponsor('irmasa2702801', 'elisab0102651', true, '');
+select * from lmh_update_upline_sponsor('irmasa2702801', 'leoniv25067016', false, '');
 
+select * from memberships m where username in ('rosidi0205661','masnon290171') or jbid =24015637951;
+select * from memberships m	where "right" = 24055707183 or "left" = 24055707183 or jbid = 22035016587; 
+select * from sranks s where jbid = 24055707183; -- spi 24015637951 upid 22035016587
+	-- Check if this member belongs to left/right someone (upline)
+	SELECT m.username as upline_existing, m."left" as left_existing, m."right" as right_existing
+	FROM memberships m 
+		 inner join memberships m2 on m."left" = m2.jbid or m."right" = m2.jbid  
+	WHERE m2.username  = 'kanaya07108412';
 --
 --#	username	jbid	spid	upid	left	right	updated_at	status	activated_at
 --1	"achmat2101171"	"22,014,939,977"	"21,074,713,651"	"22,014,934,120"	"22,024,985,928"	"22,085,097,593"	"2022-08-02 12:05:14.000"	"1"	"2022-01-22"
@@ -205,14 +213,55 @@ select * from lmh_update_upline_sponsor('hanisa2701371', 'hendra2208721', false,
 --hennie0911641	23115544555	23115544372	23115544372	23125587937	24015616535	2024-01-05 19:12:45.000	1	2023-11-09
 --suward1210911	22105148740	21094795076	21094795053	22115170729		2024-03-15 13:47:09.000	1	2022-10-12
 
+DO $$
+	DECLARE
+	    xusername text := 'rosidi0205661';
+	    new_upline_username text := 'masnon290171';
+    	jbid_user bigint;
+   		upline_existing text;
+	   	right_existing bigint;
+	   	left_existing bigint;
+	begin 
+		-- Check if this member belongs to left/right someone (upline)
+		SELECT m.username, m."left", m."right", m2.jbid -- into upline_existing, left_existing, right_existing, jbid_user
+		FROM memberships m 
+			 inner join memberships m2 on m."left" = m2.jbid or m."right" = m2.jbid
+--		SELECT m.username, m2.jbid, m."left", m."right" into upline_existing, jbid_user, left_existing, right_existing
+--		FROM memberships m 
+--			 inner join memberships m2 on m."left" = m2.jbid or m."right" = m2.jbid
+		WHERE m2.username  = 'rosidi0205661';
+	
+		
+		RAISE NOTICE 'Result All: xusername = %, left_existing = %, right_existing = %, upline_existing = %, new_upline_username = %', 
+	   				xusername, left_existing, right_existing, upline_existing, new_upline_username;
+	   			
+		if jbid_user = left_existing then
+--			update memberships set "left" = null, updated_at = now() where username = upline_existing;
+			
+
+			RAISE NOTICE 'Result Left: xusername = %, left_existing = %, upline_existing = %, new_upline_username = %', 
+		   				xusername, left_existing, upline_existing, new_upline_username;
+		   			
+		elseif jbid_user = right_existing then
+--			update memberships set "right" = null, updated_at = now() where username = upline_existing;
+			
+
+			RAISE NOTICE 'Result Right: xusername = %, right_existing = %, upline_existing = %, new_upline_username = %', 
+		   				xusername, right_existing, upline_existing, new_upline_username;
+		   			
+		end if;
+	end $$;
+
+
+
 
 -- ===============================================================================================================
 -- START UPDATE UPLINE
 -- ===============================================================================================================
 DO $$ -- hanisa2701371', 'hendra220872
 DECLARE
-    xusername text := 'hanisa2701371';
-    new_upline_username text := 'hendra220872';
+    xusername text := 'rosidi0205661'; -- 24055143660
+    new_upline_username text := 'masnon2901761'; -- 24025642780
    	change_sponsor_also boolean := false;
     new_sponsor_username text := '';
     jbid_user bigint;
@@ -225,23 +274,23 @@ DECLARE
    	left_existing bigint;
 
    begin
-		
+	   
 	-- Check if this member belongs to left/right someone (upline)
-	SELECT m.username, m."left", m."right" into upline_existing, left_existing, right_existing
+	SELECT m.username, m2.jbid, m."left", m."right" into upline_existing, jbid_user, left_existing, right_existing
 	FROM memberships m 
 		 inner join memberships m2 on m."left" = m2.jbid or m."right" = m2.jbid  
 	WHERE m2.username  = xusername;
 
 	-- update to null for existing upline
-	if left_existing is not null then
+	if left_existing is not null and jbid_user = left_existing then
 		update memberships set "left" = null, updated_at = now() where username = upline_existing;
-	elseif right_existing is not null then
+	elseif right_existing is not null and jbid_user = right_existing then
 		update memberships set "right" = null, updated_at = now() where username = upline_existing;
 	end if;
 	
 	   
 	-- Find correct jbid for new upline
-    SELECT jbid INTO jbid_user FROM memberships WHERE username = xusername;
+--    SELECT jbid INTO jbid_user FROM memberships WHERE username = xusername;
     SELECT jbid, "right", "left" INTO jbid_upline, right_downline, left_downline FROM memberships WHERE username = new_upline_username;
 	
    if left_downline is null then
@@ -255,7 +304,7 @@ DECLARE
   	end if;
   
   	-- If also want to change sponsor
-	if change_sponsor_also = true then
+	if change_sponsor_also = true and new_sponsor_username <> '' then
     	SELECT jbid INTO jbid_sponsor FROM memberships WHERE username = new_sponsor_username;
     
 		update memberships set spid = jbid_sponsor, updated_at = now() where username = xusername;
@@ -283,8 +332,8 @@ END $$;
 -- ===============================================================================================================
 DO $$ 
 DECLARE
-    xusername text := 'ainuly0304731';
-    new_sponsor_username text := 'ismawa0304571';
+    xusername text := 'rosidi0205661';
+    new_sponsor_username text := 'masnon2901761';
     jbid_user bigint;
     new_jbid_sponsor bigint;
    	sponsor_existing text;
