@@ -22,3 +22,12 @@
 	where row_num = 1;
 -- END CHECK LATEST ORDER BY USERNAME;
 -- ===========================================================================================
+
+SELECT * FROM memberships m where m.username ='nining2507921';
+select * from sranks s where s.jbid =23075395236;
+select sl.id, sl.jbid , m.username , sl.srank , r.short_name, sl.achieve_at
+from srank_logs sl 
+	inner join memberships m on m.jbid = sl.srank
+	inner join ranks r on sl.srank = r.id 
+where sl.jbid =23075395236
+order by sl.achieve_at;

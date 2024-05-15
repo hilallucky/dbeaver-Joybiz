@@ -85,7 +85,7 @@ where
 	jp."date" BETWEEN '2023-12-28'and now()::date and jp.deleted_at is null
 --	jp."date" between  '2023-12-28'and current_date and jp.deleted_at is null
 	and jp.deleted_at is null
-	and ms.username ='ipanka1111751'
+	and ms.username ='indra120289'
 group by 
 	u.activated_at, 
 	ms.username, u.nama, u.handphone, s.srank, r.short_name
@@ -688,7 +688,7 @@ select * from alamat_kelurahan ak where id_kecamatan in (7371031); --kelurahan i
 -- UBAH NO REKENING
 select * from memberships m where username ='karima0608691';
 select id, username, nama, no_ktp , email, id_bank_fk, bank_name , bank_acc_name, bank_acc_num, no_npwp, handphone 
-from users u where username in ('netisu1102381'); --ilike 'abdulm2212951'; -- 
+from users u where username in ('daniel0412291'); --ilike 'abdulm2212951'; -- 
 select * from bank b;
 
 update users set id_bank_fk = null, bank_name = null, bank_acc_name = null, bank_acc_num = null  where username in ('nurhas050175','waliya0905761');

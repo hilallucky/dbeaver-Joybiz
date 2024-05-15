@@ -12,7 +12,7 @@ SELECT
 		else 'else'
 	end as "type", count(m.flag) as "total"
 FROM memberships m
-where m.spid = (select jbid from memberships m2 where username = 'khusnu1209421')
+where m.spid = (select jbid from memberships m2 where username = 'indra120289')
 --username in ('hamidi0908411','tbabdu0403501','syehda1408901');
 group by m.flag
 ;
@@ -209,16 +209,18 @@ END $$;
 		WITH RECURSIVE descendants AS (
 		    SELECT id, username, jbid, spid, upid, 0 AS depth, "owner"
 		    FROM memberships m1
-		    WHERE lower(m1.username) in ('muhamm2003691') -- root khusnu1209421 right khusnu12094212 left khusnu12094213
+		    WHERE lower(m1.username) in ('ulufik1009381') -- root khusnu1209421 right khusnu12094212 left khusnu12094213
 		UNION    
 		    SELECT m2.id, m2.username, m2.jbid, m2.spid, m2.upid, d.depth+ 1, m2."owner"
 		    FROM memberships m2
 		    	 inner join descendants d on m2.jbid = d.upid
 		)
-		SELECT d.id, d.username, u.nama, m.username as sp_name, d.jbid, d.spid, d.upid, d.depth, d."owner"
+		SELECT d.id, d.username, u.nama, m.username as sp_name, d.jbid, s.srank, r.short_name, d.spid, d.upid, d.depth, d."owner"
 		FROM descendants d
 			left outer JOIN users u ON d."owner" = u.uid
 			inner join memberships m on d.spid = m.jbid
+			inner join sranks s on d.jbid = s.jbid -- GET rank
+			inner join ranks r on s.srank = r.id -- rank NAME
 		order by d.id
 		;
 
@@ -231,11 +233,11 @@ END $$;
 			select m.id , m.username, m.jbid, m.spid, 0 AS depth, m."owner" 
 			from memberships m  
 --			where m.username IN ('mashil2512161','hashif2003721','muhamm2003691','eniknu2411611','anisha2211511')
-			where m.username IN ('hashif2003721')
+			where m.username IN ('fikrip1409581')
 		  	UNION ALL
 			select m.id , m.username, m.jbid, m.spid, cte.depth+ 1, m."owner" 
 			from memberships m  
-				INNER JOIN cte ON m.spid = cte.jbid
+				INNER JOIN cte ON m.upid = cte.jbid
 		)
 		SELECT cte.id , cte.username, u1.nama , s.srank, r.short_name, cte.jbid, cte.spid, cte."depth", cte."owner"
 		FROM cte
@@ -277,7 +279,7 @@ END $$;
 			inner join week_periodes wp on pdj.wid = wp.id 
 --	  group by d.jbid, d.username, d.spid, d.upid, d.sp_username, DATE_TRUNC('month', t.transaction_date)
 	 where to_char(wp."eDate", 'YYYY-MM') > to_char(CURRENT_DATE - INTERVAL '4 months', 'YYYY-MM')
-	  		and d.username <> 'khusnu1209421'
+--	  		and d.username <> 'khusnu1209421'
  	 group by d.jbid, d.username, d.spid, d.upid, d.sp_username, 
 --	         DATE_TRUNC('month', t.transaction_date) AS transaction_month, 
 			to_char(wp."eDate", 'YYYY-MM')

@@ -185,7 +185,9 @@ where m.upid in (24035680055);
 
 select username, jbid, spid, upid, "left", "right", updated_at, status, activated_at 
 from memberships m 
-where m.right in (24035683282000);
+where m.username name in ('fatmaw1405461', 'linda1405471')  
+--m.right in (24035683282000)
+;
 
 select * from users s where username ilike '%mulast%';
 select * from memberships m where username in ('irmasa2702801','leoniv25067016') or jbid = 23125586173;
@@ -195,7 +197,7 @@ select * from "transaction" t where t.id_cust_fk  in (24035683282);
 -- UPDATE UPLINE & SPONSOR WITH FUNCTION
 -- lmh_update_upline_sponsor(:p_username, :p_new_upline, :p_change_sponsor_also, :p_new_sponsor)
 select * from lmh_update_upline_sponsor('irmasa2702801', 'elisab0102651', true, '');
-select * from lmh_update_upline_sponsor('irmasa2702801', 'leoniv25067016', false, '');
+select * from lmh_update_upline_sponsor('fatmaw1405461', 'linda1405471', false, '');
 
 select * from memberships m where username in ('rosidi0205661','masnon290171') or jbid =24015637951;
 select * from memberships m	where "right" = 24055707183 or "left" = 24055707183 or jbid = 22035016587; 
@@ -213,10 +215,20 @@ select * from sranks s where jbid = 24055707183; -- spi 24015637951 upid 2203501
 --hennie0911641	23115544555	23115544372	23115544372	23125587937	24015616535	2024-01-05 19:12:45.000	1	2023-11-09
 --suward1210911	22105148740	21094795076	21094795053	22115170729		2024-03-15 13:47:09.000	1	2022-10-12
 
+-- Check if this member belongs to left/right someone (upline)
+SELECT m.username, m."left", m."right", m2.jbid -- into upline_existing, left_existing, right_existing, jbid_user
+FROM memberships m 
+	 inner join memberships m2 on m."left" = m2.jbid or m."right" = m2.jbid
+WHERE m2.username  = 'sumiat0905771';
+
+
+    SELECT jbid, "right", "left" FROM memberships WHERE username = 'daisyj1603901';
+   
+	 
 DO $$
 	DECLARE
-	    xusername text := 'rosidi0205661';
-	    new_upline_username text := 'masnon290171';
+	    xusername text := 'sumiat0905771';
+	    new_upline_username text := 'daisyj1603901';
     	jbid_user bigint;
    		upline_existing text;
 	   	right_existing bigint;
@@ -235,21 +247,21 @@ DO $$
 		RAISE NOTICE 'Result All: xusername = %, left_existing = %, right_existing = %, upline_existing = %, new_upline_username = %', 
 	   				xusername, left_existing, right_existing, upline_existing, new_upline_username;
 	   			
-		if jbid_user = left_existing then
---			update memberships set "left" = null, updated_at = now() where username = upline_existing;
-			
-
-			RAISE NOTICE 'Result Left: xusername = %, left_existing = %, upline_existing = %, new_upline_username = %', 
-		   				xusername, left_existing, upline_existing, new_upline_username;
-		   			
-		elseif jbid_user = right_existing then
---			update memberships set "right" = null, updated_at = now() where username = upline_existing;
-			
-
-			RAISE NOTICE 'Result Right: xusername = %, right_existing = %, upline_existing = %, new_upline_username = %', 
-		   				xusername, right_existing, upline_existing, new_upline_username;
-		   			
-		end if;
+--		if jbid_user = left_existing then
+----			update memberships set "left" = null, updated_at = now() where username = upline_existing;
+--			
+--
+--			RAISE NOTICE 'Result Left: xusername = %, left_existing = %, upline_existing = %, new_upline_username = %', 
+--		   				xusername, left_existing, upline_existing, new_upline_username;
+--		   			
+--		elseif jbid_user = right_existing then
+----			update memberships set "right" = null, updated_at = now() where username = upline_existing;
+--			
+--
+--			RAISE NOTICE 'Result Right: xusername = %, right_existing = %, upline_existing = %, new_upline_username = %', 
+--		   				xusername, right_existing, upline_existing, new_upline_username;
+--		   			
+--		end if;
 	end $$;
 
 
@@ -260,8 +272,8 @@ DO $$
 -- ===============================================================================================================
 DO $$ -- hanisa2701371', 'hendra220872
 DECLARE
-    xusername text := 'rosidi0205661'; -- 24055143660
-    new_upline_username text := 'masnon2901761'; -- 24025642780
+    xusername text := 'sumiat0905771'; -- 24055143660
+    new_upline_username text := 'daisyj1603901'; -- 24025642780
    	change_sponsor_also boolean := false;
     new_sponsor_username text := '';
     jbid_user bigint;
@@ -288,6 +300,7 @@ DECLARE
 		update memberships set "right" = null, updated_at = now() where username = upline_existing;
 	end if;
 	
+
 	   
 	-- Find correct jbid for new upline
 --    SELECT jbid INTO jbid_user FROM memberships WHERE username = xusername;

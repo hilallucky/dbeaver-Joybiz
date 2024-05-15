@@ -740,3 +740,36 @@ and id_induk_fk in
 ) ORDER BY id_induk_fk asc;
 
 
+select a.id, a."sDate", a."eDate", a."month", a."year", a."name"
+from (
+		select  wp.id, wp."sDate" , wp."eDate" , wp."name",
+				DATE_PART('Month', wp."sDate"::DATE) as "start_date", 
+				DATE_PART('Month', wp."eDate"::DATE) as "end_date", 
+--				substring(wp."name", 4, 2)::integer as "month", 
+--				substring(wp."name", 1, 2)::integer as "year"
+				case
+					when (substring(wp."name", 5, 1) = '.') then substring(wp."name", 4, 1)::integer
+					else substring(wp."name", 4, 2)::integer
+				end as "month",
+				substring(wp."name", 1, 2)::integer as "year"
+				-- , wp."name"::DATE
+		from week_periodes wp
+	) a
+where ((a."month" between 1 and 5) and a."year" = 24) or (a."month" = 12 and a."year" = 23)
+order by a.id
+		;
+
+select *
+from barang b 
+where b.core = false 
+;
+
+select t.id, t.transaction_date, td.id_barang_fk, b.id as id_barang, td."name", b.nama, td.qty, b.core 
+from "transaction" t 
+	inner join transaction_detail td on t.id = td.id_trans_fk 
+	inner join barang b on td.id_barang_fk = b.id 
+where t.transaction_date between '2023-11-01' and now()::DATE
+	and t.deleted_at is null
+	and t.status in('PC', 'S', 'A', 'I') -- PAID
+;
+

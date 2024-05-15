@@ -3,18 +3,24 @@ select * from week_periodes wp where to_char("eDate" , 'YYYY-MM') = '2024-05' or
 
 
 -- BONUS JOY
-select *
+select wp."name" , jbs.*
 from joy_bonus_summaries jbs 
-where jbs.wid = 331
-order by jbs."date"  desc 
-limit 100;
+	inner join week_periodes wp on jbs.wid = wp.id 
+where 
+	jbs.wid = 331 or
+	wp."name" = '24.5.2'
+order by wp.id desc, jbs."date"  desc 
+limit 10000;
 
 -- BONUS PLAN
-select * 
+select wp."name" , bw.*
 from bonus_weeklies bw 
-where bw.wid = 331
-order by bw.created_at desc, bw.total_transfer
-limit 100;
+	inner join week_periodes wp on bw.wid = wp.id 
+where 
+	bw.wid = 331 or
+	wp."name" = '24.5.2'
+order by wp.id desc, bw.created_at desc, bw.total_transfer
+limit 100000;
 
 -- BONUS PUC/MPU
 select *
